@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>resources/plus-square-regular.svg</file>
+        <file>resources/save-regular.svg</file>
+        <file>resources/folder-open-regular.svg</file>
+        <file>resources/save-solid.svg</file>
+        <file>resources/history-solid.svg</file>
+        <file>resources/list-ul-solid.svg</file>
+        <file>resources/question-circle-regular.svg</file>
+        <file>resources/users-solid.svg</file>
+        <file>resources/camera-retro-solid.svg</file>
+        <file>resources/server-solid.svg</file>
+        <file>resources/network-wired-solid.svg</file>
+        <file>resources/print-solid.svg</file>
+        <file>resources/palette-solid.svg</file>
+    </qresource>
+</RCC>
