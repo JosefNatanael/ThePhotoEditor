@@ -27,7 +27,7 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QWidget" name="horizontalLayoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+       <layout class="QVBoxLayout" name="workspaceView" stretch="0,0">
         <item>
          <widget class="QPushButton" name="workspaceLoad">
           <property name="sizePolicy">

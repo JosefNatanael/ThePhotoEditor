@@ -26,12 +26,16 @@ CONFIG += c++14
 
 SOURCES += \
         AboutUs.cpp \
+        ScribbleArea.cpp \
+        ScribbleWindow.cpp \
         main.cpp \
         MainWindow.cpp
 
 HEADERS += \
         AboutUs.h \
-        MainWindow.h
+        MainWindow.h \
+        ScribbleArea.h \
+        ScribbleWindow.h
 
 FORMS += \
         AboutUs.ui \

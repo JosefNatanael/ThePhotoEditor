@@ -17,8 +17,6 @@ namespace Ui {
 class MainWindow;
 }
 
-class ScribbleArea;
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

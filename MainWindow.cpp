@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 
 #include <QToolBar>
+#include "ScribbleWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -43,6 +44,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // Sets the initial dimensions for the palette view and the workspace
     ui->splitter->setStretchFactor(0, 10);
     ui->splitter->setStretchFactor(1, 1);
+
+    // Spawns a Scribble Window
+    ScribbleWindow* scribbleWindow = new ScribbleWindow;
+    ui->workspaceView->addWidget(scribbleWindow);
 
 }
 
