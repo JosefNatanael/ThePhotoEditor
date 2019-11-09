@@ -1,8 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-#include <QToolBar>
 #include "ScribbleWindow.h"
+#include "Palette/Brush.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,11 +35,27 @@ MainWindow::MainWindow(QWidget *parent) :
      * TODO: fill each root
      */
     ui->palette->setColumnCount(1);
-    addRoot("Histogram");
-    addRoot("Basic Controls");
-    addRoot("Color");
-    addRoot("Brush");
-    addRoot("Effects");
+    QTreeWidgetItem* histogram = new QTreeWidgetItem(ui->palette);
+    QTreeWidgetItem* basicControls = new QTreeWidgetItem(ui->palette);
+    QTreeWidgetItem* colorControls = new QTreeWidgetItem(ui->palette);
+    QTreeWidgetItem* brushControls = new QTreeWidgetItem(ui->palette);
+    QTreeWidgetItem* effects = new QTreeWidgetItem(ui->palette);
+
+    // TODO
+    addRoot(histogram, "Histogram");
+
+    // TODO
+    addRoot(basicControls, "Basic Controls");
+
+    // TODO
+    addRoot(colorControls, "Color");
+
+    addRoot(brushControls, "Brush");
+    Brush* brush = new Brush();
+    customAddChild(brushControls, brush);
+
+    // TODO
+    addRoot(effects, "Effects");
 
     // Sets the initial dimensions for the palette view and the workspace
     ui->splitter->setStretchFactor(0, 10);
@@ -63,20 +79,17 @@ void MainWindow::on_actionAbout_Us_triggered()
     aboutUs.exec();
 }
 
-void MainWindow::addRoot(QString name)
+void MainWindow::addRoot(QTreeWidgetItem* parent, QString name)
 {
-    QTreeWidgetItem* item = new QTreeWidgetItem(ui->palette);
-    item->setText(0, name);
-    ui->palette->addTopLevelItem(item);
+    parent->setText(0, name);
+    ui->palette->addTopLevelItem(parent);
 }
 
-void MainWindow::addChild(QTreeWidgetItem* parent, QString name)
+void MainWindow::customAddChild(QTreeWidgetItem* parent, QWidget* widget)
 {
-    // TODO: implement addChild (probably no need to do this),
-    // but here is the sample implementation
-//    QTreeWidgetItem* item = new QTreeWidgetItem(ui->palette);
-//    item->setText(0, name);
-//    parent->addChild(item);
+    QTreeWidgetItem* item = new QTreeWidgetItem();
+    parent->addChild(item);
+    ui->palette->setItemWidget(item, 0, widget);
 }
 
 void MainWindow::on_actionPrint_triggered()

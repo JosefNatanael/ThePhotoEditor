@@ -2,7 +2,7 @@
 #include "ScribbleArea.h"
 #include <QtWidgets>
 
-// MainWindow constructor
+// ScribbleWindow constructor
 ScribbleWindow::ScribbleWindow()
 {
     // Create the ScribbleArea widget and make it
@@ -116,7 +116,7 @@ void ScribbleWindow::createActions()
     // Define the associated shortcut key
     openAct->setShortcuts(QKeySequence::Open);
 
-    // Tie the action to MainWindow::open()
+    // Tie the action to ScribbleWindow::open()
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
 
     // Get a list of the supported file formats
@@ -130,41 +130,41 @@ void ScribbleWindow::createActions()
         // Set an action for each file format
         action->setData(format);
 
-        // When clicked call MainWindow::save()
+        // When clicked call ScribbleWindow::save()
         connect(action, SIGNAL(triggered()), this, SLOT(save()));
 
         // Attach each file format option menu item to Save As
         saveAsActs.append(action);
     }
 
-    // Create print action and tie to MainWindow::print()
+    // Create print action and tie to ScribbleWindow::print()
     printAct = new QAction(tr("&Print..."), this);
     connect(printAct, SIGNAL(triggered()), scribbleArea, SLOT(print()));
 
-    // Create exit action and tie to MainWindow::close()
+    // Create exit action and tie to ScribbleWindow::close()
     exitAct = new QAction(tr("E&xit"), this);
     exitAct->setShortcuts(QKeySequence::Quit);
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-    // Create pen color action and tie to MainWindow::penColor()
+    // Create pen color action and tie to ScribbleWindow::penColor()
     penColorAct = new QAction(tr("&Pen Color..."), this);
     connect(penColorAct, SIGNAL(triggered()), this, SLOT(penColor()));
 
-    // Create pen width action and tie to MainWindow::penWidth()
+    // Create pen width action and tie to ScribbleWindow::penWidth()
     penWidthAct = new QAction(tr("Pen &Width..."), this);
     connect(penWidthAct, SIGNAL(triggered()), this, SLOT(penWidth()));
 
-    // Create clear screen action and tie to MainWindow::clearImage()
+    // Create clear screen action and tie to ScribbleWindow::clearImage()
     clearScreenAct = new QAction(tr("&Clear Screen"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
     connect(clearScreenAct, SIGNAL(triggered()),
             scribbleArea, SLOT(clearImage()));
 
-    // Create about action and tie to MainWindow::about()
+    // Create about action and tie to ScribbleWindow::about()
     aboutAct = new QAction(tr("&About"), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
-    // Create about Qt action and tie to MainWindow::aboutQt()
+    // Create about Qt action and tie to ScribbleWindow::aboutQt()
     aboutQtAct = new QAction(tr("About &Qt"), this);
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }

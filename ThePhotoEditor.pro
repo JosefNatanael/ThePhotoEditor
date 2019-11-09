@@ -26,6 +26,7 @@ CONFIG += c++14
 
 SOURCES += \
         AboutUs.cpp \
+        Palette/Brush.cpp \
         ScribbleArea.cpp \
         ScribbleWindow.cpp \
         main.cpp \
@@ -34,12 +35,14 @@ SOURCES += \
 HEADERS += \
         AboutUs.h \
         MainWindow.h \
+        Palette/Brush.h \
         ScribbleArea.h \
         ScribbleWindow.h
 
 FORMS += \
         AboutUs.ui \
-        MainWindow.ui
+        MainWindow.ui \
+        Palette/Brush.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

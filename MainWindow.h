@@ -5,6 +5,7 @@
 #include "AboutUs.h"
 
 #include <QTreeWidgetItem>
+#include <QToolBar>
 
 #include <QFile>
 #include <QFileDialog>
@@ -34,8 +35,8 @@ private:
     QString currentFile = "";
 
 private:
-    void addRoot(QString name);
-    void addChild(QTreeWidgetItem* parent, QString name);
+    void addRoot(QTreeWidgetItem* parent, QString name);
+    void customAddChild(QTreeWidgetItem* parent, QWidget* widget);
 };
 
 #endif // MAINWINDOW_H
