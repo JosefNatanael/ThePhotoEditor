@@ -1,5 +1,4 @@
 #include "ScribbleArea.h"
-#include "ui_ScribbleArea.h"
 
 #include <QtWidgets>
 #if defined(QT_PRINTSUPPORT_LIB)
@@ -9,8 +8,6 @@
 #include <QPrintDialog>
 #endif
 #endif
-
-#include "scribblearea.h"
 
 ScribbleArea::ScribbleArea(QWidget *parent)
     : QWidget(parent)
