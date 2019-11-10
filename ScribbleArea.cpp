@@ -18,7 +18,7 @@ ScribbleArea::ScribbleArea(QWidget *parent)
     // Set defaults for the monitored variables
     modified = false;
     scribbling = false;
-    myPenWidth = 1;
+    myPenWidth = 5;
     myPenColor = Qt::blue;
 }
 
@@ -28,7 +28,6 @@ bool ScribbleArea::openImage(const QString &fileName)
     // Holds the image
     QImage loadedImage;
 
-    // If the image wasn't loaded leave this function
     if (!loadedImage.load(fileName))
         return false;
 
@@ -43,7 +42,6 @@ bool ScribbleArea::openImage(const QString &fileName)
 // Save the current image
 bool ScribbleArea::saveImage(const QString &fileName, const char *fileFormat)
 {
-    // Created to hold the image
     QImage visibleImage = image;
     resizeImage(&visibleImage, size());
 

@@ -34,9 +34,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->toolBar->addAction(ui->actionSave);
 
     // Setup our actions shortcuts
-
     ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionExit->setShortcuts(QKeySequence::Quit);
+
+    // Spawns a Scribble Area
+    scribbleArea = new ScribbleArea;
+    ui->workspaceView->addWidget(scribbleArea);
+
+    // Create actions and menus
+    createActions();
+    createMenus();
 
     /*
      * Setup the treeWidget, which will be in our palette
@@ -61,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     addRoot(brushControls, "Brush");
     Brush* brush = new Brush();
     customAddChild(brushControls, brush);
+    connect(brush, &Brush::onPenColorChanged, scribbleArea, &ScribbleArea::setPenColor);
 
     // TODO
     addRoot(effects, "Effects");
@@ -68,16 +76,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Sets the initial dimensions for the palette view and the workspace
     ui->splitter->setStretchFactor(0, 10);
     ui->splitter->setStretchFactor(1, 1);
-
-    // Spawns a Scribble Area
-    scribbleArea = new ScribbleArea;
-    ui->workspaceView->addWidget(scribbleArea);
-
-    // Create actions and menus
-    createActions();
-    createMenus();
-
-    // TODO: Connect all the palette components
 
 }
 
@@ -92,6 +90,10 @@ void MainWindow::addRoot(QTreeWidgetItem* parent, QString name)
     ui->palette->addTopLevelItem(parent);
 }
 
+/*
+ * Adds a child to a parent, this is a custom implementation of the addChild function
+ * This child is a QWidget
+ */
 void MainWindow::customAddChild(QTreeWidgetItem* parent, QWidget* widget)
 {
     QTreeWidgetItem* item = new QTreeWidgetItem();
@@ -99,33 +101,11 @@ void MainWindow::customAddChild(QTreeWidgetItem* parent, QWidget* widget)
     ui->palette->setItemWidget(item, 0, widget);
 }
 
-void MainWindow::on_actionPrint_triggered()
-{
-    scribbleArea->print();
-}
-
-void MainWindow::on_actionOpen_triggered()
-{
-    open();
-}
-
-void MainWindow::on_actionExit_triggered()
-{
-    MainWindow::close();
-}
-
-void MainWindow::on_actionAbout_Us_triggered()
-{
-    AboutUs aboutUs;
-    aboutUs.setModal(true);
-    aboutUs.exec();
-}
-
-// When user is closing the app, spawn a "do you want to save" widge
+// When user is closing the app, spawn a "do you want to save" widget
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     // If they try to close maybeSave() returns true
-    // if no changes have beaen made and the app closes
+    // if no changes have been made and the app closes
     if (maybeSave()) {
         event->accept();
     } else {
@@ -144,13 +124,10 @@ void MainWindow::open()
     if (maybeSave()) {
 
         // Get the file to open from a dialog
-        // tr sets the window title to Open File
         // QDir opens the current dirctory
         QString fileName = QFileDialog::getOpenFileName(this,
                                                         tr("Open File"), QDir::currentPath());
 
-        // If we have a file name load the image and place
-        // it in the scribbleArea
         if (!fileName.isEmpty())
             scribbleArea->openImage(fileName);
     }
@@ -247,30 +224,29 @@ void MainWindow::createMenus()
     optionMenu->addSeparator();
     optionMenu->addAction(clearScreenAct);
 
-    // Add menu items to the menubar
     menuBar()->addMenu(optionMenu);
 }
 
+/*
+ * maybeSave will prompt users to save the file when user tried to quit/change image
+ * maybeSave return true if there has been no changes
+ */
 bool MainWindow::maybeSave()
 {
     // Check for changes since last save
     if (scribbleArea->isModified()) {
         QMessageBox::StandardButton ret;
 
-        // Scribble is the title
-        // Add text and the buttons
         ret = QMessageBox::warning(this, tr("Scribble"),
                                    tr("The image has been modified.\n"
                                       "Do you want to save your changes?"),
                                    QMessageBox::Save | QMessageBox::Discard
                                    | QMessageBox::Cancel);
 
-        // If save button clicked call for file to be saved
         if (ret == QMessageBox::Save) {
             return saveFile("png");
-
-            // If cancel do nothing
-        } else if (ret == QMessageBox::Cancel) {
+        }
+        else if (ret == QMessageBox::Cancel) {
             return false;
         }
     }
@@ -279,10 +255,8 @@ bool MainWindow::maybeSave()
 
 bool MainWindow::saveFile(const QByteArray &fileFormat)
 {
-    // Define path, name and default file type
     QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
 
-    // Get selected file from dialog
     // Add the proper file formats and extensions
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
                                                     initialPath,
@@ -290,12 +264,40 @@ bool MainWindow::saveFile(const QByteArray &fileFormat)
                                                     .arg(QString::fromLatin1(fileFormat.toUpper()))
                                                     .arg(QString::fromLatin1(fileFormat)));
 
-    // If no file do nothing
     if (fileName.isEmpty()) {
         return false;
-    } else {
-
+    }
+    else {
         // Call for the file to be saved
         return scribbleArea->saveImage(fileName, fileFormat.constData());
     }
+}
+
+void MainWindow::on_actionNew_triggered()
+{
+    if (maybeSave()) {
+        scribbleArea->clearImage();
+    }
+}
+
+void MainWindow::on_actionPrint_triggered()
+{
+    scribbleArea->print();
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    open();
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    MainWindow::close();
+}
+
+void MainWindow::on_actionAbout_Us_triggered()
+{
+    AboutUs aboutUs;
+    aboutUs.setModal(true);
+    aboutUs.exec();
 }

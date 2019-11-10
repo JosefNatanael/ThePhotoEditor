@@ -41,6 +41,8 @@ private slots:
     void penColor();
     void penWidth();
 
+    void on_actionNew_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -48,23 +50,14 @@ private:
     void addRoot(QTreeWidgetItem* parent, QString name);
     void customAddChild(QTreeWidgetItem* parent, QWidget* widget);
 
-    // Will tie user actions to functions
     void createActions();
     void createMenus();
-
-    // Will check if changes have occurred since last save
     bool maybeSave();
-
-    // Opens the Save dialog and saves
     bool saveFile(const QByteArray &fileFormat);
 
-    // What we'll draw on
     ScribbleArea *scribbleArea;
 
-    // The menu widgets
     QMenu *optionMenu;
-
-    // Actions tied to specific file formats
     QList<QAction *> saveAsActs;
     QAction *penColorAct;
     QAction *penWidthAct;

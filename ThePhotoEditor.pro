@@ -28,7 +28,6 @@ SOURCES += \
         AboutUs.cpp \
         Palette/Brush.cpp \
         ScribbleArea.cpp \
-        ScribbleWindow.cpp \
         main.cpp \
         MainWindow.cpp
 
@@ -36,8 +35,7 @@ HEADERS += \
         AboutUs.h \
         MainWindow.h \
         Palette/Brush.h \
-        ScribbleArea.h \
-        ScribbleWindow.h
+        ScribbleArea.h
 
 FORMS += \
         AboutUs.ui \
