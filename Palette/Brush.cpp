@@ -17,12 +17,22 @@ Brush::Brush(QWidget *parent) :
 
 }
 
+Brush::~Brush()
+{
+    delete ui;
+}
+
 void Brush::penColorChanged(const QColor& color)
 {
     emit onPenColorChanged(color);
 }
 
-Brush::~Brush()
+void Brush::on_brushWidthSlider_valueChanged(int value)
 {
-    delete ui;
+    emit onPenWidthChanged(value);
+}
+
+void Brush::on_brushWidthSpinBox_valueChanged(int value)
+{
+    emit onPenWidthChanged(value);
 }

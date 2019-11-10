@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Brush* brush = new Brush();
     customAddChild(brushControls, brush);
     connect(brush, &Brush::onPenColorChanged, scribbleArea, &ScribbleArea::setPenColor);
+    connect(brush, &Brush::onPenWidthChanged, scribbleArea, &ScribbleArea::setPenWidth);
 
     // TODO
     addRoot(effects, "Effects");
@@ -146,34 +147,6 @@ void MainWindow::save()
     saveFile(fileFormat);
 }
 
-// Opens a dialog to change the pen color
-void MainWindow::penColor()
-{
-    // Store the chosen color from the dialog
-    QColor newColor = QColorDialog::getColor(scribbleArea->penColor());
-
-    // If a valid color set it
-    if (newColor.isValid())
-        scribbleArea->setPenColor(newColor);
-}
-
-// Opens a dialog that allows the user to change the pen width
-void MainWindow::penWidth()
-{
-    // Stores button value
-    bool ok;
-
-    // Get the current pen width
-    // Define the min, max, step and ok button
-    int newWidth = QInputDialog::getInt(this, tr("Scribble"),
-                                        tr("Select pen width:"),
-                                        scribbleArea->penWidth(),
-                                        1, 50, 1, &ok);
-    // Change the pen width
-    if (ok)
-        scribbleArea->setPenWidth(newWidth);
-}
-
 // Define menu actions that call functions
 void MainWindow::createActions()
 {
@@ -195,14 +168,6 @@ void MainWindow::createActions()
         saveAsActs.append(action);
     }
 
-    // Create pen color action and tie to ScribbleWindow::penColor()
-    penColorAct = new QAction(tr("&Pen Color..."), this);
-    connect(penColorAct, SIGNAL(triggered()), this, SLOT(penColor()));
-
-    // Create pen width action and tie to ScribbleWindow::penWidth()
-    penWidthAct = new QAction(tr("Pen &Width..."), this);
-    connect(penWidthAct, SIGNAL(triggered()), this, SLOT(penWidth()));
-
     // Create clear screen action and tie to ScribbleWindow::clearImage()
     clearScreenAct = new QAction(tr("&Clear Screen"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
@@ -219,9 +184,6 @@ void MainWindow::createMenus()
 
     // Attach all actions to Options
     optionMenu = new QMenu(tr("&Options"), this);
-    optionMenu->addAction(penColorAct);
-    optionMenu->addAction(penWidthAct);
-    optionMenu->addSeparator();
     optionMenu->addAction(clearScreenAct);
 
     menuBar()->addMenu(optionMenu);

@@ -31,17 +31,14 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 
 private slots:
-    void on_actionAbout_Us_triggered();
-    void on_actionPrint_triggered();
+    void on_actionNew_triggered();
     void on_actionOpen_triggered();
+    void on_actionPrint_triggered();
+    void on_actionAbout_Us_triggered();
     void on_actionExit_triggered();
 
     void open();
     void save();
-    void penColor();
-    void penWidth();
-
-    void on_actionNew_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -59,8 +56,6 @@ private:
 
     QMenu *optionMenu;
     QList<QAction *> saveAsActs;
-    QAction *penColorAct;
-    QAction *penWidthAct;
     QAction *clearScreenAct;
 };
 

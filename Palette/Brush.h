@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QColorDialog>
-#include <QMouseEvent>
 
 namespace Ui {
 class Brush;
@@ -19,9 +18,12 @@ public:
 
 signals:
     void onPenColorChanged(const QColor& color);
+    void onPenWidthChanged(int value);
 
-public slots:
+private slots:
     void penColorChanged(const QColor& color);
+    void on_brushWidthSlider_valueChanged(int value);
+    void on_brushWidthSpinBox_valueChanged(int arg1);
 
 private:
     Ui::Brush *ui;
