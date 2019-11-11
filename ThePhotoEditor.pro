@@ -28,7 +28,7 @@ SOURCES += \
         AboutUs.cpp \
         Palette/Brush.cpp \
         Palette/Histogram.cpp \
-        ScribbleArea.cpp \
+        WorkspaceArea.cpp \
         main.cpp \
         MainWindow.cpp \
         qcustomplot.cpp
@@ -38,7 +38,7 @@ HEADERS += \
         MainWindow.h \
         Palette/Brush.h \
         Palette/Histogram.h \
-        ScribbleArea.h \
+        WorkspaceArea.h \
         qcustomplot.h
 
 FORMS += \

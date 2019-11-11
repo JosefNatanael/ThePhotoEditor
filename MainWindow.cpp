@@ -3,11 +3,14 @@
 
 #include <QtWidgets>
 
-#include "ScribbleArea.h"
+#include "WorkspaceArea.h"
 
 #include "Palette/Brush.h"
 
 #include "Palette/Histogram.h"
+
+static const int SCENE_WIDTH = 1080;    // The width of the workspace
+static const int SCENE_HEIGHT = 1920;   // The height of the workspace
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,9 +42,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionExit->setShortcuts(QKeySequence::Quit);
 
-    // Spawns a Scribble Area
-    scribbleArea = new ScribbleArea;
-    ui->workspaceView->addWidget(scribbleArea);
+    // Spawns a Workspace Area
+    workspaceArea = new WorkspaceArea;
+
+    graphicsView = new QGraphicsView(this);
+    graphicsView->setScene(workspaceArea);
+    ui->workspaceView->addWidget(graphicsView);
+    workspaceArea->setParent(graphicsView);
+    graphicsView->setFixedSize(SCENE_WIDTH, SCENE_HEIGHT);
+    graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    graphicsView->setFocusPolicy(Qt::NoFocus);
+
+    graphicsView->setSceneRect(0, 0, SCENE_WIDTH - 2, SCENE_HEIGHT - 2);
+    connect(workspaceArea, &WorkspaceArea::edit, this, &MainWindow::on_edit);
 
     // Create actions and menus
     createActions();
@@ -60,9 +75,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // TODO: check for canvas size difference.
     addRoot(histogram, "Histogram");
-    Histogram* histo = new Histogram(scribbleArea->getImage());
+    Histogram* histo = new Histogram(workspaceArea->getImage());
     customAddChild(histogram, histo);
-    connect(scribbleArea, &ScribbleArea::onImageLoaded, histo, &Histogram::imageLoaded);
+    connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
 
     // TODO
     addRoot(basicControls, "Basic Controls");
@@ -73,8 +88,8 @@ MainWindow::MainWindow(QWidget *parent) :
     addRoot(brushControls, "Brush");
     Brush* brush = new Brush();
     customAddChild(brushControls, brush);
-    connect(brush, &Brush::onPenColorChanged, scribbleArea, &ScribbleArea::setPenColor);
-    connect(brush, &Brush::onPenWidthChanged, scribbleArea, &ScribbleArea::setPenWidth);
+    connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
+    connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
 
     // TODO
     addRoot(effects, "Effects");
@@ -135,7 +150,7 @@ void MainWindow::open()
                                                         tr("Open File"), QDir::currentPath());
 
         if (!fileName.isEmpty()){
-            scribbleArea->openImage(fileName);
+            workspaceArea->openImage(fileName);
         }
     }
 }
@@ -178,7 +193,7 @@ void MainWindow::createActions()
     clearScreenAct = new QAction(tr("&Clear Screen"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
     connect(clearScreenAct, SIGNAL(triggered()),
-            scribbleArea, SLOT(clearImage()));
+            workspaceArea, SLOT(clearImage()));
 }
 
 // Create the menubar
@@ -202,7 +217,7 @@ void MainWindow::createMenus()
 bool MainWindow::maybeSave()
 {
     // Check for changes since last save
-    if (scribbleArea->isModified()) {
+    if (workspaceArea->isModified()) {
         QMessageBox::StandardButton ret;
 
         ret = QMessageBox::warning(this, tr("Scribble"),
@@ -237,20 +252,20 @@ bool MainWindow::saveFile(const QByteArray &fileFormat)
     }
     else {
         // Call for the file to be saved
-        return scribbleArea->saveImage(fileName, fileFormat.constData());
+        return workspaceArea->saveImage(fileName, fileFormat.constData());
     }
 }
 
 void MainWindow::on_actionNew_triggered()
 {
     if (maybeSave()) {
-        scribbleArea->clearImage();
+        workspaceArea->clearImage();
     }
 }
 
 void MainWindow::on_actionPrint_triggered()
 {
-    scribbleArea->print();
+    workspaceArea->print();
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -268,4 +283,15 @@ void MainWindow::on_actionAbout_Us_triggered()
     AboutUs aboutUs;
     aboutUs.setModal(true);
     aboutUs.exec();
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+    QGraphicsPathItem* toBeDeleted = history.back();
+    history.pop_back();
+    workspaceArea->removeItem(toBeDeleted);
+}
+
+void MainWindow::on_edit(QGraphicsPathItem* item) {
+    history.push_back(item);
 }

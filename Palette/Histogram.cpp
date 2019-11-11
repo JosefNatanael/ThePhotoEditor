@@ -1,7 +1,7 @@
 #include "Histogram.h"
 #include "ui_Histogram.h"
 #include "qcustomplot.cpp"
-#include "ScribbleArea.h"
+#include "WorkspaceArea.h"
 
 Histogram::Histogram(const QImage& image, QWidget *parent) :
     QWidget(parent),
