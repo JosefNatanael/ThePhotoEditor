@@ -49,13 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     graphicsView->setScene(workspaceArea);
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
-    graphicsView->setFixedSize(SCENE_WIDTH, SCENE_HEIGHT);
-    graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-    graphicsView->setFocusPolicy(Qt::NoFocus);
+//    resizeGraphicsViewBoundaries(SCENE_WIDTH, SCENE_HEIGHT);
 
-    graphicsView->setSceneRect(0, 0, SCENE_WIDTH - 2, SCENE_HEIGHT - 2);
     connect(workspaceArea, &WorkspaceArea::edit, this, &MainWindow::on_edit);
 
     // Create actions and menus
@@ -105,6 +100,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
+{
+    graphicsView->setFixedSize(newWidth, newHeight);
+    graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    graphicsView->setFocusPolicy(Qt::NoFocus);
+    graphicsView->setSceneRect(0, 0, newWidth - 2, newHeight - 2);    // Allow for extra 2px boundaries
+}
+
 void MainWindow::addRoot(QTreeWidgetItem* parent, QString name)
 {
     parent->setText(0, name);
@@ -151,6 +156,7 @@ void MainWindow::open()
 
         if (!fileName.isEmpty()){
             workspaceArea->openImage(fileName);
+            resizeGraphicsViewBoundaries(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
         }
     }
 }

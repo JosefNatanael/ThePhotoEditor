@@ -23,6 +23,8 @@ public:
 public:
     bool    openImage(const QString& fileName);
     bool    saveImage(const QString& fileName, const char* fileFormat);
+    int     getImageWidth() const { return imageWidth; }
+    int     getImageHeight() const { return imageHeight; }
 
     QColor  penColor() const { return myPenColor; }
     int     penWidth() const { return myPenWidth; }
@@ -56,8 +58,8 @@ private:
     QImage                  image;
     int                     imageWidth;
     int                     imageHeight;
-    QGraphicsPixmapItem*    pixmapGraphics; // The pointer to foreground image item
-    QGraphicsPathItem*      pathItem = nullptr; // TODO:
+    QGraphicsPixmapItem*    pixmapGraphics = nullptr; // The pointer to foreground image item
+    QGraphicsPathItem*      pathItem = nullptr;
 
 };
 

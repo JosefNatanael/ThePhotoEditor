@@ -28,6 +28,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+    void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
+
 protected:
     void                        closeEvent(QCloseEvent* event) override;
 
@@ -47,7 +49,6 @@ private slots:
 private:
     Ui::MainWindow*             ui;
 
-private:
     void                        addRoot(QTreeWidgetItem* parent, QString name);
     void                        customAddChild(QTreeWidgetItem* parent, QWidget* widget);
 

@@ -9,8 +9,8 @@
 #endif
 #endif
 
-static const int SCENE_WIDTH = 1080;    // The width of the workspace
-static const int SCENE_HEIGHT = 1920;   // The height of the workspace
+static const int SCENE_WIDTH = 1080;    // The default width of the workspace
+static const int SCENE_HEIGHT = 1920;   // The default height of the workspace
 
 WorkspaceArea::WorkspaceArea(QObject *parent)
     : QGraphicsScene (0, 0, SCENE_WIDTH, SCENE_HEIGHT, parent)
@@ -52,11 +52,16 @@ bool WorkspaceArea::openImage(const QString &fileName)
     imageWidth = sizeOfImage.width();
 
     QImage &&scaledImage = image.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    qDebug() << imageHeight << " " << imageWidth;
 
+    if (pixmapGraphics) {
+        removeItem(pixmapGraphics);
+        delete pixmapGraphics;
+    }
     pixmapGraphics = addPixmap(QPixmap::fromImage(scaledImage));
     pixmapGraphics->setTransformationMode(Qt::SmoothTransformation);
     pixmapGraphics->setPos({imageWidth / 2.0 - scaledImage.width() / 2.0, imageHeight / 2.0 - scaledImage.height() / 2.0});
-    pixmapGraphics->setZValue(-1000);
+    pixmapGraphics->setZValue(-2000);
 
     emit onImageLoaded(loadedImage);
 
@@ -67,12 +72,12 @@ bool WorkspaceArea::openImage(const QString &fileName)
 
 QImage WorkspaceArea::commitImage()
 {
-    QImage image(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+    QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
     QPainter painter;
-    painter.begin(&image);
+    painter.begin(&commitImage);
     render(&painter);       // Renders the Workspace area to the image
     painter.end();
-    return image;
+    return commitImage;
 }
 
 // Save the current image
@@ -126,7 +131,7 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     pathItem->update();
 
     QGraphicsScene::mouseMoveEvent(event);
-
+    modified = true;
 }
 
 void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
