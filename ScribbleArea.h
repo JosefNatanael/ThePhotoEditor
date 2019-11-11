@@ -26,9 +26,14 @@ public:
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
 
+    const QImage& getImage() const{return image;}
+
 public slots:
     void clearImage();
     void print();
+
+signals:
+    void onImageLoaded(const QImage& image);
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;

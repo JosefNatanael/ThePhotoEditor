@@ -7,6 +7,8 @@
 
 #include "Palette/Brush.h"
 
+#include "Palette/Histogram.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -56,8 +58,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QTreeWidgetItem* brushControls = new QTreeWidgetItem(ui->palette);
     QTreeWidgetItem* effects = new QTreeWidgetItem(ui->palette);
 
-    // TODO
+    // TODO: check for canvas size difference.
     addRoot(histogram, "Histogram");
+    Histogram* histo = new Histogram(scribbleArea->getImage());
+    customAddChild(histogram, histo);
+    connect(scribbleArea, &ScribbleArea::onImageLoaded, histo, &Histogram::imageLoaded);
 
     // TODO
     addRoot(basicControls, "Basic Controls");
@@ -129,8 +134,9 @@ void MainWindow::open()
         QString fileName = QFileDialog::getOpenFileName(this,
                                                         tr("Open File"), QDir::currentPath());
 
-        if (!fileName.isEmpty())
+        if (!fileName.isEmpty()){
             scribbleArea->openImage(fileName);
+        }
     }
 }
 

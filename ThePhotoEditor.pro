@@ -30,14 +30,16 @@ SOURCES += \
         Palette/Histogram.cpp \
         ScribbleArea.cpp \
         main.cpp \
-        MainWindow.cpp
+        MainWindow.cpp \
+        qcustomplot.cpp
 
 HEADERS += \
         AboutUs.h \
         MainWindow.h \
         Palette/Brush.h \
         Palette/Histogram.h \
-        ScribbleArea.h
+        ScribbleArea.h \
+        qcustomplot.h
 
 FORMS += \
         AboutUs.ui \
