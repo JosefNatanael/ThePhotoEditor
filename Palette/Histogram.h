@@ -22,7 +22,6 @@ public:
     QCPBars* mpHistogramBarsBlue;
 
     void drawHistogram (const QImage& image);
-    void runHistogram(const QImage& image);
 
 private:
     Ui::Histogram *ui;

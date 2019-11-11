@@ -171,7 +171,7 @@ void MainWindow::open()
             int imageHeight = sizeOfImage.height();
             int imageWidth = sizeOfImage.width();
 
-            if(workspaceArea != nullptr){
+            if(workspaceArea != nullptr) {
                 delete workspaceArea;
                 workspaceArea = nullptr;
             }

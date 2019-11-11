@@ -68,7 +68,6 @@ bool WorkspaceArea::openImage(const QString& fileName, int imageWidth, int image
 QImage WorkspaceArea::commitImage()
 {
     QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
-   // QImage commitImage(SCENE_WIDTH, SCENE_HEIGHT, QImage::Format_ARGB32_Premultiplied);
     QPainter painter;
     painter.begin(&commitImage);
     render(&painter);       // Renders the Workspace area to the image

@@ -8,15 +8,6 @@ Histogram::Histogram(const QImage& image, QWidget *parent) :
     ui(new Ui::Histogram)
 {
     ui->setupUi(this);
-   //
-}
-
-Histogram::~Histogram()
-{
-    delete ui;
-}
-
-void Histogram::runHistogram(const QImage &image){
     //grey
     mpHistogramBarsGrey = new QCPBars(ui->plot->xAxis, ui->plot->yAxis);
     QColor gray70 = Qt::gray;
@@ -44,8 +35,15 @@ void Histogram::runHistogram(const QImage &image){
     blue70.setAlphaF( 0.3 );
     mpHistogramBarsBlue->setPen(QPen(blue70));
     mpHistogramBarsBlue->setBrush(QBrush(blue70));
+}
 
-    drawHistogram(image);
+Histogram::~Histogram()
+{
+    delete mpHistogramBarsGrey;
+    delete mpHistogramBarsRed;
+    delete mpHistogramBarsGreen;
+    delete mpHistogramBarsBlue;
+    delete ui;
 }
 
 void Histogram::drawHistogram(const QImage &image){
@@ -58,6 +56,9 @@ void Histogram::drawHistogram(const QImage &image){
     for(int i = 0; i < keys.size(); i++){
         keys[i] = i;
         valuesGrey[i] = 0;
+        valuesRed[i] = 0;
+        valuesGreen[i] = 0;
+        valuesBlue[i] = 0;
     }
     for(int j = 0; j < image.height(); j++){
         for(int i = 0; i < image.width(); i++){
@@ -80,6 +81,6 @@ void Histogram::drawHistogram(const QImage &image){
     ui->plot->replot();
 }
 
-void Histogram::imageLoaded(const QImage& image){
-    runHistogram(image);
+void Histogram::imageLoaded(const QImage& image) {
+    drawHistogram(image);
 }
