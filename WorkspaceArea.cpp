@@ -48,14 +48,14 @@ bool WorkspaceArea::openImage(const QString &fileName)
 
     QImageReader reader(fileName);
     QSize sizeOfImage = reader.size();
-    int height = sizeOfImage.height();
-    int width = sizeOfImage.width();
+    imageHeight = sizeOfImage.height();
+    imageWidth = sizeOfImage.width();
 
-    QImage &&scaledImage = image.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QImage &&scaledImage = image.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     pixmapGraphics = addPixmap(QPixmap::fromImage(scaledImage));
     pixmapGraphics->setTransformationMode(Qt::SmoothTransformation);
-    pixmapGraphics->setPos({width / 2.0 - scaledImage.width() / 2.0, height / 2.0 - scaledImage.height() / 2.0});
+    pixmapGraphics->setPos({imageWidth / 2.0 - scaledImage.width() / 2.0, imageHeight / 2.0 - scaledImage.height() / 2.0});
     pixmapGraphics->setZValue(-1000);
 
     emit onImageLoaded(loadedImage);
@@ -65,10 +65,21 @@ bool WorkspaceArea::openImage(const QString &fileName)
     return true;
 }
 
+QImage WorkspaceArea::commitImage()
+{
+    QImage image(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+    QPainter painter;
+    painter.begin(&image);
+    render(&painter);       // Renders the Workspace area to the image
+    painter.end();
+    return image;
+}
+
 // Save the current image
 bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 {
-    if (image.save(fileName, fileFormat)) {
+    QImage&& snap = commitImage();
+    if (snap.save(fileName, fileFormat)) {
         modified = false;
         return true;
     }

@@ -31,6 +31,7 @@ public:
 
     const   QImage& getImage() const{ return image; }
     bool    isModified() const { return modified; }
+    QImage  commitImage();
 
 public slots:
     void    clearImage();
@@ -53,6 +54,8 @@ private:
     QColor                  myPenColor;
 
     QImage                  image;
+    int                     imageWidth;
+    int                     imageHeight;
     QGraphicsPixmapItem*    pixmapGraphics; // The pointer to foreground image item
     QGraphicsPathItem*      pathItem = nullptr; // TODO:
 
