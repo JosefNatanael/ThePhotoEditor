@@ -21,7 +21,7 @@ public:
     virtual ~WorkspaceArea() override = default;
 
 public:
-    bool    openImage(const QString& fileName);
+    bool    openImage(const QString& fileName, int width, int height);
     bool    saveImage(const QString& fileName, const char* fileFormat);
     int     getImageWidth() const { return imageWidth; }
     int     getImageHeight() const { return imageHeight; }

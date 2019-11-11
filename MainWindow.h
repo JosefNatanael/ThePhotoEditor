@@ -15,6 +15,8 @@
 #include <QVector>
 
 #include "WorkspaceArea.h"
+#include "Palette/Histogram.h"
+#include "Palette/Brush.h"
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +31,7 @@ public:
     ~MainWindow() override;
 
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
+    void                        reconnectConnection();
 
 protected:
     void                        closeEvent(QCloseEvent* event) override;
@@ -64,6 +67,15 @@ private:
     QMenu*                      optionMenu;
     QList<QAction *>            saveAsActs;
     QAction*                    clearScreenAct;
+
+    QTreeWidgetItem*            histogram;
+    QTreeWidgetItem*            basicControls;
+    QTreeWidgetItem*            colorControls;
+    QTreeWidgetItem*            brushControls;
+    QTreeWidgetItem*            effects;
+
+    Histogram*                  histo;
+    Brush*                      brush;
 };
 
 #endif // MAINWINDOW_H

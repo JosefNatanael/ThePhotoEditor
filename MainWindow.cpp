@@ -62,17 +62,16 @@ MainWindow::MainWindow(QWidget *parent) :
      * TODO: fill each root
      */
     ui->palette->setColumnCount(1);
-    QTreeWidgetItem* histogram = new QTreeWidgetItem(ui->palette);
-    QTreeWidgetItem* basicControls = new QTreeWidgetItem(ui->palette);
-    QTreeWidgetItem* colorControls = new QTreeWidgetItem(ui->palette);
-    QTreeWidgetItem* brushControls = new QTreeWidgetItem(ui->palette);
-    QTreeWidgetItem* effects = new QTreeWidgetItem(ui->palette);
+    histogram = new QTreeWidgetItem(ui->palette);
+    basicControls = new QTreeWidgetItem(ui->palette);
+    colorControls = new QTreeWidgetItem(ui->palette);
+    brushControls = new QTreeWidgetItem(ui->palette);
+    effects = new QTreeWidgetItem(ui->palette);
 
     // TODO: check for canvas size difference.
     addRoot(histogram, "Histogram");
-    Histogram* histo = new Histogram(workspaceArea->getImage());
+    histo = new Histogram(workspaceArea->getImage());
     customAddChild(histogram, histo);
-    connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
 
     // TODO
     addRoot(basicControls, "Basic Controls");
@@ -81,17 +80,25 @@ MainWindow::MainWindow(QWidget *parent) :
     addRoot(colorControls, "Color");
 
     addRoot(brushControls, "Brush");
-    Brush* brush = new Brush();
+    brush = new Brush();
     customAddChild(brushControls, brush);
-    connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
-    connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
 
     // TODO
     addRoot(effects, "Effects");
 
+    reconnectConnection();
+
     // Sets the initial dimensions for the palette view and the workspace
     ui->splitter->setStretchFactor(0, 10);
     ui->splitter->setStretchFactor(1, 1);
+
+}
+
+void MainWindow::reconnectConnection()
+{
+    connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
+    connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
+    connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
 
 }
 
@@ -155,7 +162,28 @@ void MainWindow::open()
                                                         tr("Open File"), QDir::currentPath());
 
         if (!fileName.isEmpty()){
-            workspaceArea->openImage(fileName);
+            QImage loadedImage;
+            if (!loadedImage.load(fileName)) {
+                return;
+            }
+            QImageReader reader(fileName);
+            QSize sizeOfImage = reader.size();
+            int imageHeight = sizeOfImage.height();
+            int imageWidth = sizeOfImage.width();
+
+            if(workspaceArea != nullptr){
+                delete workspaceArea;
+                workspaceArea = nullptr;
+            }
+
+            workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
+            reconnectConnection();
+
+            graphicsView->setScene(workspaceArea);
+            ui->workspaceView->addWidget(graphicsView);
+            workspaceArea->setParent(graphicsView);
+
+            workspaceArea->openImage(fileName, imageWidth, imageHeight);
             resizeGraphicsViewBoundaries(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
         }
     }

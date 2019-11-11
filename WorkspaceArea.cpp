@@ -35,21 +35,16 @@ WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
 }
 
 // Used to load the image and place it in the widget
-bool WorkspaceArea::openImage(const QString &fileName)
+bool WorkspaceArea::openImage(const QString& fileName, int imageWidth, int imageHeight)
 {
     // Holds the image
     QImage loadedImage;
-
     if (!loadedImage.load(fileName)) {
         return false;
     }
-
     image = loadedImage;
-
-    QImageReader reader(fileName);
-    QSize sizeOfImage = reader.size();
-    imageHeight = sizeOfImage.height();
-    imageWidth = sizeOfImage.width();
+    this->imageWidth = imageWidth;
+    this->imageHeight = imageHeight;
 
     QImage &&scaledImage = image.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     qDebug() << imageHeight << " " << imageWidth;
@@ -63,7 +58,7 @@ bool WorkspaceArea::openImage(const QString &fileName)
     pixmapGraphics->setPos({imageWidth / 2.0 - scaledImage.width() / 2.0, imageHeight / 2.0 - scaledImage.height() / 2.0});
     pixmapGraphics->setZValue(-2000);
 
-    emit onImageLoaded(loadedImage);
+    emit onImageLoaded(image);
 
     modified = false;
     update();
@@ -73,6 +68,7 @@ bool WorkspaceArea::openImage(const QString &fileName)
 QImage WorkspaceArea::commitImage()
 {
     QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+   // QImage commitImage(SCENE_WIDTH, SCENE_HEIGHT, QImage::Format_ARGB32_Premultiplied);
     QPainter painter;
     painter.begin(&commitImage);
     render(&painter);       // Renders the Workspace area to the image
