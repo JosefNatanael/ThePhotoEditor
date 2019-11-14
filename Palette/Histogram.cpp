@@ -3,7 +3,7 @@
 #include "qcustomplot.cpp"
 #include "WorkspaceArea.h"
 
-Histogram::Histogram(const QImage& image, QWidget *parent) :
+Histogram::Histogram(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Histogram)
 {

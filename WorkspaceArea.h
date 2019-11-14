@@ -21,32 +21,32 @@ public:
     virtual ~WorkspaceArea() override = default;
 
 public:
-    bool    openImage(const QImage&, int width, int height);
-    bool    saveImage(const QString& fileName, const char* fileFormat);
-    int     getImageWidth() const { return imageWidth; }
-    int     getImageHeight() const { return imageHeight; }
+    bool                    openImage(const QImage&, int width, int height);
+    bool                    saveImage(const QString& fileName, const char* fileFormat);
+    int                     getImageWidth() const { return imageWidth; }
+    int                     getImageHeight() const { return imageHeight; }
 
-    QColor  penColor() const { return myPenColor; }
-    int     penWidth() const { return myPenWidth; }
-    void    setPenColor(const QColor& newColor);
-    void    setPenWidth(int newWidth);
+    QColor                  penColor() const { return myPenColor; }
+    int                     penWidth() const { return myPenWidth; }
+    void                    setPenColor(const QColor& newColor);
+    void                    setPenWidth(int newWidth);
 
-    const   QImage& getImage() const{ return image; }
-    bool    isModified() const { return modified; }
-    QImage  commitImage();
+    const QImage&           getImage() const{ return image; }
+    bool                    isModified() const { return modified; }
+    QImage                  commitImage();
 
 public slots:
-    void    clearImage();
-    void    print();
+    void                    clearImage();
+    void                    print();
 
 signals:
-    void    onImageLoaded(const QImage& image);
-    void    edit(QGraphicsPathItem*);
+    void                    onImageLoaded(const QImage& image);
+    void                    edit(QGraphicsPathItem*);
 
 protected:
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void            mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     bool                    modified; // Workspace was modified

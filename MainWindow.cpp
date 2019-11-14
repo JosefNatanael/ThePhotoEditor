@@ -4,13 +4,8 @@
 #include <QtWidgets>
 
 #include "WorkspaceArea.h"
-
 #include "Palette/Brush.h"
-
 #include "Palette/Histogram.h"
-
-static const int SCENE_WIDTH = 1080;    // The width of the workspace
-static const int SCENE_HEIGHT = 1920;   // The height of the workspace
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -70,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // TODO: check for canvas size difference.
     addRoot(histogram, "Histogram");
-    histo = new Histogram(workspaceArea->getImage());
+    histo = new Histogram();
     customAddChild(histogram, histo);
 
     // TODO

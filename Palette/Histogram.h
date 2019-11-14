@@ -13,7 +13,7 @@ class Histogram : public QWidget
     Q_OBJECT
 
 public:
-    explicit Histogram(const QImage& image, QWidget *parent = nullptr);
+    explicit Histogram(QWidget *parent = nullptr);
     ~Histogram();
 
     QCPBars* mpHistogramBarsGrey;
