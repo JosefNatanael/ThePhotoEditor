@@ -50,6 +50,7 @@ protected:
 
 private:
     bool                    modified; // Workspace was modified
+    bool                    imageLoaded = false;  // If true, loaded image can be drawn without new canvas
 
     QPen                    pen; // Pen for drawing paths
     int                     myPenWidth;

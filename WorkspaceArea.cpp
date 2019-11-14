@@ -9,12 +9,15 @@
 #endif
 #endif
 
-static const int SCENE_WIDTH = 1080;    // The default width of the workspace
-static const int SCENE_HEIGHT = 1920;   // The default height of the workspace
+static const int SCENE_WIDTH = 720;    // The default width of the workspace
+static const int SCENE_HEIGHT = 480;   // The default height of the workspace
 
 WorkspaceArea::WorkspaceArea(QObject *parent)
     : QGraphicsScene (0, 0, SCENE_WIDTH, SCENE_HEIGHT, parent)
 {
+    // Set default workspace resolution
+    imageWidth = SCENE_WIDTH;
+    imageHeight = SCENE_HEIGHT;
     // Set default values for the monitored variables
     modified = false;
     myPenWidth = 5;
@@ -38,6 +41,7 @@ WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
 bool WorkspaceArea::openImage(const QImage& loadedImage, int imageWidth, int imageHeight)
 {
     image = loadedImage;
+    imageLoaded = true;
     this->imageWidth = imageWidth;
     this->imageHeight = imageHeight;
 
@@ -62,12 +66,24 @@ bool WorkspaceArea::openImage(const QImage& loadedImage, int imageWidth, int ima
 
 QImage WorkspaceArea::commitImage()
 {
-    QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
-    QPainter painter;
-    painter.begin(&commitImage);
-    render(&painter);       // Renders the Workspace area to the image
-    painter.end();
-    return commitImage;
+    if (imageLoaded) {
+        QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+        QPainter painter;
+        painter.begin(&commitImage);
+        render(&painter);       // Renders the Workspace area to the image
+        painter.end();
+        return commitImage;
+    }
+    else {  // We generate a white canvas
+        clearSelection();                                                  // Selections would also render to the file
+        setSceneRect(this->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
+        QImage commitImage(this->sceneRect().size().toSize(), QImage::Format_ARGB32);  // Create the image with the exact size of the shrunk scene
+        commitImage.fill(Qt::white);                                              // Start all pixels white color
+
+        QPainter painter(&commitImage);
+        render(&painter);
+        return commitImage;
+    }
 }
 
 // Save the current image
@@ -86,6 +102,7 @@ bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 // Color the image area with white
 void WorkspaceArea::clearImage()
 {
+    imageLoaded = false;
     image.fill(qRgb(255, 255, 255));
     modified = true;
     update();

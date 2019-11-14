@@ -183,7 +183,7 @@ void MainWindow::open()
 }
 
 // Called when the user clicks Save As in the menu
-void MainWindow::save()
+void MainWindow::saveAs()
 {
     // A QAction represents the action of the user clicking
     QAction *action = qobject_cast<QAction *>(sender());
@@ -209,8 +209,8 @@ void MainWindow::createActions()
         // Set an action for each file format
         action->setData(format);
 
-        // When clicked call ScribbleWindow::save()
-        connect(action, SIGNAL(triggered()), this, SLOT(save()));
+        // When clicked call MainWindow::saveAs()
+        connect(action, SIGNAL(triggered()), this, SLOT(saveAs()));
 
         // Attach each file format option menu item to Save As
         saveAsActs.append(action);

@@ -45,7 +45,7 @@ private slots:
     void                        on_actionUndo_triggered();
 
     void                        open();
-    void                        save();
+    void                        saveAs();
     void                        on_edit(QGraphicsPathItem*);
 
 
