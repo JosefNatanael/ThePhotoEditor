@@ -32,6 +32,7 @@ public:
 
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
     void                        reconnectConnection();
+    void                        reconstructWorkspaceArea(int imageWidth, int imageHeight);
 
 protected:
     void                        closeEvent(QCloseEvent* event) override;
@@ -47,6 +48,7 @@ private slots:
     void                        open();
     void                        saveAs();
     void                        on_edit(QGraphicsPathItem*);
+    void                        clearImage();
 
 
 private:

@@ -25,18 +25,21 @@ public:
     bool                    saveImage(const QString& fileName, const char* fileFormat);
     int                     getImageWidth() const { return imageWidth; }
     int                     getImageHeight() const { return imageHeight; }
+    bool                    getImageLoaded() const{ return imageLoaded; }
 
     QColor                  penColor() const { return myPenColor; }
     int                     penWidth() const { return myPenWidth; }
+
     void                    setPenColor(const QColor& newColor);
     void                    setPenWidth(int newWidth);
+    void                    setModified(bool);
+    void                    setImageLoaded(bool);
 
     const QImage&           getImage() const{ return image; }
     bool                    isModified() const { return modified; }
     QImage                  commitImage();
 
 public slots:
-    void                    clearImage();
     void                    print();
 
 signals:
@@ -74,6 +77,16 @@ inline void WorkspaceArea::setPenColor(const QColor &newColor)
 inline void WorkspaceArea::setPenWidth(int newWidth)
 {
     myPenWidth = newWidth;
+}
+
+inline void WorkspaceArea::setModified(bool modif)
+{
+    modified = modif;
+}
+
+inline void WorkspaceArea::setImageLoaded(bool isLoaded)
+{
+    imageLoaded = isLoaded;
 }
 
 #endif // WORKSPACEAREA_H

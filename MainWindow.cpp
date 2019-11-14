@@ -96,6 +96,20 @@ void MainWindow::reconnectConnection()
     connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
 }
 
+void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
+    if(workspaceArea != nullptr) {
+        delete workspaceArea;
+        workspaceArea = nullptr;
+    }
+
+    workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
+    reconnectConnection();
+
+    graphicsView->setScene(workspaceArea);
+    ui->workspaceView->addWidget(graphicsView);
+    workspaceArea->setParent(graphicsView);
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -135,7 +149,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // if no changes have been made and the app closes
     if (maybeSave()) {
         event->accept();
-    } else {
+    }
+    else {
 
         // If there have been changes ignore the event
         event->ignore();
@@ -164,17 +179,7 @@ void MainWindow::open()
             int imageHeight = sizeOfImage.height();
             int imageWidth = sizeOfImage.width();
 
-            if(workspaceArea != nullptr) {
-                delete workspaceArea;
-                workspaceArea = nullptr;
-            }
-
-            workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
-            reconnectConnection();
-
-            graphicsView->setScene(workspaceArea);
-            ui->workspaceView->addWidget(graphicsView);
-            workspaceArea->setParent(graphicsView);
+            reconstructWorkspaceArea(imageWidth, imageHeight);
 
             workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
             resizeGraphicsViewBoundaries(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
@@ -193,6 +198,15 @@ void MainWindow::saveAs()
 
     // Pass it to be saved
     saveFile(fileFormat);
+}
+
+void MainWindow::clearImage(){
+//    QImage pict(workspaceArea->getImageWidth(), workspaceArea->getImageHeight(), QImage::Format_ARGB32);
+//    pict.fill(qRgb(255, 255, 255));
+    reconstructWorkspaceArea(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
+    workspaceArea->setModified(true);
+    update();
+    workspaceArea ->setImageLoaded(false);
 }
 
 // Define menu actions that call functions
@@ -219,8 +233,7 @@ void MainWindow::createActions()
     // Create clear screen action and tie to ScribbleWindow::clearImage()
     clearScreenAct = new QAction(tr("&Clear Screen"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
-    connect(clearScreenAct, SIGNAL(triggered()),
-            workspaceArea, SLOT(clearImage()));
+    connect(clearScreenAct, SIGNAL(triggered()), this, SLOT(clearImage()));
 }
 
 // Create the menubar
@@ -286,7 +299,7 @@ bool MainWindow::saveFile(const QByteArray &fileFormat)
 void MainWindow::on_actionNew_triggered()
 {
     if (maybeSave()) {
-        workspaceArea->clearImage();
+        clearImage();
     }
 }
 
@@ -314,11 +327,15 @@ void MainWindow::on_actionAbout_Us_triggered()
 
 void MainWindow::on_actionUndo_triggered()
 {
+    if (history.isEmpty()) {
+        return;
+    }
     QGraphicsPathItem* toBeDeleted = history.back();
     history.pop_back();
     workspaceArea->removeItem(toBeDeleted);
 }
 
-void MainWindow::on_edit(QGraphicsPathItem* item) {
+void MainWindow::on_edit(QGraphicsPathItem* item)
+{
     history.push_back(item);
 }

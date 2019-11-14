@@ -99,15 +99,6 @@ bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
     }
 }
 
-// Color the image area with white
-void WorkspaceArea::clearImage()
-{
-    imageLoaded = false;
-    image.fill(qRgb(255, 255, 255));
-    modified = true;
-    update();
-}
-
 void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mousePressEvent(event);
