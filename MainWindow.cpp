@@ -99,7 +99,6 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
     connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
-
 }
 
 MainWindow::~MainWindow()
@@ -162,7 +161,6 @@ void MainWindow::open()
                                                         tr("Open File"), QDir::currentPath());
 
         if (!fileName.isEmpty()){
-            QImage loadedImage;
             if (!loadedImage.load(fileName)) {
                 return;
             }
@@ -183,7 +181,7 @@ void MainWindow::open()
             ui->workspaceView->addWidget(graphicsView);
             workspaceArea->setParent(graphicsView);
 
-            workspaceArea->openImage(fileName, imageWidth, imageHeight);
+            workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
             resizeGraphicsViewBoundaries(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
         }
     }

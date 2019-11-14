@@ -35,13 +35,8 @@ WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
 }
 
 // Used to load the image and place it in the widget
-bool WorkspaceArea::openImage(const QString& fileName, int imageWidth, int imageHeight)
+bool WorkspaceArea::openImage(const QImage& loadedImage, int imageWidth, int imageHeight)
 {
-    // Holds the image
-    QImage loadedImage;
-    if (!loadedImage.load(fileName)) {
-        return false;
-    }
     image = loadedImage;
     this->imageWidth = imageWidth;
     this->imageHeight = imageHeight;

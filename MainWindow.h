@@ -76,6 +76,8 @@ private:
 
     Histogram*                  histo;
     Brush*                      brush;
+
+    QImage                      loadedImage;
 };
 
 #endif // MAINWINDOW_H
