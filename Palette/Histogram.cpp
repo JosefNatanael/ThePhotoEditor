@@ -39,10 +39,7 @@ Histogram::Histogram(QWidget *parent) :
 
 Histogram::~Histogram()
 {
-    delete mpHistogramBarsGrey;
-    delete mpHistogramBarsRed;
-    delete mpHistogramBarsGreen;
-    delete mpHistogramBarsBlue;
+    ui->plot->clearPlottables();
     delete ui;
 }
 
