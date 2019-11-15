@@ -26,6 +26,7 @@ CONFIG += c++14
 
 SOURCES += \
         AboutUs.cpp \
+        Palette/BasicControls.cpp \
         Palette/Brush.cpp \
         Palette/ColorControls.cpp \
         Palette/Histogram.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
 HEADERS += \
         AboutUs.h \
         MainWindow.h \
+        Palette/BasicControls.h \
         Palette/Brush.h \
         Palette/ColorControls.h \
         Palette/Histogram.h \
@@ -46,6 +48,7 @@ HEADERS += \
 FORMS += \
         AboutUs.ui \
         MainWindow.ui \
+        Palette/BasicControls.ui \
         Palette/Brush.ui \
         Palette/ColorControls.ui \
         Palette/Histogram.ui
@@ -57,3 +60,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     Resources.qrc
+
+DISTFILES +=

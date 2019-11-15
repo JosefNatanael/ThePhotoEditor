@@ -13,5 +13,12 @@
         <file>resources/network-wired-solid.svg</file>
         <file>resources/print-solid.svg</file>
         <file>resources/palette-solid.svg</file>
+        <file>resources/rotate-left.svg</file>
+        <file>resources/cutout-lasso.svg</file>
+        <file>resources/cutout-magic-wand.svg</file>
+        <file>resources/cutout-rectangle.svg</file>
+        <file>resources/flip-horizontal.svg</file>
+        <file>resources/flip-vertical.svg</file>
+        <file>resources/rotate-right.svg</file>
     </qresource>
 </RCC>

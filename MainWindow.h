@@ -18,6 +18,7 @@
 #include "Palette/Histogram.h"
 #include "Palette/Brush.h"
 #include "Palette/ColorControls.h"
+#include "Palette/BasicControls.h"
 
 namespace Ui {
 class MainWindow;
@@ -80,6 +81,7 @@ private:
     Histogram*                  histo;
     Brush*                      brush;
     ColorControls*              colors;
+    BasicControls*              basics;
 
     QImage                      loadedImage;
     QString                     fileName = "";

@@ -68,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // TODO
     addRoot(basicControls, "Basic Controls");
+    basics = new BasicControls();
+    customAddChild(basicControls, basics);
 
     // TODO
     addRoot(colorControls, "Color");
