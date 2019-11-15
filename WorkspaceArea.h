@@ -26,6 +26,8 @@ public:
     int                     getImageWidth() const { return imageWidth; }
     int                     getImageHeight() const { return imageHeight; }
     bool                    getImageLoaded() const{ return imageLoaded; }
+    const QImage&           getImage() const{ return image; }
+    bool                    isModified() const { return modified; }
 
     QColor                  penColor() const { return myPenColor; }
     int                     penWidth() const { return myPenWidth; }
@@ -35,8 +37,6 @@ public:
     void                    setModified(bool);
     void                    setImageLoaded(bool);
 
-    const QImage&           getImage() const{ return image; }
-    bool                    isModified() const { return modified; }
     QImage                  commitImage();
 
 public slots:

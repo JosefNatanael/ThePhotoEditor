@@ -30,10 +30,6 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
-    void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
-    void                        reconnectConnection();
-    void                        reconstructWorkspaceArea(int imageWidth, int imageHeight);
-
 protected:
     void                        closeEvent(QCloseEvent* event) override;
 
@@ -51,7 +47,9 @@ private slots:
     void                        clearImage();
 
 private:
-    Ui::MainWindow*             ui;
+    void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
+    void                        reconnectConnection();
+    void                        reconstructWorkspaceArea(int imageWidth, int imageHeight);
 
     void                        addRoot(QTreeWidgetItem* parent, QString name);
     void                        customAddChild(QTreeWidgetItem* parent, QWidget* widget);
@@ -60,6 +58,9 @@ private:
     void                        createMenus();
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
+
+private:
+    Ui::MainWindow*             ui;
 
     WorkspaceArea*              workspaceArea;
     QGraphicsView*              graphicsView;
@@ -80,6 +81,8 @@ private:
 
     QImage                      loadedImage;
     QString                     fileName = "";
+    QByteArray                  fileFormat;
+    bool                        fileSaved = false;
 };
 
 inline void MainWindow::on_actionPrint_triggered()

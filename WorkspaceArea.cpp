@@ -29,6 +29,8 @@ WorkspaceArea::WorkspaceArea(QObject *parent)
 WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
     : QGraphicsScene (0, 0, width, height, parent)
 {
+    imageWidth = width;
+    imageHeight = height;
     // Set default values for the monitored variables
     modified = false;
     myPenWidth = 5;
@@ -46,7 +48,6 @@ bool WorkspaceArea::openImage(const QImage& loadedImage, int imageWidth, int ima
     this->imageHeight = imageHeight;
 
     QImage &&scaledImage = image.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    qDebug() << imageHeight << " " << imageWidth;
 
     if (pixmapGraphics) {
         removeItem(pixmapGraphics);
@@ -70,15 +71,18 @@ QImage WorkspaceArea::commitImage()
         QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
         QPainter painter;
         painter.begin(&commitImage);
-        render(&painter);       // Renders the Workspace area to the image
+        render(&painter);                                                               // Renders the Workspace area to the image
         painter.end();
         return commitImage;
     }
     else {  // We generate a white canvas
-        clearSelection();                                                  // Selections would also render to the file
-        setSceneRect(this->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
-        QImage commitImage(this->sceneRect().size().toSize(), QImage::Format_ARGB32);  // Create the image with the exact size of the shrunk scene
-        commitImage.fill(Qt::white);                                              // Start all pixels white color
+        clearSelection();                                                               // Selections would also render to the file
+        setSceneRect(this->itemsBoundingRect());                                        // Re-shrink the scene to it's bounding contents
+        QImage commitImage(this->sceneRect().size().toSize(), QImage::Format_ARGB32);   // Create the image with the exact size of the shrunk scene
+        if (commitImage.isNull()) {
+            return commitImage;
+        }
+        commitImage.fill(Qt::white);                                                    // Start all pixels white color
 
         QPainter painter(&commitImage);
         render(&painter);
@@ -90,6 +94,9 @@ QImage WorkspaceArea::commitImage()
 bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 {
     QImage&& snap = commitImage();
+    if (snap.isNull()) {
+        return false;
+    }
     if (snap.save(fileName, fileFormat)) {
         modified = false;
         return true;

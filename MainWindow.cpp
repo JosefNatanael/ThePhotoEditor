@@ -34,7 +34,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->toolBar->addAction(ui->actionSave);
 
     // Setup our actions shortcuts
+    ui->actionNew->setShortcuts(QKeySequence::New);
     ui->actionOpen->setShortcuts(QKeySequence::Open);
+    ui->actionSave->setShortcuts(QKeySequence::Save);
+    ui->actionUndo->setShortcuts(QKeySequence::Undo);
+    ui->actionPrint->setShortcuts(QKeySequence::Print);
+    ui->actionHistory->setShortcut(tr("Ctrl+H"));
     ui->actionExit->setShortcuts(QKeySequence::Quit);
 
     // Spawns a Workspace Area
@@ -146,8 +151,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 // Called when the user clicks Save As in the menu
 void MainWindow::saveAs()
 {
-    QAction *action = qobject_cast<QAction *>(sender());    // Represents the action of the user clicking
-    QByteArray fileFormat = action->data().toByteArray();   // Stores the array of bytes of the users data
+    QAction *action = qobject_cast<QAction *>(sender());        // Represents the action of the user clicking
+    QByteArray defaultFormat("jpg", 3);                         // Sets default
+    fileFormat = action->data().toByteArray();                  // Stores the array of bytes of the users data
+    if (fileFormat.isEmpty()) {
+        fileFormat = defaultFormat;
+    }
 
     saveAsFile(fileFormat);
 }
@@ -233,7 +242,14 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
         return false;
     }
     else {
-        return workspaceArea->saveImage(fileName, fileFormat.constData());  // Call for the file to be saved
+        bool saved = workspaceArea->saveImage(fileName, fileFormat.constData());    // Call for the file to be saved
+        if (saved) {
+            fileSaved = true;
+        }
+        else {
+            fileSaved = false;
+        }
+        return saved;
     }
 }
 
@@ -255,6 +271,9 @@ void MainWindow::on_actionOpen_triggered()
             if (!loadedImage.load(fileName)) {
                 return;
             }
+            this->fileName = fileName;
+            fileSaved = false;
+
             QImageReader reader(fileName);
             QSize sizeOfImage = reader.size();
             int imageHeight = sizeOfImage.height();
@@ -270,7 +289,18 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-
+    if (fileSaved) {
+        bool saved = workspaceArea->saveImage(fileName, fileFormat.constData());    // Call for the file to be saved
+        if (saved) {
+            fileSaved = true;
+        }
+        else {
+            fileSaved = false;
+        }
+    }
+    else {
+        saveAs();
+    }
 }
 
 void MainWindow::on_actionUndo_triggered()
