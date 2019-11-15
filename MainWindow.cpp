@@ -6,6 +6,7 @@
 #include "WorkspaceArea.h"
 #include "Palette/Brush.h"
 #include "Palette/Histogram.h"
+#include "Palette/ColorControls.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,10 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    /*
-     * Add a new toolbar dynamically, with specified fixed height,
-     * since we need to add an expanding spacer, and widgets
-    */
+    // Adding a toolbar on runtime, layed out vertically, aligned to the right
     ui->toolBar->setIconSize(QSize(55, 55));
     ui->toolBar->setFixedHeight(60);
     ui->toolBar->setContentsMargins(30, 0, 30, 0);
@@ -73,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // TODO
     addRoot(colorControls, "Color");
+    colors = new ColorControls();
+    customAddChild(colorControls, colors);
 
     addRoot(brushControls, "Brush");
     brush = new Brush();
@@ -81,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // TODO
     addRoot(effects, "Effects");
 
+    // TODO
     reconnectConnection();
 }
 

@@ -77,5 +77,21 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>brushWidthSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>brushWidthSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>258</x>
+     <y>136</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

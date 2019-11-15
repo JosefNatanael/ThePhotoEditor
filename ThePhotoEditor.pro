@@ -27,6 +27,7 @@ CONFIG += c++14
 SOURCES += \
         AboutUs.cpp \
         Palette/Brush.cpp \
+        Palette/ColorControls.cpp \
         Palette/Histogram.cpp \
         WorkspaceArea.cpp \
         main.cpp \
@@ -37,6 +38,7 @@ HEADERS += \
         AboutUs.h \
         MainWindow.h \
         Palette/Brush.h \
+        Palette/ColorControls.h \
         Palette/Histogram.h \
         WorkspaceArea.h \
         qcustomplot.h
@@ -45,6 +47,7 @@ FORMS += \
         AboutUs.ui \
         MainWindow.ui \
         Palette/Brush.ui \
+        Palette/ColorControls.ui \
         Palette/Histogram.ui
 
 # Default rules for deployment.
