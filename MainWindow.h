@@ -44,12 +44,11 @@ private slots:
     void                        on_actionAbout_Us_triggered();
     void                        on_actionExit_triggered();
     void                        on_actionUndo_triggered();
+    void                        on_actionSave_triggered();
 
-    void                        open();
     void                        saveAs();
     void                        on_edit(QGraphicsPathItem*);
     void                        clearImage();
-
 
 private:
     Ui::MainWindow*             ui;
@@ -60,7 +59,7 @@ private:
     void                        createActions();
     void                        createMenus();
     bool                        maybeSave();
-    bool                        saveFile(const QByteArray &fileFormat);
+    bool                        saveAsFile(const QByteArray &fileFormat);
 
     WorkspaceArea*              workspaceArea;
     QGraphicsView*              graphicsView;
@@ -80,6 +79,23 @@ private:
     Brush*                      brush;
 
     QImage                      loadedImage;
+    QString                     fileName = "";
 };
+
+inline void MainWindow::on_actionPrint_triggered()
+{
+    workspaceArea->print();
+}
+
+inline void MainWindow::on_actionExit_triggered()
+{
+    MainWindow::close();
+}
+
+inline void MainWindow::on_edit(QGraphicsPathItem* item)
+{
+    history.push_back(item);
+}
+
 
 #endif // MAINWINDOW_H

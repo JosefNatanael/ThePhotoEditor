@@ -44,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
     graphicsView->setScene(workspaceArea);
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
-//    resizeGraphicsViewBoundaries(SCENE_WIDTH, SCENE_HEIGHT);
 
     connect(workspaceArea, &WorkspaceArea::edit, this, &MainWindow::on_edit);
 
@@ -52,18 +51,14 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createMenus();
 
-    /*
-     * Setup the treeWidget, which will be in our palette
-     * TODO: fill each root
-     */
+    // Setup the treeWidget, which will be in our palette
     ui->palette->setColumnCount(1);
-    histogram = new QTreeWidgetItem(ui->palette);
-    basicControls = new QTreeWidgetItem(ui->palette);
-    colorControls = new QTreeWidgetItem(ui->palette);
-    brushControls = new QTreeWidgetItem(ui->palette);
-    effects = new QTreeWidgetItem(ui->palette);
+    histogram       = new QTreeWidgetItem(ui->palette);
+    basicControls   = new QTreeWidgetItem(ui->palette);
+    colorControls   = new QTreeWidgetItem(ui->palette);
+    brushControls   = new QTreeWidgetItem(ui->palette);
+    effects         = new QTreeWidgetItem(ui->palette);
 
-    // TODO: check for canvas size difference.
     addRoot(histogram, "Histogram");
     histo = new Histogram();
     customAddChild(histogram, histo);
@@ -82,11 +77,11 @@ MainWindow::MainWindow(QWidget *parent) :
     addRoot(effects, "Effects");
 
     reconnectConnection();
+}
 
-    // Sets the initial dimensions for the palette view and the workspace
-    ui->splitter->setStretchFactor(0, 10);
-    ui->splitter->setStretchFactor(1, 1);
-
+MainWindow::~MainWindow()
+{
+    delete ui;
 }
 
 void MainWindow::reconnectConnection()
@@ -108,11 +103,6 @@ void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
     graphicsView->setScene(workspaceArea);
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
 }
 
 void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
@@ -145,89 +135,42 @@ void MainWindow::customAddChild(QTreeWidgetItem* parent, QWidget* widget)
 // When user is closing the app, spawn a "do you want to save" widget
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    // If they try to close maybeSave() returns true
-    // if no changes have been made and the app closes
     if (maybeSave()) {
-        event->accept();
+        event->accept();    // If no changes have been made and the app closes
     }
     else {
-
-        // If there have been changes ignore the event
-        event->ignore();
-    }
-}
-
-// Check if the current image has been changed and then
-// open a dialog to open a file
-void MainWindow::open()
-{
-    // Check if changes have been made since last save
-    // maybeSave() returns true if no changes have been made
-    if (maybeSave()) {
-
-        // Get the file to open from a dialog
-        // QDir opens the current dirctory
-        QString fileName = QFileDialog::getOpenFileName(this,
-                                                        tr("Open File"), QDir::currentPath());
-
-        if (!fileName.isEmpty()){
-            if (!loadedImage.load(fileName)) {
-                return;
-            }
-            QImageReader reader(fileName);
-            QSize sizeOfImage = reader.size();
-            int imageHeight = sizeOfImage.height();
-            int imageWidth = sizeOfImage.width();
-
-            reconstructWorkspaceArea(imageWidth, imageHeight);
-
-            workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
-            resizeGraphicsViewBoundaries(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
-        }
+        event->ignore();    // If there have been changes ignore the event
     }
 }
 
 // Called when the user clicks Save As in the menu
 void MainWindow::saveAs()
 {
-    // A QAction represents the action of the user clicking
-    QAction *action = qobject_cast<QAction *>(sender());
+    QAction *action = qobject_cast<QAction *>(sender());    // Represents the action of the user clicking
+    QByteArray fileFormat = action->data().toByteArray();   // Stores the array of bytes of the users data
 
-    // Stores the array of bytes of the users data
-    QByteArray fileFormat = action->data().toByteArray();
-
-    // Pass it to be saved
-    saveFile(fileFormat);
+    saveAsFile(fileFormat);
 }
 
 void MainWindow::clearImage(){
-//    QImage pict(workspaceArea->getImageWidth(), workspaceArea->getImageHeight(), QImage::Format_ARGB32);
-//    pict.fill(qRgb(255, 255, 255));
     reconstructWorkspaceArea(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
     workspaceArea->setModified(true);
     update();
     workspaceArea ->setImageLoaded(false);
 }
 
-// Define menu actions that call functions
+// Define menu actions for SaveAs and clearScreen
 void MainWindow::createActions()
 {
     // Get a list of the supported file formats
     // QImageWriter is used to write images to files
     foreach (QByteArray format, QImageWriter::supportedImageFormats()) {
         QString text = tr("%1...").arg(QString(format).toUpper());
+        QAction *action = new QAction(text, this);      // Create an action for each file format
 
-        // Create an action for each file format
-        QAction *action = new QAction(text, this);
-
-        // Set an action for each file format
-        action->setData(format);
-
-        // When clicked call MainWindow::saveAs()
+        action->setData(format);    // Set an action for each file format
+        saveAsActs.append(action);  // Attach each file format option menu item to Save As
         connect(action, SIGNAL(triggered()), this, SLOT(saveAs()));
-
-        // Attach each file format option menu item to Save As
-        saveAsActs.append(action);
     }
 
     // Create clear screen action and tie to ScribbleWindow::clearImage()
@@ -236,7 +179,7 @@ void MainWindow::createActions()
     connect(clearScreenAct, SIGNAL(triggered()), this, SLOT(clearImage()));
 }
 
-// Create the menubar
+// Create additional menus for certain actions, i.e. clearScreen action
 void MainWindow::createMenus()
 {
     // Create Save As option and the list of file types
@@ -263,11 +206,10 @@ bool MainWindow::maybeSave()
         ret = QMessageBox::warning(this, tr("Scribble"),
                                    tr("The image has been modified.\n"
                                       "Do you want to save your changes?"),
-                                   QMessageBox::Save | QMessageBox::Discard
-                                   | QMessageBox::Cancel);
+                                   QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 
         if (ret == QMessageBox::Save) {
-            return saveFile("png");
+            return saveAsFile("png");
         }
         else if (ret == QMessageBox::Cancel) {
             return false;
@@ -276,12 +218,12 @@ bool MainWindow::maybeSave()
     return true;
 }
 
-bool MainWindow::saveFile(const QByteArray &fileFormat)
+bool MainWindow::saveAsFile(const QByteArray &fileFormat)
 {
     QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
 
     // Add the proper file formats and extensions
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
+    fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
                                                     initialPath,
                                                     tr("%1 Files (*.%2);;All Files (*)")
                                                     .arg(QString::fromLatin1(fileFormat.toUpper()))
@@ -291,8 +233,7 @@ bool MainWindow::saveFile(const QByteArray &fileFormat)
         return false;
     }
     else {
-        // Call for the file to be saved
-        return workspaceArea->saveImage(fileName, fileFormat.constData());
+        return workspaceArea->saveImage(fileName, fileFormat.constData());  // Call for the file to be saved
     }
 }
 
@@ -301,28 +242,35 @@ void MainWindow::on_actionNew_triggered()
     if (maybeSave()) {
         clearImage();
     }
+    workspaceArea->setModified(false);
 }
 
-void MainWindow::on_actionPrint_triggered()
-{
-    workspaceArea->print();
-}
-
+// Check if the current image has been changed and then open a dialog to open a file
 void MainWindow::on_actionOpen_triggered()
 {
-    open();
+    if (maybeSave()) {      // Check if changes have been made since last save
+        // Get the file to open from a dialog
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
+        if (!fileName.isEmpty()){
+            if (!loadedImage.load(fileName)) {
+                return;
+            }
+            QImageReader reader(fileName);
+            QSize sizeOfImage = reader.size();
+            int imageHeight = sizeOfImage.height();
+            int imageWidth = sizeOfImage.width();
+
+            reconstructWorkspaceArea(imageWidth, imageHeight);
+
+            workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
+            resizeGraphicsViewBoundaries(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
+        }
+    }
 }
 
-void MainWindow::on_actionExit_triggered()
+void MainWindow::on_actionSave_triggered()
 {
-    MainWindow::close();
-}
 
-void MainWindow::on_actionAbout_Us_triggered()
-{
-    AboutUs aboutUs;
-    aboutUs.setModal(true);
-    aboutUs.exec();
 }
 
 void MainWindow::on_actionUndo_triggered()
@@ -335,7 +283,9 @@ void MainWindow::on_actionUndo_triggered()
     workspaceArea->removeItem(toBeDeleted);
 }
 
-void MainWindow::on_edit(QGraphicsPathItem* item)
+void MainWindow::on_actionAbout_Us_triggered()
 {
-    history.push_back(item);
+    AboutUs aboutUs;
+    aboutUs.setModal(true);
+    aboutUs.exec();
 }
