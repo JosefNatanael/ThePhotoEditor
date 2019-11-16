@@ -295,6 +295,7 @@ void MainWindow::on_actionOpen_triggered()
     if (maybeSave()) {      // Check if changes have been made since last save
         // Get the file to open from a dialog
         QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
+        QImage loadedImage;
         if (!fileName.isEmpty()){
             if (!loadedImage.load(fileName)) {
                 return;
