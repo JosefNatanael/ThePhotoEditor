@@ -36,10 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(ui->actionSave);
 
-
-    /*
-     * Setup our actions shortcuts
-     */
+    // Setup our actions shortcuts
     ui->actionNew->setShortcuts(QKeySequence::New);
     ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionSave->setShortcuts(QKeySequence::Save);
@@ -57,11 +54,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
 
-    // Create actions and menus
+    // Create additional actions and menus
     createActions();
     createMenus();
 
-    // Setup the treeWidget, which will be in our palette
+    // Setup a treeWidget, which are the menus in our palette
     ui->palette->setColumnCount(1);
     histogram       = new QTreeWidgetItem(ui->palette);
     basicControls   = new QTreeWidgetItem(ui->palette);
@@ -69,28 +66,33 @@ MainWindow::MainWindow(QWidget *parent) :
     brushControls   = new QTreeWidgetItem(ui->palette);
     effects         = new QTreeWidgetItem(ui->palette);
 
+    /*
+     * Fills in our treeWidget palette with all the widgets it has
+     */
+    // 1. Adds a Histogram widget to the treeWidget palette
     addRoot(histogram, "Histogram");
     histo = new Histogram();
     customAddChild(histogram, histo);
 
-    // TODO
+    // 2. Adds a BasicControls widget to the treeWidget palette
     addRoot(basicControls, "Basic Controls");
     basics = new BasicControls();
     customAddChild(basicControls, basics);
 
-    // TODO
+    // 3. Adds a ColorControls widget to the treeWidget palette
     addRoot(colorControls, "Color");
     colors = new ColorControls();
     customAddChild(colorControls, colors);
 
+    // 4. Adds a BrushControls widget to the treeWidget palette
     addRoot(brushControls, "Brush");
     brush = new Brush();
     customAddChild(brushControls, brush);
 
-    // TODO
+    // TODO 5. Adds an Effects widget to the treeWidget palette
     addRoot(effects, "Effects");
 
-    // TODO
+    // Setup all our signal and slots
     reconnectConnection();
 }
 
@@ -107,6 +109,10 @@ void MainWindow::reconnectConnection()
     connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
 }
 
+/*
+ * Delete the current workspaceArea and recreate it with the new image dimensions
+ * Then resetup our graphicsView
+ */
 void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
     if(workspaceArea != nullptr) {
         delete workspaceArea;
@@ -121,6 +127,10 @@ void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
     workspaceArea->setParent(graphicsView);
 }
 
+/*
+ * Resize our graphicsView dimensions to a specified width and height.
+ * This is done usually after we reconstruct our workspaceArea
+ */
 void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
 {
     graphicsView->setFixedSize(newWidth, newHeight);
@@ -131,6 +141,7 @@ void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
     graphicsView->setSceneRect(0, 0, newWidth - 2, newHeight - 2);    // Allow for extra 2px boundaries
 }
 
+// Adds a root into a parent widget, in the palette treeWidget
 void MainWindow::addRoot(QTreeWidgetItem* parent, QString name)
 {
     parent->setText(0, name);
@@ -159,7 +170,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-// Called when the user clicks Save As in the menu
+/*
+ * Called when the user clicks Save As in the menu,
+ * then this function will call the saveAsFile function to actually save the image with the right format
+ */
 void MainWindow::saveAs()
 {
     QAction *action = qobject_cast<QAction *>(sender());        // Represents the action of the user clicking
@@ -172,6 +186,7 @@ void MainWindow::saveAs()
     saveAsFile(fileFormat);
 }
 
+// clears the workspaceArea
 void MainWindow::clearImage(){
     reconstructWorkspaceArea(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
     workspaceArea->setModified(true);
@@ -186,10 +201,10 @@ void MainWindow::createActions()
     // QImageWriter is used to write images to files
     foreach (QByteArray format, QImageWriter::supportedImageFormats()) {
         QString text = tr("%1...").arg(QString(format).toUpper());
-        QAction *action = new QAction(text, this);      // Create an action for each file format
+        QAction *action = new QAction(text, this);                      // Create an action for each file format
 
-        action->setData(format);    // Set an action for each file format
-        saveAsActs.append(action);  // Attach each file format option menu item to Save As
+        action->setData(format);                                        // Set an action for each file format
+        saveAsActs.append(action);                                      // Attach each file format option menu item to Save As
         connect(action, SIGNAL(triggered()), this, SLOT(saveAs()));
     }
 
@@ -238,6 +253,7 @@ bool MainWindow::maybeSave()
     return true;
 }
 
+// Saves the current image with the specified fileFormat, return true if image saved, otherwise false.
 bool MainWindow::saveAsFile(const QByteArray &fileFormat)
 {
     QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
@@ -264,6 +280,7 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
     }
 }
 
+// Clears the workspaceArea
 void MainWindow::on_actionNew_triggered()
 {
     if (maybeSave()) {
@@ -298,6 +315,7 @@ void MainWindow::on_actionOpen_triggered()
     }
 }
 
+// Tries to save the file instead of saveAs the file, if it has once been saved.
 void MainWindow::on_actionSave_triggered()
 {
     if (fileSaved) {
@@ -314,6 +332,7 @@ void MainWindow::on_actionSave_triggered()
     }
 }
 
+// Undo brush stroke
 void MainWindow::on_actionUndo_triggered()
 {
     if (history.isEmpty()) {
@@ -324,6 +343,14 @@ void MainWindow::on_actionUndo_triggered()
     workspaceArea->removeItem(toBeDeleted);
 }
 
+// Print the workspaceArea
+void MainWindow::on_actionPrint_triggered()
+{
+    on_actionSave_triggered();
+    workspaceArea->print();
+}
+
+// Shows About us widget when slot triggered
 void MainWindow::on_actionAbout_Us_triggered()
 {
     AboutUs aboutUs;

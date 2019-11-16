@@ -94,6 +94,7 @@ QImage WorkspaceArea::commitImage()
 bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 {
     QImage&& snap = commitImage();
+    image = snap;
     if (snap.isNull()) {
         return false;
     }
@@ -151,7 +152,6 @@ void WorkspaceArea::print()
     // Check for print dialog availability
 #if QT_CONFIG(printdialog)
 
-    // Can be used to print
     QPrinter printer(QPrinter::HighResolution);
 
     // Open printer dialog and print if asked

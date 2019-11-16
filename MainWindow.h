@@ -83,17 +83,11 @@ private:
     ColorControls*              colors;                 // Our ColorControls widget
     BasicControls*              basics;                 // Our BasicControls widget
 
-    QImage                      loadedImage;            // TODO: IT CAN BE A POINTER? Saves the loaded image, after being loaded from workspaceArea
+    QImage                      loadedImage;            // TODO: CAN IT BE A POINTER? Saves the loaded image, after being loaded from workspaceArea
     QString                     fileName = "";          // filename of the loaded image
     QByteArray                  fileFormat;             // the file format of our loaded image
     bool                        fileSaved = false;      // the state that saves whether our current project been saved
 };
-
-// Print the workspaceArea
-inline void MainWindow::on_actionPrint_triggered()
-{
-    workspaceArea->print();
-}
 
 // Close the application
 inline void MainWindow::on_actionExit_triggered()
