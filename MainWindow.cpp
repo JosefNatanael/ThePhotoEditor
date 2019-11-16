@@ -14,16 +14,21 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Adding a toolbar on runtime, layed out vertically, aligned to the right
+    /*
+     * Adds a toolbar on runtime, layed out vertically, aligned to the right
+     */
+    // 1. Set the toolbar dimensions
     ui->toolBar->setIconSize(QSize(55, 55));
     ui->toolBar->setFixedHeight(60);
     ui->toolBar->setContentsMargins(30, 0, 30, 0);
     ui->toolBar->setStyleSheet("QToolBar{spacing:30px;}");
 
+    // 2. Setup the toolbar alignment
     QWidget* spacerWidget = new QWidget(this);
     spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     spacerWidget->setVisible(true);
 
+    // 3. Adds actions to the toolbar
     ui->toolBar->addWidget(spacerWidget);
     ui->toolBar->addAction(ui->actionNew);
     ui->toolBar->addSeparator();
@@ -31,7 +36,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(ui->actionSave);
 
-    // Setup our actions shortcuts
+
+    /*
+     * Setup our actions shortcuts
+     */
     ui->actionNew->setShortcuts(QKeySequence::New);
     ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionSave->setShortcuts(QKeySequence::Save);
@@ -40,15 +48,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionHistory->setShortcut(tr("Ctrl+H"));
     ui->actionExit->setShortcuts(QKeySequence::Quit);
 
-    // Spawns a Workspace Area
+    // Spawns a WorkspaceArea
     workspaceArea = new WorkspaceArea;
 
+    // Adds the workspaceArea into our graphicsView
     graphicsView = new QGraphicsView(this);
     graphicsView->setScene(workspaceArea);
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
-
-    connect(workspaceArea, &WorkspaceArea::edit, this, &MainWindow::on_edit);
 
     // Create actions and menus
     createActions();
@@ -94,6 +101,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::reconnectConnection()
 {
+    connect(workspaceArea, &WorkspaceArea::edit, this, &MainWindow::on_edit);
     connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
     connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);

@@ -66,39 +66,42 @@ private:
 
     WorkspaceArea*              workspaceArea;
     QGraphicsView*              graphicsView;
-    QVector<QGraphicsPathItem*> history;
+    QVector<QGraphicsPathItem*> history;                // Saves the strokes created when drawing on the workspaceArea
 
-    QMenu*                      optionMenu;
-    QList<QAction *>            saveAsActs;
-    QAction*                    clearScreenAct;
+    QMenu*                      optionMenu;             // optionMenu is generated during runtime
+    QList<QAction *>            saveAsActs;             // all possible image format that can be used to save the image
+    QAction*                    clearScreenAct;         // an action to clear the workspaceArea
 
-    QTreeWidgetItem*            histogram;
-    QTreeWidgetItem*            basicControls;
-    QTreeWidgetItem*            colorControls;
-    QTreeWidgetItem*            brushControls;
-    QTreeWidgetItem*            effects;
+    QTreeWidgetItem*            histogram;              // The parent wrapper of our histogram widget
+    QTreeWidgetItem*            basicControls;          // The parent wrapper of our basicControls widget
+    QTreeWidgetItem*            colorControls;          // The parent wrapper of our colorControls widget
+    QTreeWidgetItem*            brushControls;          // The parent wrapper of our brushControls widget
+    QTreeWidgetItem*            effects;                // The parent wrapper of our effects widget
 
-    Histogram*                  histo;
-    Brush*                      brush;
-    ColorControls*              colors;
-    BasicControls*              basics;
+    Histogram*                  histo;                  // Our Histogram widget
+    Brush*                      brush;                  // Our Brush widget
+    ColorControls*              colors;                 // Our ColorControls widget
+    BasicControls*              basics;                 // Our BasicControls widget
 
-    QImage                      loadedImage;
-    QString                     fileName = "";
-    QByteArray                  fileFormat;
-    bool                        fileSaved = false;
+    QImage                      loadedImage;            // TODO: IT CAN BE A POINTER? Saves the loaded image, after being loaded from workspaceArea
+    QString                     fileName = "";          // filename of the loaded image
+    QByteArray                  fileFormat;             // the file format of our loaded image
+    bool                        fileSaved = false;      // the state that saves whether our current project been saved
 };
 
+// Print the workspaceArea
 inline void MainWindow::on_actionPrint_triggered()
 {
     workspaceArea->print();
 }
 
+// Close the application
 inline void MainWindow::on_actionExit_triggered()
 {
     MainWindow::close();
 }
 
+// Saves the stroke history to the history
 inline void MainWindow::on_edit(QGraphicsPathItem* item)
 {
     history.push_back(item);

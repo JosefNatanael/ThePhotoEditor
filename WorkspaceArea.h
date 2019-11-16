@@ -43,8 +43,8 @@ public slots:
     void                    print();
 
 signals:
-    void                    onImageLoaded(const QImage& image);
-    void                    edit(QGraphicsPathItem*);
+    void                    onImageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
+    void                    edit(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
 
 protected:
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -52,18 +52,18 @@ protected:
     virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
-    bool                    modified; // Workspace was modified
-    bool                    imageLoaded = false;  // If true, loaded image can be drawn without new canvas
+    bool                    modified;                   // Workspace was modified
+    bool                    imageLoaded = false;        // If true, loaded image can be drawn without new canvas
 
-    QPen                    pen; // Pen for drawing paths
-    int                     myPenWidth;
-    QColor                  myPenColor;
+    QPen                    pen;                        // Pen for drawing paths
+    int                     myPenWidth;                 // stores the width of the current pen
+    QColor                  myPenColor;                 // stores what color is our pen
 
-    QImage                  image;
-    int                     imageWidth;
-    int                     imageHeight;
-    QGraphicsPixmapItem*    pixmapGraphics = nullptr; // The pointer to foreground image item
-    QGraphicsPathItem*      pathItem = nullptr;
+    QImage                  image;                      // Saves the current image
+    int                     imageWidth;                 // Saves the width of our current image
+    int                     imageHeight;                // Saves the height of our current image
+    QGraphicsPixmapItem*    pixmapGraphics = nullptr;   // The pointer to foreground image item
+    QGraphicsPathItem*      pathItem = nullptr;         // Pointer to the strokes created when drawing
 
 };
 
@@ -79,11 +79,13 @@ inline void WorkspaceArea::setPenWidth(int newWidth)
     myPenWidth = newWidth;
 }
 
+// Used to change the modified state of the WorkspaceArea
 inline void WorkspaceArea::setModified(bool modif)
 {
     modified = modif;
 }
 
+// Used to change the loaded state of the WorkspaceArea
 inline void WorkspaceArea::setImageLoaded(bool isLoaded)
 {
     imageLoaded = isLoaded;
