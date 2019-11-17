@@ -36,6 +36,7 @@ public:
     void                    setPenWidth(int newWidth);
     void                    setModified(bool);
     void                    setImageLoaded(bool);
+    void                    resize(int, int);
 
     QImage                  commitImage();
 

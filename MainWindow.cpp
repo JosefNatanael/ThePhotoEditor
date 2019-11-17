@@ -92,6 +92,19 @@ MainWindow::MainWindow(QWidget *parent) :
     // TODO 5. Adds an Effects widget to the treeWidget palette
     addRoot(effects, "Effects");
 
+    //Setup zoom options
+    QComboBox* comboBox = new QComboBox(this);
+    comboBox->addItem("50%");
+    comboBox->addItem("100%");
+    comboBox->addItem("120%");
+    comboBox->setCurrentText("100%");
+    ui->statusBar->addWidget(comboBox);
+
+
+    connect(comboBox, SIGNAL(currentIndexChanged(const QString&)),
+            this, SLOT(onZoom(const QString&)));
+
+
     // Setup all our signal and slots
     reconnectConnection();
 }
@@ -359,3 +372,64 @@ void MainWindow::on_actionAbout_Us_triggered()
     aboutUs.setModal(true);
     aboutUs.exec();
 }
+
+void MainWindow::wheelEvent(QWheelEvent* event) {
+    graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    double scaleFactor = 1.1;
+    graphicsView->centerOn(0, 0);
+    if (event->orientation() == Qt::Vertical) {
+        if (event->delta() > 7 && workspaceArea->getImageWidth() < 1920 && workspaceArea->getImageHeight() < 1080) {
+
+            int a = workspaceArea->getImageWidth()*scaleFactor;
+            int b = workspaceArea->getImageHeight()*scaleFactor;
+            graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
+            resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
+            workspaceArea->resize(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
+            currentZoom *= scaleFactor;
+        } else if (event->delta() < -7 && workspaceArea->getImageWidth() > 200 && workspaceArea->getImageHeight() > 200) {
+            int a = workspaceArea->getImageWidth()*(1.0/scaleFactor);
+            int b = workspaceArea->getImageHeight()*(1.0/scaleFactor);
+            graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
+            resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*(1.0/scaleFactor), workspaceArea->getImageHeight()*(1.0/scaleFactor));
+            workspaceArea->resize(workspaceArea->getImageWidth()*(1.0/scaleFactor), workspaceArea->getImageHeight()*(1.0/scaleFactor));
+            currentZoom /= scaleFactor;
+        }
+    }
+    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+}
+
+
+void MainWindow::onZoom(const QString& level) {
+
+    double originalFactor = 1.0 / currentZoom;
+    int a = workspaceArea->getImageWidth()*originalFactor;
+    int b = workspaceArea->getImageHeight()*originalFactor;
+    graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
+    resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*originalFactor, workspaceArea->getImageHeight()*originalFactor);
+    workspaceArea->resize(workspaceArea->getImageWidth()*originalFactor, workspaceArea->getImageHeight()*originalFactor);
+    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+
+
+    double scaleFactor = 1.0;
+
+    if (level == "50%") {
+        scaleFactor = 0.5;
+        currentZoom = 0.5;
+    } else if (level == "100%") {
+        scaleFactor = 1.0;
+        currentZoom = 1.0;
+    } else if (level == "120%") {
+        scaleFactor = 1.2;
+        currentZoom = 1.2;
+    }
+
+    a = workspaceArea->getImageWidth()*scaleFactor;
+    b = workspaceArea->getImageHeight()*scaleFactor;
+    graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
+    resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
+    workspaceArea->resize(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
+
+
+}
+
+

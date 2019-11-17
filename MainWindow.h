@@ -34,6 +34,7 @@ public:
 
 protected:
     void                        closeEvent(QCloseEvent* event) override;
+    virtual void                wheelEvent(QWheelEvent* event) override;
 
 private slots:
     void                        on_actionNew_triggered();
@@ -47,6 +48,7 @@ private slots:
     void                        saveAs();
     void                        on_edit(QGraphicsPathItem*);
     void                        clearImage();
+    void                        onZoom(const QString&);
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
@@ -86,6 +88,7 @@ private:
     QString                     fileName = "";          // filename of the loaded image
     QByteArray                  fileFormat;             // the file format of our loaded image
     bool                        fileSaved = false;      // the state that saves whether our current project been saved
+    double                      currentZoom = 1.0;
 };
 
 // Close the application
