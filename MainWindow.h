@@ -49,6 +49,7 @@ private slots:
     void                        on_edit(QGraphicsPathItem*);
     void                        clearImage();
     void                        onZoom(const QString&);
+    void                        crossCursorChanged(bool);
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);

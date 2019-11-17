@@ -15,8 +15,18 @@ public:
     explicit BasicControls(QWidget *parent = nullptr);
     ~BasicControls();
 
+private slots:
+    void on_beginCutoutPushButton_clicked();
+
+    void on_cancelCutoutPushButton_clicked();
+
 private:
     Ui::BasicControls *ui;
+    bool beginButtonClicked = false;
+
+signals:
+    void crossCursorSignal(bool);
+
 };
 
 #endif // BASICCONTROLS_H

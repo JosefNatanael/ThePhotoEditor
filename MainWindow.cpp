@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 
 #include <QtWidgets>
+#include <QRubberBand>
 
 #include "WorkspaceArea.h"
 #include "Palette/Brush.h"
@@ -120,6 +121,7 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
     connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
+    connect(basics, &BasicControls::crossCursorSignal, this, &MainWindow::crossCursorChanged);
 }
 
 /*
@@ -430,6 +432,16 @@ void MainWindow::onZoom(const QString& level) {
     workspaceArea->resize(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
 
 
+}
+
+void MainWindow::crossCursorChanged(bool cross)
+{
+    if(cross){
+        graphicsView->setCursor(Qt::CrossCursor);
+    }
+    else {
+        graphicsView->setCursor(Qt::ArrowCursor);
+    }
 }
 
 

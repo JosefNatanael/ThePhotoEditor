@@ -49,3 +49,22 @@ BasicControls::~BasicControls()
 {
     delete ui;
 }
+
+void BasicControls::on_beginCutoutPushButton_clicked()
+{
+    beginButtonClicked = true;
+    //all push button in basic controls is disabled, except cancel
+    ui->applyPushButton->setEnabled(false);
+    ui->cropPushButton->setEnabled(false);
+    ui->beginCutoutPushButton->setEnabled(false);
+    emit crossCursorSignal(true);
+}
+
+void BasicControls::on_cancelCutoutPushButton_clicked()
+{
+    beginButtonClicked = false;
+    ui->applyPushButton->setEnabled(true);
+    ui->cropPushButton->setEnabled(true);
+    ui->beginCutoutPushButton->setEnabled(true);
+    emit crossCursorSignal(false);
+}
