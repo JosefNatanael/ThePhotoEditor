@@ -26,10 +26,21 @@ CONFIG += c++14
 
 SOURCES += \
         AboutUs.cpp \
+        FilterTransform/AbstractImageFilterTransform.cpp \
+        FilterTransform/AbstractKernelBasedImageFilterTransform.cpp \
+        FilterTransform/AbstractNonKernelBasedImageFilterTransform.cpp \
+        FilterTransform/KernelBased/GaussianBlurFilter.cpp \
+        FilterTransform/NonKernelBased/ClockwiseRotationTransform.cpp \
+        FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.cpp \
+        FilterTransform/NonKernelBased/FlipHorizontalTransform.cpp \
+        FilterTransform/NonKernelBased/FlipVerticalTransform.cpp \
+        FilterTransform/NonKernelBased/GrayscaleFilter.cpp \
+        FilterTransform/NonKernelBased/InvertFilter.cpp \
         Palette/BasicControls.cpp \
         Palette/Brush.cpp \
         Palette/ColorControls.cpp \
         Palette/Histogram.cpp \
+        PixelHelper.cpp \
         WorkspaceArea.cpp \
         main.cpp \
         MainWindow.cpp \
@@ -37,11 +48,22 @@ SOURCES += \
 
 HEADERS += \
         AboutUs.h \
+        FilterTransform/AbstractImageFilterTransform.h \
+        FilterTransform/AbstractKernelBasedImageFilterTransform.h \
+        FilterTransform/AbstractNonKernelBasedImageFilterTransform.h \
+        FilterTransform/KernelBased/GaussianBlurFilter.h \
+        FilterTransform/NonKernelBased/ClockwiseRotationTransform.h \
+        FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.h \
+        FilterTransform/NonKernelBased/FlipHorizontalTransform.h \
+        FilterTransform/NonKernelBased/FlipVerticalTransform.h \
+        FilterTransform/NonKernelBased/GrayscaleFilter.h \
+        FilterTransform/NonKernelBased/InvertFilter.h \
         MainWindow.h \
         Palette/BasicControls.h \
         Palette/Brush.h \
         Palette/ColorControls.h \
         Palette/Histogram.h \
+        PixelHelper.h \
         WorkspaceArea.h \
         qcustomplot.h
 
