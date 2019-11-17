@@ -5,7 +5,7 @@ AbstractNonKernelBasedImageFilterTransform::AbstractNonKernelBasedImageFilterTra
 
 }
 
-QImage AbstractNonKernelBasedImageFilterTransform::applyFilter(const QImage &img, int, double strength) const
+QImage AbstractNonKernelBasedImageFilterTransform::applyFilter(const QImage &img, int, double strength)
 {
     return applyFilter(img, strength);
 }

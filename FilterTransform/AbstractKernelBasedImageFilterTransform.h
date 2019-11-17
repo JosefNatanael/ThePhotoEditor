@@ -3,13 +3,30 @@
 
 #include "AbstractImageFilterTransform.h"
 
+#include <QVector>
+#include <QColor>
+#include <QtMath>
+
 class AbstractKernelBasedImageFilterTransform : public AbstractImageFilterTransform
 {
     Q_OBJECT
 public:
-    explicit AbstractKernelBasedImageFilterTransform(QObject *parent = nullptr);
-    virtual QImage applyFilter(const QImage &img, int size, double strength) const override;
-    virtual QImage applyFilter(const QImage &img, int size) const = 0;
+    explicit AbstractKernelBasedImageFilterTransform(int size = 1, QObject *parent = nullptr);
+    virtual QImage applyFilter(const QImage &img, int size, double strength) override;
+    virtual QImage applyFilter(const QImage &img, int size) = 0;
+
+    QImage convolution(const QImage& image) const;
+    virtual void setKernel(int size, double strength) = 0;
+
+protected:
+    int getEntry(int x, int y) const;
+    void setEntry(int x, int y, int value);
+    void setSize(int newSize);
+    void redefineKernel(int size);
+
+private:
+    int size;
+    QVector<QVector<int>> kernel;
 
 };
 

@@ -187,7 +187,8 @@ void MainWindow::saveAs()
 }
 
 // clears the workspaceArea
-void MainWindow::clearImage(){
+void MainWindow::clearImage()
+{
     reconstructWorkspaceArea(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
     workspaceArea->setModified(true);
     update();

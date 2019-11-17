@@ -12,7 +12,7 @@ public:
     explicit AbstractImageFilterTransform(QObject *parent = nullptr);
     virtual ~AbstractImageFilterTransform() = default;
 
-    virtual QImage applyFilter(const QImage &img, int size, double strength) const = 0;
+    virtual QImage applyFilter(const QImage &img, int size, double strength) = 0;
     virtual QString getName() const = 0;
 
 signals:

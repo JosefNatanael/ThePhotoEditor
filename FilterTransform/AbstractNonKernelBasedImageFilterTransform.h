@@ -8,7 +8,7 @@ class AbstractNonKernelBasedImageFilterTransform : public AbstractImageFilterTra
     Q_OBJECT
 public:
     explicit AbstractNonKernelBasedImageFilterTransform(QObject *parent = nullptr);
-    virtual QImage applyFilter(const QImage &img, int size, double strength) const override;
+    virtual QImage applyFilter(const QImage &img, int size, double strength) override;
     virtual QImage applyFilter(const QImage &img, double strength) const = 0;
     virtual QImage applyFilter(const QImage &img) const = 0;
 };
