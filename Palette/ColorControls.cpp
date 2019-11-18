@@ -12,3 +12,8 @@ ColorControls::~ColorControls()
 {
     delete ui;
 }
+
+void ColorControls::on_bnwButton_clicked()
+{
+
+}

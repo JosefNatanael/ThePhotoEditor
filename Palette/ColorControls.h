@@ -15,8 +15,14 @@ public:
     explicit ColorControls(QWidget *parent = nullptr);
     ~ColorControls();
 
+private slots:
+    void on_bnwButton_clicked();
+
 private:
     Ui::ColorControls *ui;
+
+signals:
+
 };
 
 #endif // COLORCONTROLS_H

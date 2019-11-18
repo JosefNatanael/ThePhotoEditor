@@ -27,7 +27,7 @@ private:
     Ui::Histogram *ui;
 
 public slots:
-    void imageLoaded(const QImage& image);
+    void onImageLoaded(const QImage& image);
 };
 
 #endif // HISTOGRAM_H

@@ -43,7 +43,7 @@ WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
 bool WorkspaceArea::openImage(const QImage& loadedImage, int imageWidth, int imageHeight)
 {
     image = loadedImage;
-    imageLoaded = true;
+    isImageLoaded = true;
     this->imageWidth = imageWidth;
     this->imageHeight = imageHeight;
 
@@ -58,7 +58,7 @@ bool WorkspaceArea::openImage(const QImage& loadedImage, int imageWidth, int ima
     pixmapGraphics->setPos({imageWidth / 2.0 - scaledImage.width() / 2.0, imageHeight / 2.0 - scaledImage.height() / 2.0});
     pixmapGraphics->setZValue(-2000);
 
-    emit onImageLoaded(image);
+    emit imageLoaded(image);
 
     modified = false;
     update();
@@ -67,7 +67,7 @@ bool WorkspaceArea::openImage(const QImage& loadedImage, int imageWidth, int ima
 
 QImage WorkspaceArea::commitImage()
 {
-    if (imageLoaded) {
+    if (isImageLoaded) {
         QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
         QPainter painter;
         painter.begin(&commitImage);
@@ -128,7 +128,7 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         pathItem->setPen(pen);                          // set sticker pen to default pen
         pathItem->setPath(path);						// set sticker path to the new path
         this->addItem(pathItem);
-        emit edit(pathItem);
+        emit edited(pathItem);
     }
 
     path = pathItem->path();							// get path from sticker

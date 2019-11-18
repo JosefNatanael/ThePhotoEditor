@@ -22,17 +22,17 @@ Brush::~Brush()
     delete ui;
 }
 
-void Brush::penColorChanged(const QColor& color)
+void Brush::onPenColorChanged(const QColor& color)
 {
-    emit onPenColorChanged(color);
+    emit penColorChanged(color);
 }
 
 void Brush::on_brushWidthSlider_valueChanged(int value)
 {
-    emit onPenWidthChanged(value);
+    emit penWidthChanged(value);
 }
 
 void Brush::on_brushWidthSpinBox_valueChanged(int value)
 {
-    emit onPenWidthChanged(value);
+    emit penWidthChanged(value);
 }

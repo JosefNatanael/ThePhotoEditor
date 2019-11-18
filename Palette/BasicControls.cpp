@@ -57,7 +57,7 @@ void BasicControls::on_beginCutoutPushButton_clicked()
     ui->applyPushButton->setEnabled(false);
     ui->cropPushButton->setEnabled(false);
     ui->beginCutoutPushButton->setEnabled(false);
-    emit crossCursorSignal(true);
+    emit crossCursorChanged(true);
 }
 
 void BasicControls::on_cancelCutoutPushButton_clicked()
@@ -66,5 +66,5 @@ void BasicControls::on_cancelCutoutPushButton_clicked()
     ui->applyPushButton->setEnabled(true);
     ui->cropPushButton->setEnabled(true);
     ui->beginCutoutPushButton->setEnabled(true);
-    emit crossCursorSignal(false);
+    emit crossCursorChanged(false);
 }

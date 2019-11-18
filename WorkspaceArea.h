@@ -25,7 +25,7 @@ public:
     bool                    saveImage(const QString& fileName, const char* fileFormat);
     int                     getImageWidth() const { return imageWidth; }
     int                     getImageHeight() const { return imageHeight; }
-    bool                    getImageLoaded() const{ return imageLoaded; }
+    bool                    getImageLoaded() const{ return isImageLoaded; }
     const QImage&           getImage() const{ return image; }
     bool                    isModified() const { return modified; }
 
@@ -44,8 +44,8 @@ public slots:
     void                    print();
 
 signals:
-    void                    onImageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
-    void                    edit(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
+    void                    imageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
+    void                    edited(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
 
 protected:
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -54,7 +54,7 @@ protected:
 
 private:
     bool                    modified;                   // Workspace was modified
-    bool                    imageLoaded = false;        // If true, loaded image can be drawn without new canvas
+    bool                    isImageLoaded = false;        // If true, loaded image can be drawn without new canvas
 
     QPen                    pen;                        // Pen for drawing paths
     int                     myPenWidth;                 // stores the width of the current pen
@@ -89,7 +89,7 @@ inline void WorkspaceArea::setModified(bool modif)
 // Used to change the loaded state of the WorkspaceArea
 inline void WorkspaceArea::setImageLoaded(bool isLoaded)
 {
-    imageLoaded = isLoaded;
+    isImageLoaded = isLoaded;
 }
 
 #endif // WORKSPACEAREA_H

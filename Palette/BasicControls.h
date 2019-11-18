@@ -17,7 +17,6 @@ public:
 
 private slots:
     void on_beginCutoutPushButton_clicked();
-
     void on_cancelCutoutPushButton_clicked();
 
 private:
@@ -25,7 +24,7 @@ private:
     bool beginButtonClicked = false;
 
 signals:
-    void crossCursorSignal(bool);
+    void crossCursorChanged(bool);
 
 };
 

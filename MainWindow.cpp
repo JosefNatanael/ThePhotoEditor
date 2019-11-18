@@ -112,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Setup all our signal and slots
     reconnectConnection();                                                                                      // Workspace related connection
-    connect(basics, &BasicControls::crossCursorSignal, this, &MainWindow::crossCursorChanged);                  // Cursor change connection
+    connect(basics, &BasicControls::crossCursorChanged, this, &MainWindow::onCrossCursorChanged);                  // Cursor change connection
     connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));         // Zoom level change connection
 }
 
@@ -125,10 +125,10 @@ MainWindow::~MainWindow()
 // This is needed in order to reestablish connection after workspaceArea is recreated
 void MainWindow::reconnectConnection()
 {
-    connect(workspaceArea, &WorkspaceArea::edit, this, &MainWindow::on_edit);
-    connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
-    connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
-    connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
+    connect(workspaceArea, &WorkspaceArea::edited, this, &MainWindow::on_edit);
+    connect(workspaceArea, &WorkspaceArea::imageLoaded, histo, &Histogram::onImageLoaded);
+    connect(brush, &Brush::penColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
+    connect(brush, &Brush::penWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
 }
 
 /*
@@ -147,6 +147,7 @@ void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
     graphicsView->setScene(workspaceArea);
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
+    graphicsView->scene()->installEventFilter(this);
 }
 
 /*
@@ -455,7 +456,7 @@ void MainWindow::onZoom(const QString& level)
     workspaceArea->resize(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
 }
 
-void MainWindow::crossCursorChanged(bool cross)
+void MainWindow::onCrossCursorChanged(bool cross)
 {
     if(cross){
         graphicsView->setCursor(Qt::CrossCursor);

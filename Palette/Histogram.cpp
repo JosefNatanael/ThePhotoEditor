@@ -78,6 +78,6 @@ void Histogram::drawHistogram(const QImage &image){
     ui->plot->replot();
 }
 
-void Histogram::imageLoaded(const QImage& image) {
+void Histogram::onImageLoaded(const QImage& image) {
     drawHistogram(image);
 }
