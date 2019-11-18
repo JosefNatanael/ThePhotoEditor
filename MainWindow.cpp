@@ -46,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionHistory->setShortcut(tr("Ctrl+H"));
     ui->actionExit->setShortcuts(QKeySequence::Quit);
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
     // Spawns a WorkspaceArea
     workspaceArea = new WorkspaceArea;
 
@@ -55,9 +57,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
     // Create additional actions and menus
     createActions();
     createMenus();
+
+    // Setup zoom options
+    QComboBox* comboBox = new QComboBox(this);
+    comboBox->addItem("50%");
+    comboBox->addItem("100%");
+    comboBox->addItem("120%");
+    comboBox->setCurrentText("100%");
+    ui->statusBar->addWidget(comboBox);
+
+    connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
     // Setup a treeWidget, which are the menus in our palette
     ui->palette->setColumnCount(1);
@@ -93,21 +109,11 @@ MainWindow::MainWindow(QWidget *parent) :
     // TODO 5. Adds an Effects widget to the treeWidget palette
     addRoot(effects, "Effects");
 
-    //Setup zoom options
-    QComboBox* comboBox = new QComboBox(this);
-    comboBox->addItem("50%");
-    comboBox->addItem("100%");
-    comboBox->addItem("120%");
-    comboBox->setCurrentText("100%");
-    ui->statusBar->addWidget(comboBox);
-
-
-    connect(comboBox, SIGNAL(currentIndexChanged(const QString&)),
-            this, SLOT(onZoom(const QString&)));
-
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
     // Setup all our signal and slots
     reconnectConnection();
+    connect(basics, &BasicControls::crossCursorSignal, this, &MainWindow::crossCursorChanged);
 }
 
 MainWindow::~MainWindow()
@@ -115,13 +121,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// Setup all connections related to the workspaceArea
+// This is needed in order to reestablish connection after workspaceArea is recreated
 void MainWindow::reconnectConnection()
 {
     connect(workspaceArea, &WorkspaceArea::edit, this, &MainWindow::on_edit);
     connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
     connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
-    connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
-    connect(basics, &BasicControls::crossCursorSignal, this, &MainWindow::crossCursorChanged);
+    connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);    
 }
 
 /*
@@ -379,21 +386,23 @@ void MainWindow::wheelEvent(QWheelEvent* event) {
     graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     double scaleFactor = 1.1;
     graphicsView->centerOn(0, 0);
+    int workspaceAreaWidth = workspaceArea->getImageWidth();
+    int workspaceAreaHeight = workspaceArea->getImageHeight();
     if (event->orientation() == Qt::Vertical) {
-        if (event->delta() > 7 && workspaceArea->getImageWidth() < 1920 && workspaceArea->getImageHeight() < 1080) {
-
-            int a = workspaceArea->getImageWidth()*scaleFactor;
-            int b = workspaceArea->getImageHeight()*scaleFactor;
-            graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
-            resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
-            workspaceArea->resize(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
+        if (event->delta() > 7 && workspaceAreaWidth < 1920 && workspaceAreaHeight < 1080) {
+            int a = static_cast<int>(workspaceAreaWidth * scaleFactor);
+            int b = static_cast<int>(workspaceAreaHeight * scaleFactor);
+            graphicsView->scale(static_cast<double>(a) / workspaceAreaWidth, static_cast<double>(b) / workspaceAreaHeight);
+            resizeGraphicsViewBoundaries(static_cast<int>(workspaceAreaWidth * scaleFactor), static_cast<int>(workspaceAreaHeight * scaleFactor));
+            workspaceArea->resize(workspaceAreaWidth * scaleFactor, workspaceAreaHeight * scaleFactor);
             currentZoom *= scaleFactor;
-        } else if (event->delta() < -7 && workspaceArea->getImageWidth() > 200 && workspaceArea->getImageHeight() > 200) {
-            int a = workspaceArea->getImageWidth()*(1.0/scaleFactor);
-            int b = workspaceArea->getImageHeight()*(1.0/scaleFactor);
-            graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
-            resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*(1.0/scaleFactor), workspaceArea->getImageHeight()*(1.0/scaleFactor));
-            workspaceArea->resize(workspaceArea->getImageWidth()*(1.0/scaleFactor), workspaceArea->getImageHeight()*(1.0/scaleFactor));
+        }
+        else if (event->delta() < -7 && workspaceArea->getImageWidth() > 200 && workspaceArea->getImageHeight() > 200) {
+            int a = workspaceAreaWidth * (1.0 / scaleFactor);
+            int b = workspaceAreaHeight * (1.0 / scaleFactor);
+            graphicsView->scale(static_cast<double>(a) / workspaceAreaWidth, (double) b / (double) workspaceAreaHeight);
+            resizeGraphicsViewBoundaries(workspaceAreaWidth * (1.0 / scaleFactor), workspaceAreaHeight * (1.0 / scaleFactor));
+            workspaceArea->resize(workspaceAreaWidth * (1.0 / scaleFactor), workspaceAreaHeight * (1.0 / scaleFactor));
             currentZoom /= scaleFactor;
         }
     }
