@@ -34,7 +34,7 @@ public:
 
 protected:
     void                        closeEvent(QCloseEvent* event) override;
-    virtual void                wheelEvent(QWheelEvent* event) override;
+    virtual bool                eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
     void                        on_actionNew_triggered();
@@ -55,6 +55,7 @@ private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
     void                        reconnectConnection();
     void                        reconstructWorkspaceArea(int imageWidth, int imageHeight);
+    void                        handleWheelEvent(QGraphicsSceneWheelEvent* event);
 
     void                        addRoot(QTreeWidgetItem* parent, QString name);
     void                        customAddChild(QTreeWidgetItem* parent, QWidget* widget);

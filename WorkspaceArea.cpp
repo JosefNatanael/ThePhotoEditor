@@ -168,11 +168,10 @@ void WorkspaceArea::print()
 #endif // QT_CONFIG(printdialog)
 }
 
-
-void WorkspaceArea::resize(int width, int height) {
+void WorkspaceArea::resize(int width, int height)
+{
     //pixmapGraphics->setPos({-width*0.5, -height*0.5});
     this->imageWidth = width;
     this->imageHeight = height;
-
 }
 

@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     graphicsView->setScene(workspaceArea);
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
+    graphicsView->scene()->installEventFilter(this);
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -70,8 +71,6 @@ MainWindow::MainWindow(QWidget *parent) :
     comboBox->addItem("120%");
     comboBox->setCurrentText("100%");
     ui->statusBar->addWidget(comboBox);
-
-    connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,8 +111,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     // Setup all our signal and slots
-    reconnectConnection();
-    connect(basics, &BasicControls::crossCursorSignal, this, &MainWindow::crossCursorChanged);
+    reconnectConnection();                                                                                      // Workspace related connection
+    connect(basics, &BasicControls::crossCursorSignal, this, &MainWindow::crossCursorChanged);                  // Cursor change connection
+    connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));         // Zoom level change connection
 }
 
 MainWindow::~MainWindow()
@@ -128,7 +128,7 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::edit, this, &MainWindow::on_edit);
     connect(workspaceArea, &WorkspaceArea::onImageLoaded, histo, &Histogram::imageLoaded);
     connect(brush, &Brush::onPenColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
-    connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);    
+    connect(brush, &Brush::onPenWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
 }
 
 /*
@@ -283,10 +283,10 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
 
     // Add the proper file formats and extensions
     fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
-                                                    initialPath,
-                                                    tr("%1 Files (*.%2);;All Files (*)")
-                                                    .arg(QString::fromLatin1(fileFormat.toUpper()))
-                                                    .arg(QString::fromLatin1(fileFormat)));
+                                            initialPath,
+                                            tr("%1 Files (*.%2);;All Files (*)")
+                                            .arg(QString::fromLatin1(fileFormat.toUpper()))
+                                            .arg(QString::fromLatin1(fileFormat)));
 
     if (fileName.isEmpty()) {
         return false;
@@ -382,7 +382,20 @@ void MainWindow::on_actionAbout_Us_triggered()
     aboutUs.exec();
 }
 
-void MainWindow::wheelEvent(QWheelEvent* event) {
+bool MainWindow::eventFilter(QObject*, QEvent* event)
+{
+    if (event->type() == QEvent::GraphicsSceneWheel) {
+        handleWheelEvent(static_cast<QGraphicsSceneWheelEvent*> (event));
+
+        // Don't propagate event to the whole maindinwo
+        event->accept();
+        return true;
+    }
+    return false;
+}
+
+void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
+{
     graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     double scaleFactor = 1.1;
     graphicsView->centerOn(0, 0);
@@ -394,27 +407,26 @@ void MainWindow::wheelEvent(QWheelEvent* event) {
             int b = static_cast<int>(workspaceAreaHeight * scaleFactor);
             graphicsView->scale(static_cast<double>(a) / workspaceAreaWidth, static_cast<double>(b) / workspaceAreaHeight);
             resizeGraphicsViewBoundaries(static_cast<int>(workspaceAreaWidth * scaleFactor), static_cast<int>(workspaceAreaHeight * scaleFactor));
-            workspaceArea->resize(workspaceAreaWidth * scaleFactor, workspaceAreaHeight * scaleFactor);
+            workspaceArea->resize(static_cast<int>(workspaceAreaWidth * scaleFactor), static_cast<int>(workspaceAreaHeight * scaleFactor));
             currentZoom *= scaleFactor;
         }
-        else if (event->delta() < -7 && workspaceArea->getImageWidth() > 200 && workspaceArea->getImageHeight() > 200) {
-            int a = workspaceAreaWidth * (1.0 / scaleFactor);
-            int b = workspaceAreaHeight * (1.0 / scaleFactor);
-            graphicsView->scale(static_cast<double>(a) / workspaceAreaWidth, (double) b / (double) workspaceAreaHeight);
-            resizeGraphicsViewBoundaries(workspaceAreaWidth * (1.0 / scaleFactor), workspaceAreaHeight * (1.0 / scaleFactor));
-            workspaceArea->resize(workspaceAreaWidth * (1.0 / scaleFactor), workspaceAreaHeight * (1.0 / scaleFactor));
+        else if (event->delta() < -7 && workspaceAreaWidth > 200 && workspaceAreaHeight > 200) {
+            int a = static_cast<int>(workspaceAreaWidth * (1.0 / scaleFactor));
+            int b = static_cast<int>(workspaceAreaHeight * (1.0 / scaleFactor));
+            graphicsView->scale(static_cast<double>(a) / workspaceAreaWidth, static_cast<double>(b) / workspaceAreaHeight);
+            resizeGraphicsViewBoundaries(static_cast<int>(workspaceAreaWidth * (1.0 / scaleFactor)), static_cast<int>(workspaceAreaHeight * (1.0 / scaleFactor)));
+            workspaceArea->resize(static_cast<int>(workspaceAreaWidth * (1.0 / scaleFactor)), static_cast<int>(workspaceAreaHeight * (1.0 / scaleFactor)));
             currentZoom /= scaleFactor;
         }
     }
     graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 }
 
-
-void MainWindow::onZoom(const QString& level) {
-
+void MainWindow::onZoom(const QString& level)
+{
     double originalFactor = 1.0 / currentZoom;
-    int a = workspaceArea->getImageWidth()*originalFactor;
-    int b = workspaceArea->getImageHeight()*originalFactor;
+    int a = workspaceArea->getImageWidth() * originalFactor;
+    int b = workspaceArea->getImageHeight() * originalFactor;
     graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
     resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*originalFactor, workspaceArea->getImageHeight()*originalFactor);
     workspaceArea->resize(workspaceArea->getImageWidth()*originalFactor, workspaceArea->getImageHeight()*originalFactor);
@@ -426,21 +438,21 @@ void MainWindow::onZoom(const QString& level) {
     if (level == "50%") {
         scaleFactor = 0.5;
         currentZoom = 0.5;
-    } else if (level == "100%") {
+    }
+    else if (level == "100%") {
         scaleFactor = 1.0;
         currentZoom = 1.0;
-    } else if (level == "120%") {
+    }
+    else if (level == "120%") {
         scaleFactor = 1.2;
         currentZoom = 1.2;
     }
 
-    a = workspaceArea->getImageWidth()*scaleFactor;
-    b = workspaceArea->getImageHeight()*scaleFactor;
+    a = workspaceArea->getImageWidth() * scaleFactor;
+    b = workspaceArea->getImageHeight() * scaleFactor;
     graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
     resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
     workspaceArea->resize(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
-
-
 }
 
 void MainWindow::crossCursorChanged(bool cross)
