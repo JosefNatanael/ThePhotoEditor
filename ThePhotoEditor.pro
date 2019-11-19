@@ -38,6 +38,8 @@ SOURCES += \
         FilterTransform/NonKernelBased/HueFilter.cpp \
         FilterTransform/NonKernelBased/InvertFilter.cpp \
         FilterTransform/NonKernelBased/SaturationFilter.cpp \
+        FilterTransform/NonKernelBased/TemperatureFilter.cpp \
+        FilterTransform/NonKernelBased/TintFilter.cpp \
         Palette/BasicControls.cpp \
         Palette/Brush.cpp \
         Palette/ColorControls.cpp \
@@ -62,6 +64,8 @@ HEADERS += \
         FilterTransform/NonKernelBased/HueFilter.h \
         FilterTransform/NonKernelBased/InvertFilter.h \
         FilterTransform/NonKernelBased/SaturationFilter.h \
+        FilterTransform/NonKernelBased/TemperatureFilter.h \
+        FilterTransform/NonKernelBased/TintFilter.h \
         MainWindow.h \
         Palette/BasicControls.h \
         Palette/Brush.h \
