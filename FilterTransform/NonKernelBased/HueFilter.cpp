@@ -24,7 +24,7 @@ QImage HueFilter::applyFilter(const QImage &image, double strength) const
         for (int j = 0; j < image.width(); ++j) {
             QRgb pixel = PixelHelper::getPixel(image, i, j);
             QColor pixelColor = QColor::fromRgb(pixel);
-            int hsvHue = qBound(0, pixelColor.hsvHue() + static_cast<int>(strength), 360);
+            int hsvHue = qBound(0, pixelColor.hsvHue() + static_cast<int>(strength), 359);
             pixelColor.setHsv(hsvHue, pixelColor.hsvSaturation(), pixelColor.value());
             PixelHelper::setPixel(newImage, i, j, pixelColor.rgba());
         }

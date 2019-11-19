@@ -53,10 +53,10 @@
    <item row="7" column="0">
     <widget class="QSlider" name="saturationSlider">
      <property name="minimum">
-      <number>-50</number>
+      <number>-100</number>
      </property>
      <property name="maximum">
-      <number>50</number>
+      <number>100</number>
      </property>
      <property name="value">
       <number>0</number>
@@ -89,10 +89,10 @@
    <item row="7" column="1">
     <widget class="QSpinBox" name="saturationSpinBox">
      <property name="minimum">
-      <number>-50</number>
+      <number>-100</number>
      </property>
      <property name="maximum">
-      <number>50</number>
+      <number>100</number>
      </property>
      <property name="value">
       <number>0</number>
@@ -321,12 +321,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>153</x>
-     <y>190</y>
+     <x>163</x>
+     <y>175</y>
     </hint>
     <hint type="destinationlabel">
-     <x>273</x>
-     <y>190</y>
+     <x>298</x>
+     <y>174</y>
     </hint>
    </hints>
   </connection>
@@ -337,12 +337,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>249</y>
+     <x>138</x>
+     <y>238</y>
     </hint>
     <hint type="destinationlabel">
-     <x>274</x>
-     <y>258</y>
+     <x>298</x>
+     <y>237</y>
     </hint>
    </hints>
   </connection>
@@ -353,12 +353,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>152</x>
-     <y>320</y>
+     <x>162</x>
+     <y>302</y>
     </hint>
     <hint type="destinationlabel">
-     <x>276</x>
-     <y>328</y>
+     <x>298</x>
+     <y>301</y>
     </hint>
    </hints>
   </connection>
@@ -369,12 +369,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>232</x>
-     <y>443</y>
+     <x>241</x>
+     <y>441</y>
     </hint>
     <hint type="destinationlabel">
-     <x>278</x>
-     <y>446</y>
+     <x>298</x>
+     <y>440</y>
     </hint>
    </hints>
   </connection>
@@ -385,12 +385,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>209</x>
-     <y>520</y>
+     <x>219</x>
+     <y>505</y>
     </hint>
     <hint type="destinationlabel">
-     <x>294</x>
-     <y>521</y>
+     <x>298</x>
+     <y>504</y>
     </hint>
    </hints>
   </connection>
@@ -401,12 +401,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>212</x>
-     <y>589</y>
+     <x>222</x>
+     <y>568</y>
     </hint>
     <hint type="destinationlabel">
-     <x>274</x>
-     <y>594</y>
+     <x>298</x>
+     <y>567</y>
     </hint>
    </hints>
   </connection>
@@ -417,12 +417,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>275</x>
-     <y>181</y>
+     <x>298</x>
+     <y>174</y>
     </hint>
     <hint type="destinationlabel">
-     <x>213</x>
-     <y>180</y>
+     <x>223</x>
+     <y>175</y>
     </hint>
    </hints>
   </connection>
@@ -433,12 +433,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>268</x>
-     <y>248</y>
+     <x>298</x>
+     <y>237</y>
     </hint>
     <hint type="destinationlabel">
-     <x>212</x>
-     <y>247</y>
+     <x>222</x>
+     <y>238</y>
     </hint>
    </hints>
   </connection>
@@ -449,12 +449,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>282</x>
-     <y>318</y>
+     <x>298</x>
+     <y>301</y>
     </hint>
     <hint type="destinationlabel">
-     <x>209</x>
-     <y>321</y>
+     <x>219</x>
+     <y>302</y>
     </hint>
    </hints>
   </connection>
@@ -469,8 +469,8 @@
      <y>438</y>
     </hint>
     <hint type="destinationlabel">
-     <x>185</x>
-     <y>442</y>
+     <x>195</x>
+     <y>441</y>
     </hint>
    </hints>
   </connection>
@@ -481,12 +481,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>270</x>
-     <y>513</y>
+     <x>298</x>
+     <y>504</y>
     </hint>
     <hint type="destinationlabel">
-     <x>233</x>
-     <y>512</y>
+     <x>241</x>
+     <y>505</y>
     </hint>
    </hints>
   </connection>
@@ -497,12 +497,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>266</x>
-     <y>583</y>
+     <x>298</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
-     <x>229</x>
-     <y>587</y>
+     <x>239</x>
+     <y>568</y>
     </hint>
    </hints>
   </connection>
