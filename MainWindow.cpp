@@ -508,6 +508,25 @@ void MainWindow::fitImageToScreen(int currentWidth, int currentHeight) {
         comboBox->setCurrentText("Fit to screen");
 
     }
+    centerAndResize();
+}
+
+void MainWindow::centerAndResize() {
+    // get the dimension available on this screen
+    QSize availableSize = qApp->desktop()->availableGeometry().size();
+    int width = availableSize.width();
+    int height = availableSize.height();
+    qDebug() << "Available dimensions " << width << "x" << height;
+    QSize newSize( width, height );
+
+    setGeometry(
+        QStyle::alignedRect(
+            Qt::LeftToRight,
+            Qt::AlignCenter,
+            newSize,
+            qApp->desktop()->availableGeometry()
+        )
+    );
 }
 
 

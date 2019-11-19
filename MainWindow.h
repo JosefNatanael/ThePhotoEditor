@@ -65,6 +65,7 @@ private:
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
     void                        fitImageToScreen(int, int);
+    void                        centerAndResize();
 
 private:
     Ui::MainWindow*             ui;
