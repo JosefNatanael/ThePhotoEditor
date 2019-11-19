@@ -65,10 +65,11 @@ MainWindow::MainWindow(QWidget *parent) :
     createMenus();
 
     // Setup zoom options
-    QComboBox* comboBox = new QComboBox(this);
+    comboBox = new QComboBox(this);
     comboBox->addItem("50%");
     comboBox->addItem("100%");
     comboBox->addItem("120%");
+    comboBox->addItem("Fit to screen");
     comboBox->setCurrentText("100%");
     ui->statusBar->addWidget(comboBox);
 
@@ -336,6 +337,9 @@ void MainWindow::on_actionOpen_triggered()
 
             workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
             resizeGraphicsViewBoundaries(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
+
+            fitImageToScreen(imageWidth, imageHeight);
+
         }
     }
 }
@@ -402,8 +406,11 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     graphicsView->centerOn(0, 0);
     int workspaceAreaWidth = workspaceArea->getImageWidth();
     int workspaceAreaHeight = workspaceArea->getImageHeight();
+    QRect screenSize = QApplication::desktop()->screenGeometry();
+    int screenWidth = screenSize.width();
+    int screenHeight = screenSize.height();
     if (event->orientation() == Qt::Vertical) {
-        if (event->delta() > 7 && workspaceAreaWidth < 1920 && workspaceAreaHeight < 1080) {
+        if (event->delta() > 7 && workspaceAreaWidth < screenWidth && workspaceAreaHeight < screenHeight) {
             int a = static_cast<int>(workspaceAreaWidth * scaleFactor);
             int b = static_cast<int>(workspaceAreaHeight * scaleFactor);
             graphicsView->scale(static_cast<double>(a) / workspaceAreaWidth, static_cast<double>(b) / workspaceAreaHeight);
@@ -425,6 +432,11 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
 
 void MainWindow::onZoom(const QString& level)
 {
+    if (level == "Fit to screen") {
+        fitImageToScreen(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
+        return;
+    }
+
     double originalFactor = 1.0 / currentZoom;
     int a = workspaceArea->getImageWidth() * originalFactor;
     int b = workspaceArea->getImageHeight() * originalFactor;
@@ -454,6 +466,7 @@ void MainWindow::onZoom(const QString& level)
     graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
     resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
     workspaceArea->resize(workspaceArea->getImageWidth()*scaleFactor, workspaceArea->getImageHeight()*scaleFactor);
+    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 }
 
 void MainWindow::onCrossCursorChanged(bool cross)
@@ -463,6 +476,37 @@ void MainWindow::onCrossCursorChanged(bool cross)
     }
     else {
         graphicsView->setCursor(Qt::ArrowCursor);
+    }
+}
+
+void MainWindow::fitImageToScreen(int currentWidth, int currentHeight) {
+
+    QRect screenSize = QApplication::desktop()->screenGeometry();
+    int screenWidth = screenSize.width();
+    int screenHeight = screenSize.height();
+
+    if (currentWidth > screenWidth || currentHeight > screenHeight) {
+        double ratio = qMax((double) screenWidth / (double) currentWidth, (double) screenHeight / (double) currentHeight)*0.5;
+        int a = workspaceArea->getImageWidth()*ratio;
+        int b = workspaceArea->getImageHeight()*ratio;
+        graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
+        resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*ratio, workspaceArea->getImageHeight()*ratio);
+        workspaceArea->resize(workspaceArea->getImageWidth()*ratio, workspaceArea->getImageHeight()*ratio);
+        currentZoom *= ratio;
+        graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+        comboBox->setCurrentText("Fit to screen");
+
+    } else if (currentWidth < screenWidth || currentHeight < screenHeight) {
+        double ratio = qMin((double) screenWidth / (double) currentWidth, (double) screenHeight / (double) currentHeight)*0.5;
+        int a = workspaceArea->getImageWidth()*ratio;
+        int b = workspaceArea->getImageHeight()*ratio;
+        graphicsView->scale((double) a / (double) workspaceArea->getImageWidth(), (double) b / (double) workspaceArea->getImageHeight());
+        resizeGraphicsViewBoundaries(workspaceArea->getImageWidth()*ratio, workspaceArea->getImageHeight()*ratio);
+        workspaceArea->resize(workspaceArea->getImageWidth()*ratio, workspaceArea->getImageHeight()*ratio);
+        currentZoom *= ratio;
+        graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+        comboBox->setCurrentText("Fit to screen");
+
     }
 }
 

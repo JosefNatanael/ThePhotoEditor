@@ -64,6 +64,7 @@ private:
     void                        createMenus();
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
+    void                        fitImageToScreen(int, int);
 
 private:
     Ui::MainWindow*             ui;
@@ -91,6 +92,7 @@ private:
     QByteArray                  fileFormat;             // the file format of our loaded image
     bool                        fileSaved = false;      // the state that saves whether our current project been saved
     double                      currentZoom = 1.0;
+    QComboBox*                  comboBox;
 };
 
 // Close the application
