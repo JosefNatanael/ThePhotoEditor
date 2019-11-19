@@ -35,6 +35,7 @@ SOURCES += \
         FilterTransform/NonKernelBased/FlipHorizontalTransform.cpp \
         FilterTransform/NonKernelBased/FlipVerticalTransform.cpp \
         FilterTransform/NonKernelBased/GrayscaleFilter.cpp \
+        FilterTransform/NonKernelBased/HueFilter.cpp \
         FilterTransform/NonKernelBased/InvertFilter.cpp \
         Palette/BasicControls.cpp \
         Palette/Brush.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
         FilterTransform/NonKernelBased/FlipHorizontalTransform.h \
         FilterTransform/NonKernelBased/FlipVerticalTransform.h \
         FilterTransform/NonKernelBased/GrayscaleFilter.h \
+        FilterTransform/NonKernelBased/HueFilter.h \
         FilterTransform/NonKernelBased/InvertFilter.h \
         MainWindow.h \
         Palette/BasicControls.h \
