@@ -1,16 +1,17 @@
-#include "BrightnessFilter.h"
+#include "ExposureFilter.h"
+#include <QtMath>
 
-BrightnessFilter::BrightnessFilter(QObject* parent) : AbstractNonKernelBasedImageFilterTransform(parent)
+ExposureFilter::ExposureFilter(QObject* parent) : AbstractNonKernelBasedImageFilterTransform(parent)
 {
 
 }
 
-QString BrightnessFilter::getName() const
+QString ExposureFilter::getName() const
 {
-    return "BrightnessFilter";
+    return "ExposureFilter";
 }
 
-QImage BrightnessFilter::applyFilter(const QImage &image, double strength) const
+QImage ExposureFilter::applyFilter(const QImage &image, double strength) const
 {
     QImage newImage{image};
     // This filter will be dealing with integer strength values
@@ -18,13 +19,14 @@ QImage BrightnessFilter::applyFilter(const QImage &image, double strength) const
         return newImage;
     }
     // 1. we turn from rgb to hsl
-    // 2. linear modification of luminance
+    // 2. modification of luminance, with formula newLight = oldLight * 2 ^ exposure compensation. Exposure compensation is simply strength/100
     // 3. we turn hsl back to rgb
     for (int i = 0; i < image.height(); ++i) {
         for (int j = 0; j < image.width(); ++j) {
             QRgb pixel = PixelHelper::getPixel(image, i, j);
             QColor pixelColor = QColor::fromRgb(pixel);
-            int hsvLightness = qBound(0, pixelColor.value() + static_cast<int>(strength), 255);
+            double exposureCompensation = strength / 100;
+            int hsvLightness = qBound(0, static_cast<int>(pixelColor.value() * qPow(2, exposureCompensation)), 255);
             pixelColor.setHsv(pixelColor.hsvHue(), pixelColor.hsvSaturation(), hsvLightness);
             PixelHelper::setPixel(newImage, i, j, pixelColor.rgba());
         }
@@ -33,7 +35,7 @@ QImage BrightnessFilter::applyFilter(const QImage &image, double strength) const
 }
 
 // No change
-QImage BrightnessFilter::applyFilter(const QImage &image) const
+QImage ExposureFilter::applyFilter(const QImage &image) const
 {
     QImage newImage{image};
     return newImage;

@@ -34,6 +34,7 @@ SOURCES += \
         FilterTransform/NonKernelBased/ClockwiseRotationTransform.cpp \
         FilterTransform/NonKernelBased/ContrastFilter.cpp \
         FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.cpp \
+        FilterTransform/NonKernelBased/ExposureFilter.cpp \
         FilterTransform/NonKernelBased/FlipHorizontalTransform.cpp \
         FilterTransform/NonKernelBased/FlipVerticalTransform.cpp \
         FilterTransform/NonKernelBased/GrayscaleFilter.cpp \
@@ -62,6 +63,7 @@ HEADERS += \
         FilterTransform/NonKernelBased/ClockwiseRotationTransform.h \
         FilterTransform/NonKernelBased/ContrastFilter.h \
         FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.h \
+        FilterTransform/NonKernelBased/ExposureFilter.h \
         FilterTransform/NonKernelBased/FlipHorizontalTransform.h \
         FilterTransform/NonKernelBased/FlipVerticalTransform.h \
         FilterTransform/NonKernelBased/GrayscaleFilter.h \
