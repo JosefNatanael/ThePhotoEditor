@@ -31,10 +31,10 @@
    <item row="20" column="0">
     <widget class="QSlider" name="contrastSlider">
      <property name="minimum">
-      <number>-50</number>
+      <number>-255</number>
      </property>
      <property name="maximum">
-      <number>50</number>
+      <number>255</number>
      </property>
      <property name="value">
       <number>0</number>
@@ -71,13 +71,6 @@
      </property>
     </widget>
    </item>
-   <item row="12" column="0">
-    <widget class="QPushButton" name="applyColorButton">
-     <property name="text">
-      <string>Apply color changes</string>
-     </property>
-    </widget>
-   </item>
    <item row="16" column="0">
     <widget class="QSlider" name="brightnessSlider">
      <property name="minimum">
@@ -91,19 +84,6 @@
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="20" column="1">
-    <widget class="QSpinBox" name="contrastSpinBox">
-     <property name="minimum">
-      <number>-50</number>
-     </property>
-     <property name="maximum">
-      <number>50</number>
-     </property>
-     <property name="value">
-      <number>0</number>
      </property>
     </widget>
    </item>
@@ -142,6 +122,13 @@
      </property>
     </widget>
    </item>
+   <item row="21" column="0">
+    <widget class="QPushButton" name="applyLightingButton">
+     <property name="text">
+      <string>Apply lighting changes</string>
+     </property>
+    </widget>
+   </item>
    <item row="8" column="0">
     <widget class="QLabel" name="tintLabel">
      <property name="text">
@@ -173,13 +160,6 @@
     <widget class="QLabel" name="brightnessLabel">
      <property name="text">
       <string>Brightness</string>
-     </property>
-    </widget>
-   </item>
-   <item row="21" column="0">
-    <widget class="QPushButton" name="applyLightingButton">
-     <property name="text">
-      <string>Apply lighting changes</string>
      </property>
     </widget>
    </item>
@@ -268,6 +248,26 @@
      </property>
     </widget>
    </item>
+   <item row="12" column="0">
+    <widget class="QPushButton" name="applyColorButton">
+     <property name="text">
+      <string>Apply color changes</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QSlider" name="temperatureSlider">
+     <property name="minimum">
+      <number>-100</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
    <item row="7" column="1">
     <widget class="QSpinBox" name="saturationSpinBox">
      <property name="minimum">
@@ -317,19 +317,6 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="0">
-    <widget class="QSlider" name="temperatureSlider">
-     <property name="minimum">
-      <number>-100</number>
-     </property>
-     <property name="maximum">
-      <number>100</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
    <item row="11" column="1">
     <widget class="QSpinBox" name="temperatureSpinBox">
      <property name="minimum">
@@ -337,6 +324,19 @@
      </property>
      <property name="maximum">
       <number>100</number>
+     </property>
+    </widget>
+   </item>
+   <item row="20" column="1">
+    <widget class="QSpinBox" name="contrastSpinBox">
+     <property name="minimum">
+      <number>-255</number>
+     </property>
+     <property name="maximum">
+      <number>255</number>
+     </property>
+     <property name="value">
+      <number>0</number>
      </property>
     </widget>
    </item>

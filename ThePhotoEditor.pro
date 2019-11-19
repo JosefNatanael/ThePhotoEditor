@@ -30,7 +30,9 @@ SOURCES += \
         FilterTransform/AbstractKernelBasedImageFilterTransform.cpp \
         FilterTransform/AbstractNonKernelBasedImageFilterTransform.cpp \
         FilterTransform/KernelBased/GaussianBlurFilter.cpp \
+        FilterTransform/NonKernelBased/BrightnessFilter.cpp \
         FilterTransform/NonKernelBased/ClockwiseRotationTransform.cpp \
+        FilterTransform/NonKernelBased/ContrastFilter.cpp \
         FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.cpp \
         FilterTransform/NonKernelBased/FlipHorizontalTransform.cpp \
         FilterTransform/NonKernelBased/FlipVerticalTransform.cpp \
@@ -56,7 +58,9 @@ HEADERS += \
         FilterTransform/AbstractKernelBasedImageFilterTransform.h \
         FilterTransform/AbstractNonKernelBasedImageFilterTransform.h \
         FilterTransform/KernelBased/GaussianBlurFilter.h \
+        FilterTransform/NonKernelBased/BrightnessFilter.h \
         FilterTransform/NonKernelBased/ClockwiseRotationTransform.h \
+        FilterTransform/NonKernelBased/ContrastFilter.h \
         FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.h \
         FilterTransform/NonKernelBased/FlipHorizontalTransform.h \
         FilterTransform/NonKernelBased/FlipVerticalTransform.h \
