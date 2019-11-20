@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Spawns a WorkspaceArea
     graphicsView = new QGraphicsView(this);
     // Spawns a graphicsView
-    workspaceArea = new WorkspaceArea(graphicsView);
+    workspaceArea = new WorkspaceArea();
 
     // Adds the workspaceArea into our graphicsView
     graphicsView->setScene(workspaceArea);
@@ -145,7 +145,7 @@ void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
         workspaceArea = nullptr;
     }
 
-    workspaceArea = new WorkspaceArea(imageWidth, imageHeight, graphicsView);
+    workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
     reconnectConnection();
 
     graphicsView->setScene(workspaceArea);

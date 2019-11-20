@@ -17,8 +17,8 @@ class WorkspaceArea : public QGraphicsScene
     Q_OBJECT
 
 public:
-    explicit WorkspaceArea(QGraphicsView* parentView, QObject* parent = nullptr);
-    WorkspaceArea(int width, int height, QGraphicsView* parentView, QObject* parent = nullptr);
+    explicit WorkspaceArea(QObject* parent = nullptr);
+    WorkspaceArea(int width, int height, QObject* parent = nullptr);
     virtual ~WorkspaceArea() override = default;
 
 public:
@@ -61,8 +61,6 @@ protected:
     virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
-    QGraphicsView*          parentView;
-
     bool                    modified;                   // Workspace was modified
     bool                    isImageLoaded = false;        // If true, loaded image can be drawn without new canvas
     CursorMode              cursorMode = CursorMode::SCRIBBLE;  // Mouse events will be used to scribble the workspacearea

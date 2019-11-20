@@ -12,11 +12,9 @@
 static const int SCENE_WIDTH = 720;    // The default width of the workspace
 static const int SCENE_HEIGHT = 480;   // The default height of the workspace
 
-WorkspaceArea::WorkspaceArea(QGraphicsView* parentView, QObject *parent)
+WorkspaceArea::WorkspaceArea(QObject *parent)
     : QGraphicsScene (0, 0, SCENE_WIDTH, SCENE_HEIGHT, parent)
 {
-    // Set parent view
-    this->parentView = parentView;
     // Set default workspace resolution
     imageWidth = SCENE_WIDTH;
     imageHeight = SCENE_HEIGHT;
@@ -28,11 +26,9 @@ WorkspaceArea::WorkspaceArea(QGraphicsView* parentView, QObject *parent)
     pen.setJoinStyle(Qt::RoundJoin);
 }
 
-WorkspaceArea::WorkspaceArea(int width, int height, QGraphicsView* parentView, QObject *parent)
+WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
     : QGraphicsScene (0, 0, width, height, parent)
 {
-    // Set parent view
-    this->parentView = parentView;
     // Set workspace resolution
     imageWidth = width;
     imageHeight = height;
@@ -120,7 +116,7 @@ void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
         qDebug() << cropOrigin.x() << " " << cropOrigin.y();
         qDebug() << cropOrigin.rx() << " " << cropOrigin.ry();
         if (!rubberBand) {
-            rubberBand = new QRubberBand(QRubberBand::Rectangle, 0);
+            rubberBand = new QRubberBand(QRubberBand::Rectangle, nullptr);
             rubberBand->setGeometry(QRect(cropOrigin, QSize()));
             rubberBand->show();
         } else {

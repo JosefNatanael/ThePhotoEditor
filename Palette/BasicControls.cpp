@@ -43,9 +43,6 @@ BasicControls::BasicControls(QWidget *parent) :
     logoLasso.load(":/icons/resources/cutout-lasso.svg");
     logoLasso = logoLasso.scaled(ui->lassoLabel->size(), Qt::KeepAspectRatio);
     ui->lassoLabel->setPixmap(logoLasso);
-
-
-    connect(ui->rectangleCutRadioButton, SIGNAL(clicked()), this, SLOT(onRadioButtonToggled()));
 }
 
 BasicControls::~BasicControls()
