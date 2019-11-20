@@ -8,6 +8,7 @@
 #include "Palette/Brush.h"
 #include "Palette/Histogram.h"
 #include "Palette/ColorControls.h"
+#include "Palette/Effects.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -134,6 +135,11 @@ void MainWindow::reconnectConnection()
     connect(brush, &Brush::penColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::penWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
     connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::onImageCropped);
+
+    connect(effect, &Effects::gaussianBlurOnClicked, workspaceArea, &WorkspaceArea::gaussianBlurSlot);
+    connect(effect, &Effects::meanBlurOnClicked, workspaceArea, &WorkspaceArea::meanBlurSlot);
+    connect(colors, &ColorControls::blackAndWhiteApplied, workspaceArea, &WorkspaceArea::blackAndWhiteSlot);
+    connect(colors, &ColorControls::invertApplied, workspaceArea, &WorkspaceArea::invertSlot);
 }
 
 /*

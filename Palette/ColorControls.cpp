@@ -15,5 +15,10 @@ ColorControls::~ColorControls()
 
 void ColorControls::on_bnwButton_clicked()
 {
+    emit blackAndWhiteApplied();
+}
 
+void ColorControls::on_invertButton_clicked()
+{
+    emit invertApplied();
 }

@@ -18,11 +18,14 @@ public:
 private slots:
     void on_bnwButton_clicked();
 
+    void on_invertButton_clicked();
+
 private:
     Ui::ColorControls *ui;
 
 signals:
-
+    void blackAndWhiteApplied();
+    void invertApplied();
 };
 
 #endif // COLORCONTROLS_H

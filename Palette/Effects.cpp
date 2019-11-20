@@ -1,5 +1,8 @@
 #include "Effects.h"
 #include "ui_Effects.h"
+#include "FilterTransform/KernelBased/GaussianBlurFilter.h"
+#include "FilterTransform/KernelBased/MeanBlurFilter.h"
+#include <QDebug>
 
 Effects::Effects(QWidget *parent) :
     QWidget(parent),
@@ -20,12 +23,12 @@ Effects::~Effects()
 
 void Effects::on_gaussianPushButton_clicked()
 {
-    //TODO
+    emit gaussianBlurOnClicked();
 }
 
 void Effects::on_meanPushButton_clicked()
 {
-    //TODO
+    emit meanBlurOnClicked();
 }
 
 void Effects::on_inpaintingPushButton_clicked()

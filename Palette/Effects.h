@@ -22,6 +22,10 @@ private slots:
 
     void on_inpaintingPushButton_clicked();
 
+signals:
+    void gaussianBlurOnClicked();
+    void meanBlurOnClicked();
+
 private:
     Ui::Effects *ui;
 };

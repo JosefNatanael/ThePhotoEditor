@@ -49,6 +49,10 @@ public:
 
 public slots:
     void                    print();
+    void                    gaussianBlurSlot();
+    void                    meanBlurSlot();
+    void                    blackAndWhiteSlot();
+    void                    invertSlot();
 
 signals:
     void                    imageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
