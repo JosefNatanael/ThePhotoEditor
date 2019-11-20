@@ -6,6 +6,7 @@
 #include <QImage>
 #include <QPoint>
 #include <QGraphicsScene>
+#include <QRubberBand>
 
 namespace Ui {
 class WorkspaceArea;
@@ -36,16 +37,17 @@ public:
     void                    setPenWidth(int newWidth);
     void                    setModified(bool);
     void                    setImageLoaded(bool);
-    void                    resize(int, int);
 
     QImage                  commitImage();
 
 public slots:
     void                    print();
+    void                    onRadioButtonToggled(const QString&);
 
 signals:
     void                    imageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
     void                    edited(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
+    void                    imageCropped(const QImage&, int width, int height);
 
 protected:
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -65,6 +67,12 @@ private:
     int                     imageHeight;                // Saves the height of our current image
     QGraphicsPixmapItem*    pixmapGraphics = nullptr;   // The pointer to foreground image item
     QGraphicsPathItem*      pathItem = nullptr;         // Pointer to the strokes created when drawing
+    QString                 toggledRB;
+    QPoint                  cropOriginScreen;
+    QPoint                  cropOrigin;
+    QRubberBand*            rubberBand = nullptr;
+    int                     cropX, cropY;
+    double                  dx, dy;
 
 };
 

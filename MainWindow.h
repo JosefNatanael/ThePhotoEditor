@@ -50,6 +50,7 @@ private slots:
     void                        clearImage();
     void                        onZoom(const QString&);
     void                        onCrossCursorChanged(bool);
+    void                        onImageCropped(const QImage&, int width, int height);
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
@@ -94,6 +95,8 @@ private:
     bool                        fileSaved = false;      // the state that saves whether our current project been saved
     double                      currentZoom = 1.0;
     QComboBox*                  comboBox;
+    int                         resizedImageHeight;
+    int                         resizedImageWidth;
 };
 
 // Close the application

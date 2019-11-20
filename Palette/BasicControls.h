@@ -18,6 +18,7 @@ public:
 private slots:
     void on_beginCutoutPushButton_clicked();
     void on_cancelCutoutPushButton_clicked();
+    void onRadioButtonToggled();
 
 private:
     Ui::BasicControls *ui;
@@ -25,6 +26,7 @@ private:
 
 signals:
     void crossCursorChanged(bool);
+    void radioButtonToggled(const QString&);
 
 };
 

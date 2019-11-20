@@ -109,11 +109,48 @@ bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 
 void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (toggledRB == "rect") {
+        cropOriginScreen = event->screenPos();
+        cropOrigin = event->scenePos().toPoint();
+        qDebug() << cropOrigin.x() << " " << cropOrigin.y();
+        qDebug() << cropOrigin.rx() << " " << cropOrigin.ry();
+        if (!rubberBand) {
+            rubberBand = new QRubberBand(QRubberBand::Rectangle, 0);
+            rubberBand->setGeometry(QRect(cropOrigin, QSize()));
+            rubberBand->show();
+        } else {
+            rubberBand = nullptr;
+        }
+    }
     QGraphicsScene::mousePressEvent(event);
 }
 
 void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (toggledRB == "rect" && rubberBand) {
+
+        if (cropOrigin.x() + (event->scenePos().toPoint().x()- cropOrigin.x()) <= width() &&
+                cropOrigin.x() + (event->scenePos().toPoint().x()- cropOrigin.x()) > 0) {
+            cropX = event->scenePos().toPoint().x() - cropOrigin.x();
+            dx = event->screenPos().x() - cropOriginScreen.x();
+        }
+        if (cropOrigin.y() + (event->scenePos().toPoint().y() - cropOrigin.y()) <= height() &&
+                cropOrigin.y() + (event->scenePos().toPoint().y() - cropOrigin.y()) > 0) {
+            cropY = event->scenePos().toPoint().y() - cropOrigin.y();
+            dy = event->screenPos().y() - cropOriginScreen.y();
+        }
+//        qDebug() << cropX << " " << cropY;
+//        qDebug() << imageWidth << " " << imageHeight;
+//        qDebug() << width() << " " << height();
+
+        QRect rect = QRect(cropOriginScreen.x(), cropOriginScreen.y(),
+                           dx,
+                           dy).normalized();
+        rubberBand->setGeometry(rect);
+        QGraphicsScene::mouseMoveEvent(event);
+        return;
+    }
+
     if ((event->buttons() & Qt::LeftButton) == 0) {
         QGraphicsScene::mouseMoveEvent(event);
         return;
@@ -142,9 +179,32 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+
+    if (toggledRB == "rect" && rubberBand) {
+        if (cropX < 0) {
+            cropOrigin.setX(cropOrigin.x() + cropX);
+            cropX = cropOrigin.x() - cropX;
+        }
+
+        if (cropY < 0) {
+            cropOrigin.setY(cropOrigin.y() + cropY);
+            cropY = cropOrigin.y() - cropY;
+        }
+
+        QRect cropRect = QRect(cropOrigin.x(), cropOrigin.y(), cropX, cropY);
+
+        QImage croppedImage = image.copy(cropRect);
+
+        emit imageCropped(croppedImage, cropX, cropY);
+
+        rubberBand->hide();
+        rubberBand = nullptr;
+
+    }
     pathItem = nullptr;
     QGraphicsScene::mouseReleaseEvent(event);
 }
+
 
 // Print the image
 void WorkspaceArea::print()
@@ -168,10 +228,8 @@ void WorkspaceArea::print()
 #endif // QT_CONFIG(printdialog)
 }
 
-void WorkspaceArea::resize(int width, int height)
-{
-    //pixmapGraphics->setPos({-width*0.5, -height*0.5});
-    this->imageWidth = width;
-    this->imageHeight = height;
-}
 
+void WorkspaceArea::onRadioButtonToggled(const QString& toggled) {
+    toggledRB = toggled;
+    qDebug() << "RECT";
+}

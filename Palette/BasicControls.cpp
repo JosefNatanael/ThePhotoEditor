@@ -43,6 +43,9 @@ BasicControls::BasicControls(QWidget *parent) :
     logoLasso.load(":/icons/resources/cutout-lasso.svg");
     logoLasso = logoLasso.scaled(ui->lassoLabel->size(), Qt::KeepAspectRatio);
     ui->lassoLabel->setPixmap(logoLasso);
+
+
+    connect(ui->rectangleCutRadioButton, SIGNAL(clicked()), this, SLOT(onRadioButtonToggled()));
 }
 
 BasicControls::~BasicControls()
@@ -67,4 +70,14 @@ void BasicControls::on_cancelCutoutPushButton_clicked()
     ui->cropPushButton->setEnabled(true);
     ui->beginCutoutPushButton->setEnabled(true);
     emit crossCursorChanged(false);
+}
+
+void BasicControls::onRadioButtonToggled() {
+   if (ui->rectangleCutRadioButton->isChecked()) {
+       emit radioButtonToggled("rect");
+   } else if (ui->lassoCutRadioButton->isChecked()) {
+       emit radioButtonToggled("lasso");
+   } else if (ui->magicCutRadioButton->isChecked()) {
+       emit radioButtonToggled("magic");
+   }
 }
