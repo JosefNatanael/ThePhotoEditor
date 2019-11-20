@@ -12,9 +12,11 @@
 static const int SCENE_WIDTH = 720;    // The default width of the workspace
 static const int SCENE_HEIGHT = 480;   // The default height of the workspace
 
-WorkspaceArea::WorkspaceArea(QObject *parent)
+WorkspaceArea::WorkspaceArea(QGraphicsView* parentView, QObject *parent)
     : QGraphicsScene (0, 0, SCENE_WIDTH, SCENE_HEIGHT, parent)
 {
+    // Set parent view
+    this->parentView = parentView;
     // Set default workspace resolution
     imageWidth = SCENE_WIDTH;
     imageHeight = SCENE_HEIGHT;
@@ -26,9 +28,12 @@ WorkspaceArea::WorkspaceArea(QObject *parent)
     pen.setJoinStyle(Qt::RoundJoin);
 }
 
-WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
+WorkspaceArea::WorkspaceArea(int width, int height, QGraphicsView* parentView, QObject *parent)
     : QGraphicsScene (0, 0, width, height, parent)
 {
+    // Set parent view
+    this->parentView = parentView;
+    // Set workspace resolution
     imageWidth = width;
     imageHeight = height;
     // Set default values for the monitored variables
@@ -109,7 +114,7 @@ bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 
 void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (toggledRB == "rect") {
+    if (cursorMode == CursorMode::RECTANGLECROP) {
         cropOriginScreen = event->screenPos();
         cropOrigin = event->scenePos().toPoint();
         qDebug() << cropOrigin.x() << " " << cropOrigin.y();
@@ -127,8 +132,34 @@ void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (toggledRB == "rect" && rubberBand) {
+    if ((event->buttons() & Qt::LeftButton) == 0) {
+        QGraphicsScene::mouseMoveEvent(event);
+        return;
+    }
 
+    switch (cursorMode) {
+    case CursorMode::SCRIBBLE:
+    {
+        QPainterPath path;
+        if(pathItem == nullptr) {
+            path.moveTo(event->scenePos());					// move path to event scene position
+            pathItem = new QGraphicsPathItem();
+            pen.setColor(myPenColor);
+            pen.setWidth(myPenWidth);
+            pathItem->setPen(pen);                          // set sticker pen to default pen
+            pathItem->setPath(path);						// set sticker path to the new path
+            this->addItem(pathItem);
+            emit edited(pathItem);
+        }
+
+        path = pathItem->path();							// get path from sticker
+        path.lineTo(event->scenePos());						// draw line from last event pos to current pos
+        pathItem->setPath(path);
+        pathItem->update();
+        break;
+    }
+    case CursorMode::RECTANGLECROP:
+    {
         if (cropOrigin.x() + (event->scenePos().toPoint().x()- cropOrigin.x()) <= width() &&
                 cropOrigin.x() + (event->scenePos().toPoint().x()- cropOrigin.x()) > 0) {
             cropX = event->scenePos().toPoint().x() - cropOrigin.x();
@@ -139,48 +170,28 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             cropY = event->scenePos().toPoint().y() - cropOrigin.y();
             dy = event->screenPos().y() - cropOriginScreen.y();
         }
-//        qDebug() << cropX << " " << cropY;
-//        qDebug() << imageWidth << " " << imageHeight;
-//        qDebug() << width() << " " << height();
+        //        qDebug() << cropX << " " << cropY;
+        //        qDebug() << imageWidth << " " << imageHeight;
+        //        qDebug() << width() << " " << height();
 
-        QRect rect = QRect(cropOriginScreen.x(), cropOriginScreen.y(),
-                           dx,
-                           dy).normalized();
+        QRect rect = QRect(cropOriginScreen.x(), cropOriginScreen.y(), dx, dy).normalized();
         rubberBand->setGeometry(rect);
-        QGraphicsScene::mouseMoveEvent(event);
-        return;
+        break;
     }
-
-    if ((event->buttons() & Qt::LeftButton) == 0) {
-        QGraphicsScene::mouseMoveEvent(event);
-        return;
     }
-
-    QPainterPath path;
-    if(pathItem == nullptr) {
-        path.moveTo(event->scenePos());					// move path to event scene position
-        pathItem = new QGraphicsPathItem();
-        pen.setColor(myPenColor);
-        pen.setWidth(myPenWidth);
-        pathItem->setPen(pen);                          // set sticker pen to default pen
-        pathItem->setPath(path);						// set sticker path to the new path
-        this->addItem(pathItem);
-        emit edited(pathItem);
-    }
-
-    path = pathItem->path();							// get path from sticker
-    path.lineTo(event->scenePos());						// draw line from last event pos to current pos
-    pathItem->setPath(path);
-    pathItem->update();
 
     QGraphicsScene::mouseMoveEvent(event);
     modified = true;
 }
 
 void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-
-    if (toggledRB == "rect" && rubberBand) {
+{   
+    switch (cursorMode) {
+    case CursorMode::SCRIBBLE:
+        pathItem = nullptr;
+        break;
+    case CursorMode::RECTANGLECROP:
+    {
         if (cropX < 0) {
             cropOrigin.setX(cropOrigin.x() + cropX);
             cropX = cropOrigin.x() - cropX;
@@ -196,12 +207,11 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         QImage croppedImage = image.copy(cropRect);
 
         emit imageCropped(croppedImage, cropX, cropY);
-
-        rubberBand->hide();
+        delete rubberBand;
         rubberBand = nullptr;
-
+        break;
     }
-    pathItem = nullptr;
+    }
     QGraphicsScene::mouseReleaseEvent(event);
 }
 
@@ -226,10 +236,4 @@ void WorkspaceArea::print()
         painter.drawImage(0, 0, image);
     }
 #endif // QT_CONFIG(printdialog)
-}
-
-
-void WorkspaceArea::onRadioButtonToggled(const QString& toggled) {
-    toggledRB = toggled;
-    qDebug() << "RECT";
 }

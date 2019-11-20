@@ -71,13 +71,3 @@ void BasicControls::on_cancelCutoutPushButton_clicked()
     ui->beginCutoutPushButton->setEnabled(true);
     emit crossCursorChanged(false);
 }
-
-void BasicControls::onRadioButtonToggled() {
-   if (ui->rectangleCutRadioButton->isChecked()) {
-       emit radioButtonToggled("rect");
-   } else if (ui->lassoCutRadioButton->isChecked()) {
-       emit radioButtonToggled("lasso");
-   } else if (ui->magicCutRadioButton->isChecked()) {
-       emit radioButtonToggled("magic");
-   }
-}

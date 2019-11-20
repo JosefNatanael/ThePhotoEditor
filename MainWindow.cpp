@@ -49,10 +49,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     // Spawns a WorkspaceArea
-    workspaceArea = new WorkspaceArea;
+    graphicsView = new QGraphicsView(this);
+    // Spawns a graphicsView
+    workspaceArea = new WorkspaceArea(graphicsView);
 
     // Adds the workspaceArea into our graphicsView
-    graphicsView = new QGraphicsView(this);
     graphicsView->setScene(workspaceArea);
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
@@ -131,7 +132,6 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::imageLoaded, histo, &Histogram::onImageLoaded);
     connect(brush, &Brush::penColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::penWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
-    connect(basics, &BasicControls::radioButtonToggled, workspaceArea, &WorkspaceArea::onRadioButtonToggled);
     connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::onImageCropped);
 }
 
@@ -145,7 +145,7 @@ void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
         workspaceArea = nullptr;
     }
 
-    workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
+    workspaceArea = new WorkspaceArea(imageWidth, imageHeight, graphicsView);
     reconnectConnection();
 
     graphicsView->setScene(workspaceArea);
@@ -485,11 +485,13 @@ void MainWindow::onZoom(const QString& level)
 
 void MainWindow::onCrossCursorChanged(bool cross)
 {
-    if(cross){
+    if (cross) {
         graphicsView->setCursor(Qt::CrossCursor);
+        workspaceArea->setCursorMode(WorkspaceArea::CursorMode::RECTANGLECROP);
     }
     else {
         graphicsView->setCursor(Qt::ArrowCursor);
+        workspaceArea->setCursorMode(WorkspaceArea::CursorMode::SCRIBBLE);
     }
 }
 

@@ -17,9 +17,15 @@ class WorkspaceArea : public QGraphicsScene
     Q_OBJECT
 
 public:
-    explicit WorkspaceArea(QObject* parent = nullptr);
-    WorkspaceArea(int width, int height, QObject* parent = nullptr);
+    explicit WorkspaceArea(QGraphicsView* parentView, QObject* parent = nullptr);
+    WorkspaceArea(int width, int height, QGraphicsView* parentView, QObject* parent = nullptr);
     virtual ~WorkspaceArea() override = default;
+
+public:
+    enum class CursorMode {
+        SCRIBBLE,
+        RECTANGLECROP
+    };
 
 public:
     bool                    openImage(const QImage&, int width, int height);
@@ -33,16 +39,16 @@ public:
     QColor                  penColor() const { return myPenColor; }
     int                     penWidth() const { return myPenWidth; }
 
-    void                    setPenColor(const QColor& newColor);
-    void                    setPenWidth(int newWidth);
-    void                    setModified(bool);
-    void                    setImageLoaded(bool);
+    void                    setPenColor(const QColor& newColor) { myPenColor = newColor; }
+    void                    setPenWidth(int newWidth) { myPenWidth = newWidth; }
+    void                    setModified(bool modified) { this->modified = modified; }
+    void                    setImageLoaded(bool isImageLoaded) { this->isImageLoaded = isImageLoaded ; }
+    void                    setCursorMode(CursorMode cursorMode) { this->cursorMode = cursorMode; }
 
     QImage                  commitImage();
 
 public slots:
     void                    print();
-    void                    onRadioButtonToggled(const QString&);
 
 signals:
     void                    imageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
@@ -55,8 +61,13 @@ protected:
     virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
+    QGraphicsView*          parentView;
+
     bool                    modified;                   // Workspace was modified
     bool                    isImageLoaded = false;        // If true, loaded image can be drawn without new canvas
+    CursorMode              cursorMode = CursorMode::SCRIBBLE;  // Mouse events will be used to scribble the workspacearea
+    QRubberBand*            rubberBand = nullptr;
+    QPoint                  rubberBandOrigin;
 
     QPen                    pen;                        // Pen for drawing paths
     int                     myPenWidth;                 // stores the width of the current pen
@@ -67,37 +78,12 @@ private:
     int                     imageHeight;                // Saves the height of our current image
     QGraphicsPixmapItem*    pixmapGraphics = nullptr;   // The pointer to foreground image item
     QGraphicsPathItem*      pathItem = nullptr;         // Pointer to the strokes created when drawing
-    QString                 toggledRB;
+
     QPoint                  cropOriginScreen;
     QPoint                  cropOrigin;
-    QRubberBand*            rubberBand = nullptr;
     int                     cropX, cropY;
     double                  dx, dy;
 
 };
-
-// Used to change the pen color
-inline void WorkspaceArea::setPenColor(const QColor &newColor)
-{
-    myPenColor = newColor;
-}
-
-// Used to change the pen width
-inline void WorkspaceArea::setPenWidth(int newWidth)
-{
-    myPenWidth = newWidth;
-}
-
-// Used to change the modified state of the WorkspaceArea
-inline void WorkspaceArea::setModified(bool modif)
-{
-    modified = modif;
-}
-
-// Used to change the loaded state of the WorkspaceArea
-inline void WorkspaceArea::setImageLoaded(bool isLoaded)
-{
-    isImageLoaded = isLoaded;
-}
 
 #endif // WORKSPACEAREA_H
