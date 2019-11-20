@@ -1,2 +1,25 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/icons">
+        <file>resources/camera-retro-solid.svg</file>
+        <file>resources/cutout-lasso.svg</file>
+        <file>resources/cutout-magic-wand.svg</file>
+        <file>resources/cutout-rectangle.svg</file>
+        <file>resources/effects-logo.svg</file>
+        <file>resources/flip-horizontal.svg</file>
+        <file>resources/flip-vertical.svg</file>
+        <file>resources/folder-open-regular.svg</file>
+        <file>resources/history-solid.svg</file>
+        <file>resources/list-ul-solid.svg</file>
+        <file>resources/network-wired-solid.svg</file>
+        <file>resources/palette-solid.svg</file>
+        <file>resources/plus-square-regular.svg</file>
+        <file>resources/print-solid.svg</file>
+        <file>resources/question-circle-regular.svg</file>
+        <file>resources/rotate-left.svg</file>
+        <file>resources/rotate-right.svg</file>
+        <file>resources/save-regular.svg</file>
+        <file>resources/save-solid.svg</file>
+        <file>resources/server-solid.svg</file>
+        <file>resources/users-solid.svg</file>
+    </qresource>
+</RCC>

@@ -105,23 +105,4 @@ RESOURCES += \
     Resources.qrc
 
 DISTFILES += \
-    resources/camera-retro-solid.svg \
-    resources/cutout-lasso.svg \
-    resources/cutout-magic-wand.svg \
-    resources/cutout-rectangle.svg \
-    resources/flip-horizontal.svg \
-    resources/flip-vertical.svg \
-    resources/folder-open-regular.svg \
-    resources/history-solid.svg \
-    resources/list-ul-solid.svg \
-    resources/network-wired-solid.svg \
-    resources/palette-solid.svg \
-    resources/plus-square-regular.svg \
-    resources/print-solid.svg \
-    resources/question-circle-regular.svg \
-    resources/rotate-left.svg \
-    resources/rotate-right.svg \
-    resources/save-regular.svg \
-    resources/save-solid.svg \
-    resources/server-solid.svg \
-    resources/users-solid.svg
+
