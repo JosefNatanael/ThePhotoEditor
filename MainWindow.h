@@ -20,6 +20,7 @@
 #include "Palette/Brush.h"
 #include "Palette/ColorControls.h"
 #include "Palette/BasicControls.h"
+#include "Palette/Effects.h"
 
 namespace Ui {
 class MainWindow;
@@ -90,6 +91,7 @@ private:
     Brush*                      brush;                  // Our Brush widget
     ColorControls*              colors;                 // Our ColorControls widget
     BasicControls*              basics;                 // Our BasicControls widget
+    Effects*                    effect;                 // Our Effects widget
 
     QString                     fileName = "";          // filename of the loaded image
     QByteArray                  fileFormat;             // the file format of our loaded image

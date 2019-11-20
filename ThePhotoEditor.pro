@@ -30,6 +30,7 @@ SOURCES += \
         FilterTransform/AbstractKernelBasedImageFilterTransform.cpp \
         FilterTransform/AbstractNonKernelBasedImageFilterTransform.cpp \
         FilterTransform/KernelBased/GaussianBlurFilter.cpp \
+        FilterTransform/KernelBased/MeanBlurFilter.cpp \
         FilterTransform/NonKernelBased/BrightnessFilter.cpp \
         FilterTransform/NonKernelBased/ClockwiseRotationTransform.cpp \
         FilterTransform/NonKernelBased/ContrastFilter.cpp \
@@ -46,6 +47,7 @@ SOURCES += \
         Palette/BasicControls.cpp \
         Palette/Brush.cpp \
         Palette/ColorControls.cpp \
+        Palette/Effects.cpp \
         Palette/Histogram.cpp \
         PixelHelper.cpp \
         WindowHelper.cpp \
@@ -60,6 +62,7 @@ HEADERS += \
         FilterTransform/AbstractKernelBasedImageFilterTransform.h \
         FilterTransform/AbstractNonKernelBasedImageFilterTransform.h \
         FilterTransform/KernelBased/GaussianBlurFilter.h \
+        FilterTransform/KernelBased/MeanBlurFilter.h \
         FilterTransform/NonKernelBased/BrightnessFilter.h \
         FilterTransform/NonKernelBased/ClockwiseRotationTransform.h \
         FilterTransform/NonKernelBased/ContrastFilter.h \
@@ -77,6 +80,7 @@ HEADERS += \
         Palette/BasicControls.h \
         Palette/Brush.h \
         Palette/ColorControls.h \
+        Palette/Effects.h \
         Palette/Histogram.h \
         PixelHelper.h \
         WindowHelper.h \
@@ -89,6 +93,7 @@ FORMS += \
         Palette/BasicControls.ui \
         Palette/Brush.ui \
         Palette/ColorControls.ui \
+        Palette/Effects.ui \
         Palette/Histogram.ui
 
 # Default rules for deployment.
@@ -99,4 +104,24 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     Resources.qrc
 
-DISTFILES +=
+DISTFILES += \
+    resources/camera-retro-solid.svg \
+    resources/cutout-lasso.svg \
+    resources/cutout-magic-wand.svg \
+    resources/cutout-rectangle.svg \
+    resources/flip-horizontal.svg \
+    resources/flip-vertical.svg \
+    resources/folder-open-regular.svg \
+    resources/history-solid.svg \
+    resources/list-ul-solid.svg \
+    resources/network-wired-solid.svg \
+    resources/palette-solid.svg \
+    resources/plus-square-regular.svg \
+    resources/print-solid.svg \
+    resources/question-circle-regular.svg \
+    resources/rotate-left.svg \
+    resources/rotate-right.svg \
+    resources/save-regular.svg \
+    resources/save-solid.svg \
+    resources/server-solid.svg \
+    resources/users-solid.svg

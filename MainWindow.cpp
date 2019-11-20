@@ -109,7 +109,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // TODO 5. Adds an Effects widget to the treeWidget palette
     addRoot(effects, "Effects");
-
+    effect = new Effects();
+    customAddChild(effects, effect);
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     // Setup all our signal and slots
