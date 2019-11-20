@@ -415,24 +415,19 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     int workspaceAreaWidth = resizedImageWidth;
     int workspaceAreaHeight = resizedImageHeight;
     const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
-    int screenWidth = screenSize.width();
-    int screenHeight = screenSize.height();
     if (event->orientation() == Qt::Vertical) {
-        if (event->delta() > 7 && workspaceAreaWidth < screenWidth && workspaceAreaHeight < screenHeight) {
-            int a = static_cast<int>(workspaceAreaWidth * scaleFactor);
-            int b = static_cast<int>(workspaceAreaHeight * scaleFactor);
-            graphicsView->scale(static_cast<double>(a) / workspaceAreaWidth, static_cast<double>(b) / workspaceAreaHeight);
-            resizeGraphicsViewBoundaries(static_cast<int>(workspaceAreaWidth * scaleFactor), static_cast<int>(workspaceAreaHeight * scaleFactor));
+        if (event->delta() > 7 && workspaceAreaWidth < screenSize.width() && workspaceAreaHeight < screenSize.height()) {
             resizedImageWidth = static_cast<int>(workspaceAreaWidth * scaleFactor);
             resizedImageHeight = static_cast<int>(workspaceAreaHeight * scaleFactor);
+            graphicsView->scale(static_cast<double>(resizedImageWidth) / workspaceAreaWidth, static_cast<double>(resizedImageHeight) / workspaceAreaHeight);
+            resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom *= scaleFactor;
         }
         else if (event->delta() < -7 && workspaceAreaWidth > 200 && workspaceAreaHeight > 200) {
-            int a = static_cast<int>(workspaceAreaWidth * (1.0 / scaleFactor));
-            int b = static_cast<int>(workspaceAreaHeight * (1.0 / scaleFactor));
-            graphicsView->scale(static_cast<double>(a) / workspaceAreaWidth, static_cast<double>(b) / workspaceAreaHeight);
             resizedImageWidth = static_cast<int>(workspaceAreaWidth * (1.0 / scaleFactor));
             resizedImageHeight = static_cast<int>(workspaceAreaHeight * (1.0 / scaleFactor));
+            graphicsView->scale(static_cast<double>(resizedImageWidth) / workspaceAreaWidth, static_cast<double>(resizedImageHeight) / workspaceAreaHeight);
+            resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom /= scaleFactor;
         }
     }
