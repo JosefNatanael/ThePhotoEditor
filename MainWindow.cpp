@@ -493,23 +493,31 @@ void MainWindow::fitImageToScreen(int currentWidth, int currentHeight)
     int screenWidth = screenSize.width();
     int screenHeight = screenSize.height();
 
-    double ratio;
     if (currentWidth > screenWidth || currentHeight > screenHeight) {
-        ratio = qMax(static_cast<double>(screenWidth) / currentWidth, static_cast<double>(screenHeight) / currentHeight) * 0.5;
-    }
-    else {
-        ratio = qMin(static_cast<double>(screenWidth) / currentWidth, static_cast<double>(screenHeight) / currentHeight) * 0.5;
-    }
-    int newFittedWidth = static_cast<int>(currentWidth * ratio);
-    int newFittedHeight = static_cast<int>(currentHeight * ratio);
-    graphicsView->scale(static_cast<double>(newFittedWidth / currentWidth), static_cast<double>(newFittedHeight / currentHeight));
-    resizeGraphicsViewBoundaries(static_cast<int>(currentWidth * ratio), static_cast<int>(currentHeight * ratio));
-    resizedImageWidth = newFittedWidth;
-    resizedImageHeight = newFittedHeight;
-    currentZoom *= ratio;
-    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    comboBox->setCurrentText("Fit to screen");
+        double ratio = qMax((double) screenWidth / (double) currentWidth, (double) screenHeight / (double) currentHeight)*0.5;
+        int a = resizedImageWidth*ratio;
+        int b = resizedImageHeight*ratio;
+        graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
+        resizeGraphicsViewBoundaries(resizedImageWidth*ratio, resizedImageHeight*ratio);
+        resizedImageWidth *= ratio;
+        resizedImageHeight *= ratio;
+        currentZoom *= ratio;
+        graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+        comboBox->setCurrentText("Fit to screen");
 
+    } else if (currentWidth < screenWidth || currentHeight < screenHeight) {
+        double ratio = qMin((double) screenWidth / (double) currentWidth, (double) screenHeight / (double) currentHeight)*0.5;
+        int a = resizedImageWidth*ratio;
+        int b = resizedImageHeight*ratio;
+        graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
+        resizeGraphicsViewBoundaries(resizedImageWidth*ratio, resizedImageHeight*ratio);
+        resizedImageWidth *= ratio;
+        resizedImageHeight *= ratio;
+        currentZoom *= ratio;
+        graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+        comboBox->setCurrentText("Fit to screen");
+
+    }
     centerAndResize();
 }
 
