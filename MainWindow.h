@@ -13,6 +13,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QVector>
+#include "WindowHelper.h"
 
 #include "WorkspaceArea.h"
 #include "Palette/Histogram.h"

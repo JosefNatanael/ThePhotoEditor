@@ -414,7 +414,7 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     graphicsView->centerOn(0, 0);
     int workspaceAreaWidth = resizedImageWidth;
     int workspaceAreaHeight = resizedImageHeight;
-    QRect screenSize = QApplication::desktop()->screenGeometry();
+    const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
     int screenWidth = screenSize.width();
     int screenHeight = screenSize.height();
     if (event->orientation() == Qt::Vertical) {
@@ -441,16 +441,14 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
 
 void MainWindow::onZoom(const QString& level)
 {
-
-
     if (level == "Fit to screen") {
         fitImageToScreen(resizedImageWidth, resizedImageHeight);
         return;
     }
 
     double originalFactor = 1.0 / currentZoom;
-    int a = resizedImageWidth * originalFactor;
-    int b = resizedImageHeight * originalFactor;
+    int a = static_cast<int>(resizedImageWidth * originalFactor);
+    int b = static_cast<int>(resizedImageHeight * originalFactor);
     graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
     resizeGraphicsViewBoundaries(resizedImageWidth*originalFactor, resizedImageHeight*originalFactor);
     resizedImageWidth *= originalFactor;
@@ -473,8 +471,8 @@ void MainWindow::onZoom(const QString& level)
         currentZoom = 1.2;
     }
 
-    a = resizedImageWidth * scaleFactor;
-    b = resizedImageHeight * scaleFactor;
+    a = static_cast<int>(resizedImageWidth * scaleFactor);
+    b = static_cast<int>(resizedImageHeight * scaleFactor);
     graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
     resizeGraphicsViewBoundaries(resizedImageWidth*scaleFactor, resizedImageHeight*scaleFactor);
     resizedImageWidth *= scaleFactor;
@@ -495,9 +493,9 @@ void MainWindow::onCrossCursorChanged(bool cross)
     }
 }
 
-void MainWindow::fitImageToScreen(int currentWidth, int currentHeight) {
-
-    QRect screenSize = QApplication::desktop()->screenGeometry();
+void MainWindow::fitImageToScreen(int currentWidth, int currentHeight)
+{
+    const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
     int screenWidth = screenSize.width();
     int screenHeight = screenSize.height();
 
@@ -531,7 +529,7 @@ void MainWindow::fitImageToScreen(int currentWidth, int currentHeight) {
 
 void MainWindow::centerAndResize() {
     // get the dimension available on this screen
-    QSize availableSize = qApp->desktop()->availableGeometry().size();
+    QSize availableSize = WindowHelper::screenFromWidget(qApp->desktop())->availableSize();
     int width = availableSize.width();
     int height = availableSize.height();
     qDebug() << "Available dimensions " << width << "x" << height;
@@ -542,7 +540,7 @@ void MainWindow::centerAndResize() {
             Qt::LeftToRight,
             Qt::AlignCenter,
             newSize,
-            qApp->desktop()->availableGeometry()
+            WindowHelper::screenFromWidget(qApp->desktop())->availableGeometry()
         )
     );
 }
