@@ -59,6 +59,7 @@ private:
     void                        reconnectConnection();
     void                        reconstructWorkspaceArea(int imageWidth, int imageHeight);
     void                        handleWheelEvent(QGraphicsSceneWheelEvent* event);
+    void                        resetGraphicsViewScale();      // Revert changes caused by wheelEvent zoom
 
     void                        addRoot(QTreeWidgetItem* parent, QString name);
     void                        customAddChild(QTreeWidgetItem* parent, QWidget* widget);
@@ -96,7 +97,8 @@ private:
     QString                     fileName = "";          // filename of the loaded image
     QByteArray                  fileFormat;             // the file format of our loaded image
     bool                        fileSaved = false;      // the state that saves whether our current project been saved
-    double                      currentZoom = 1.0;
+    double                      currentZoom = 1.0;      // Saves our current zoom level
+    double                      totalScale = 1.0;
     QComboBox*                  comboBox;
     int                         resizedImageHeight;
     int                         resizedImageWidth;

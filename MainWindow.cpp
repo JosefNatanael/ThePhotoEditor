@@ -338,6 +338,7 @@ void MainWindow::on_actionOpen_triggered()
             int imageHeight = sizeOfImage.height();
             int imageWidth = sizeOfImage.width();
 
+            resetGraphicsViewScale();
             reconstructWorkspaceArea(imageWidth, imageHeight);
 
             resizedImageWidth = imageWidth;
@@ -419,6 +420,7 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
             resizedImageWidth = static_cast<int>(workspaceAreaWidth * scaleFactor);
             resizedImageHeight = static_cast<int>(workspaceAreaHeight * scaleFactor);
             graphicsView->scale(static_cast<double>(resizedImageWidth) / workspaceAreaWidth, static_cast<double>(resizedImageHeight) / workspaceAreaHeight);
+            totalScale *= static_cast<double>(resizedImageHeight) / workspaceAreaHeight;
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom *= scaleFactor;
         }
@@ -426,6 +428,7 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
             resizedImageWidth = static_cast<int>(workspaceAreaWidth * (1.0 / scaleFactor));
             resizedImageHeight = static_cast<int>(workspaceAreaHeight * (1.0 / scaleFactor));
             graphicsView->scale(static_cast<double>(resizedImageWidth) / workspaceAreaWidth, static_cast<double>(resizedImageHeight) / workspaceAreaHeight);
+            totalScale *= static_cast<double>(resizedImageWidth) / workspaceAreaWidth;
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom /= scaleFactor;
         }
@@ -554,4 +557,18 @@ void MainWindow::onImageCropped(const QImage& image, int width, int height) {
     resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
 
     fitImageToScreen(resizedImageWidth, resizedImageHeight);
+}
+
+void MainWindow::resetGraphicsViewScale()
+{
+    int workspaceAreaWidth = resizedImageWidth;
+    int workspaceAreaHeight = resizedImageHeight;
+
+            resizedImageWidth = static_cast<int>(workspaceAreaWidth / totalScale);
+            resizedImageHeight = static_cast<int>(workspaceAreaHeight / totalScale);
+            graphicsView->scale(static_cast<double>(resizedImageWidth) / workspaceAreaWidth, static_cast<double>(resizedImageHeight) / workspaceAreaHeight);
+            resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
+
+    currentZoom = 1 / totalScale;
+    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 }
