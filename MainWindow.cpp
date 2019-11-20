@@ -167,7 +167,7 @@ void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
     graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     graphicsView->setFocusPolicy(Qt::NoFocus);
-    graphicsView->setSceneRect(0, 0, newWidth - 2, newHeight - 2);    // Allow for extra 2px boundaries
+    graphicsView->setSceneRect(0, 0, newWidth - 2, newHeight - 2);    // Allow for extra 2px boundaries, 1px on the left/top and 1px on the right/bottom
 }
 
 // Adds a root into a parent widget, in the palette treeWidget
@@ -326,7 +326,6 @@ void MainWindow::on_actionOpen_triggered()
         // Get the file to open from a dialog
         QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
         QImage loadedImage;
-        //clearImage();
         if (!fileName.isEmpty()){
             if (!loadedImage.load(fileName)) {
                 return;
@@ -345,10 +344,9 @@ void MainWindow::on_actionOpen_triggered()
             resizedImageHeight = imageHeight;
 
             workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
-            resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
+            resizeGraphicsViewBoundaries(imageWidth, imageHeight);
 
             fitImageToScreen(imageWidth, imageHeight);
-
         }
     }
 }
@@ -495,31 +493,23 @@ void MainWindow::fitImageToScreen(int currentWidth, int currentHeight)
     int screenWidth = screenSize.width();
     int screenHeight = screenSize.height();
 
+    double ratio;
     if (currentWidth > screenWidth || currentHeight > screenHeight) {
-        double ratio = qMax((double) screenWidth / (double) currentWidth, (double) screenHeight / (double) currentHeight)*0.5;
-        int a = resizedImageWidth*ratio;
-        int b = resizedImageHeight*ratio;
-        graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
-        resizeGraphicsViewBoundaries(resizedImageWidth*ratio, resizedImageHeight*ratio);
-        resizedImageWidth *= ratio;
-        resizedImageHeight *= ratio;
-        currentZoom *= ratio;
-        graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-        comboBox->setCurrentText("Fit to screen");
-
-    } else if (currentWidth < screenWidth || currentHeight < screenHeight) {
-        double ratio = qMin((double) screenWidth / (double) currentWidth, (double) screenHeight / (double) currentHeight)*0.5;
-        int a = resizedImageWidth*ratio;
-        int b = resizedImageHeight*ratio;
-        graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
-        resizeGraphicsViewBoundaries(resizedImageWidth*ratio, resizedImageHeight*ratio);
-        resizedImageWidth *= ratio;
-        resizedImageHeight *= ratio;
-        currentZoom *= ratio;
-        graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-        comboBox->setCurrentText("Fit to screen");
-
+        ratio = qMax(static_cast<double>(screenWidth) / currentWidth, static_cast<double>(screenHeight) / currentHeight) * 0.5;
     }
+    else {
+        ratio = qMin(static_cast<double>(screenWidth) / currentWidth, static_cast<double>(screenHeight) / currentHeight) * 0.5;
+    }
+    int newFittedWidth = static_cast<int>(currentWidth * ratio);
+    int newFittedHeight = static_cast<int>(currentHeight * ratio);
+    graphicsView->scale(static_cast<double>(newFittedWidth / currentWidth), static_cast<double>(newFittedHeight / currentHeight));
+    resizeGraphicsViewBoundaries(static_cast<int>(currentWidth * ratio), static_cast<int>(currentHeight * ratio));
+    resizedImageWidth = newFittedWidth;
+    resizedImageHeight = newFittedHeight;
+    currentZoom *= ratio;
+    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    comboBox->setCurrentText("Fit to screen");
+
     centerAndResize();
 }
 
