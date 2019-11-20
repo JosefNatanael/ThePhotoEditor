@@ -447,6 +447,7 @@ void MainWindow::onZoom(const QString& level)
     int a = static_cast<int>(resizedImageWidth * originalFactor);
     int b = static_cast<int>(resizedImageHeight * originalFactor);
     graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
+    totalScale *= (double) a / (double) resizedImageWidth;
     resizeGraphicsViewBoundaries(resizedImageWidth*originalFactor, resizedImageHeight*originalFactor);
     resizedImageWidth *= originalFactor;
     resizedImageHeight *= originalFactor;
@@ -471,6 +472,7 @@ void MainWindow::onZoom(const QString& level)
     a = static_cast<int>(resizedImageWidth * scaleFactor);
     b = static_cast<int>(resizedImageHeight * scaleFactor);
     graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
+    totalScale *= (double) a / (double) resizedImageWidth;
     resizeGraphicsViewBoundaries(resizedImageWidth*scaleFactor, resizedImageHeight*scaleFactor);
     resizedImageWidth *= scaleFactor;
     resizedImageHeight *= scaleFactor;
@@ -501,6 +503,7 @@ void MainWindow::fitImageToScreen(int currentWidth, int currentHeight)
         int a = resizedImageWidth*ratio;
         int b = resizedImageHeight*ratio;
         graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
+        totalScale *= (double) a / (double) resizedImageWidth;
         resizeGraphicsViewBoundaries(resizedImageWidth*ratio, resizedImageHeight*ratio);
         resizedImageWidth *= ratio;
         resizedImageHeight *= ratio;
@@ -513,6 +516,7 @@ void MainWindow::fitImageToScreen(int currentWidth, int currentHeight)
         int a = resizedImageWidth*ratio;
         int b = resizedImageHeight*ratio;
         graphicsView->scale((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
+        totalScale *= (double) a / (double) resizedImageWidth;
         resizeGraphicsViewBoundaries(resizedImageWidth*ratio, resizedImageHeight*ratio);
         resizedImageWidth *= ratio;
         resizedImageHeight *= ratio;
