@@ -19,13 +19,18 @@ private slots:
     void on_beginCutoutPushButton_clicked();
     void on_cancelCutoutPushButton_clicked();
 
+    void on_applyPushButton_clicked();
+
 private:
     Ui::BasicControls *ui;
     bool beginButtonClicked = false;
 
 signals:
     void crossCursorChanged(bool);
-
+    void ccwRotationSignal();
+    void cwRotationSignal();
+    void horizontalFlipSignal();
+    void verticalFlipSignal();
 };
 
 #endif // BASICCONTROLS_H

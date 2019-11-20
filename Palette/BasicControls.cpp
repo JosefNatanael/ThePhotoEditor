@@ -68,3 +68,11 @@ void BasicControls::on_cancelCutoutPushButton_clicked()
     ui->beginCutoutPushButton->setEnabled(true);
     emit crossCursorChanged(false);
 }
+
+void BasicControls::on_applyPushButton_clicked()
+{
+    if(ui->ccwRadioButton->isChecked()){emit ccwRotationSignal();}
+    if(ui->cwRadioButton->isChecked()){emit cwRotationSignal();}
+    if(ui->horizontalRadioButton->isChecked()){emit horizontalFlipSignal();}
+    if(ui->verticalRadioButton->isChecked()){emit verticalFlipSignal();}
+}

@@ -136,10 +136,16 @@ void MainWindow::reconnectConnection()
     connect(brush, &Brush::penWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
     connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::onImageCropped);
 
-    connect(effect, &Effects::gaussianBlurOnClicked, workspaceArea, &WorkspaceArea::gaussianBlurSlot);
-    connect(effect, &Effects::meanBlurOnClicked, workspaceArea, &WorkspaceArea::meanBlurSlot);
+    connect(basics, &BasicControls::ccwRotationSignal, workspaceArea, &WorkspaceArea::ccwRotationSlot);
+    connect(basics, &BasicControls::cwRotationSignal, workspaceArea, &WorkspaceArea::cwRotationSlot);
+    connect(basics, &BasicControls::horizontalFlipSignal, workspaceArea, &WorkspaceArea::horizontalFlipSlot);
+    connect(basics, &BasicControls::verticalFlipSignal, workspaceArea, &WorkspaceArea::verticalFlipSlot);
+
     connect(colors, &ColorControls::blackAndWhiteApplied, workspaceArea, &WorkspaceArea::blackAndWhiteSlot);
     connect(colors, &ColorControls::invertApplied, workspaceArea, &WorkspaceArea::invertSlot);
+
+    connect(effect, &Effects::gaussianBlurOnClicked, workspaceArea, &WorkspaceArea::gaussianBlurSlot);
+    connect(effect, &Effects::meanBlurOnClicked, workspaceArea, &WorkspaceArea::meanBlurSlot);
 }
 
 /*
