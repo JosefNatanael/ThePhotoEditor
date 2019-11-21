@@ -425,7 +425,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
             resizedImageWidth = workspaceAreaWidth * scaleFactor;
             resizedImageHeight = workspaceAreaHeight * scaleFactor;
             graphicsView->scale(resizedImageWidth / workspaceAreaWidth, resizedImageHeight / workspaceAreaHeight);
-            totalScale *= resizedImageHeight / workspaceAreaHeight;
+            totalScaleX *= resizedImageWidth / workspaceAreaWidth;
+            totalScaleY *= resizedImageHeight / workspaceAreaHeight;
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom *= scaleFactor;
         }
@@ -433,7 +434,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
             resizedImageWidth = workspaceAreaWidth * (1.0 / scaleFactor);
             resizedImageHeight = workspaceAreaHeight * (1.0 / scaleFactor);
             graphicsView->scale(resizedImageWidth / workspaceAreaWidth, resizedImageHeight / workspaceAreaHeight);
-            totalScale *= resizedImageWidth / workspaceAreaWidth;
+            totalScaleX *= resizedImageWidth / workspaceAreaWidth;
+            totalScaleY *= resizedImageHeight / workspaceAreaHeight;
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom /= scaleFactor;
         }
@@ -452,7 +454,8 @@ void MainWindow::onZoom(const QString& level)
     double a = resizedImageWidth * originalFactor;
     double b = resizedImageHeight * originalFactor;
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-    totalScale *= originalFactor;
+    totalScaleX *= originalFactor;
+    totalScaleY *= originalFactor;
     resizeGraphicsViewBoundaries(resizedImageWidth*originalFactor, resizedImageHeight*originalFactor);
     resizedImageWidth *= originalFactor;
     resizedImageHeight *= originalFactor;
@@ -477,7 +480,8 @@ void MainWindow::onZoom(const QString& level)
     a = resizedImageWidth * scaleFactor;
     b = resizedImageHeight * scaleFactor;
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-    totalScale *= a / resizedImageWidth;
+    totalScaleX *= a / resizedImageWidth;
+    totalScaleY *= a / resizedImageHeight;
     resizeGraphicsViewBoundaries(resizedImageWidth*scaleFactor, resizedImageHeight*scaleFactor);
     resizedImageWidth *= scaleFactor;
     resizedImageHeight *= scaleFactor;
@@ -508,7 +512,8 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
         double a = resizedImageWidth*ratio;
         double b = resizedImageHeight*ratio;
         graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-        totalScale *= ratio;
+        totalScaleX *= ratio;
+        totalScaleY *= ratio;
         resizeGraphicsViewBoundaries(resizedImageWidth*ratio, resizedImageHeight*ratio);
         resizedImageWidth *= ratio;
         resizedImageHeight *= ratio;
@@ -521,7 +526,8 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
         double a = resizedImageWidth*ratio;
         double b = resizedImageHeight*ratio;
         graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-        totalScale *= ratio;
+        totalScaleX *= ratio;
+        totalScaleY *= ratio;
         resizeGraphicsViewBoundaries(resizedImageWidth*ratio, resizedImageHeight*ratio);
         resizedImageWidth *= ratio;
         resizedImageHeight *= ratio;
@@ -551,16 +557,21 @@ void MainWindow::centerAndResize() {
 }
 // TO BE REMOVED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-void MainWindow::onImageCropped(const QImage& image, int width, int height) {
+void MainWindow::onImageCropped(const QImage& image, int width, int height)
+{
 
     qDebug() << "CROPPED";
+    qDebug() << width << height << resizedImageWidth << resizedImageHeight;
 
-    //reconstructWorkspaceArea(width, height);
+    double ratioX = resizedImageWidth / width;
+    double ratioY = resizedImageHeight / height;
+    totalScaleX *= ratioX;
+    totalScaleY *= ratioY;
 
     resizedImageWidth = width;
     resizedImageHeight = height;
 
-    qDebug() << resizedImageWidth << " " << resizedImageHeight;
+    graphicsView->scale(ratioX, ratioY);
 
     workspaceArea->openImage(image, resizedImageWidth, resizedImageHeight);
     resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
@@ -573,13 +584,14 @@ void MainWindow::resetGraphicsViewScale()
     int workspaceAreaWidth = resizedImageWidth;
     int workspaceAreaHeight = resizedImageHeight;
 
-    resizedImageWidth = workspaceAreaWidth / totalScale;
-    resizedImageHeight = workspaceAreaHeight / totalScale;
-    graphicsView->scale(1 / totalScale, 1 / totalScale);
+    resizedImageWidth = workspaceAreaWidth / totalScaleX;
+    resizedImageHeight = workspaceAreaHeight / totalScaleY;
+    graphicsView->scale(1 / totalScaleX, 1 / totalScaleY);
     resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
 
-    currentZoom = 1 / totalScale;
-    totalScale = 1;
+    currentZoom = 1 / totalScaleX;
+    totalScaleX = 1;
+    totalScaleY = 1;
     graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 }
 

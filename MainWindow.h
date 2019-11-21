@@ -101,7 +101,8 @@ private:
     QByteArray                  fileFormat;             // the file format of our loaded image
     bool                        fileSaved = false;      // the state that saves whether our current project been saved
     double                      currentZoom = 1.0;      // Saves our current zoom level
-    double                      totalScale = 1.0;
+    double                      totalScaleX = 1.0;
+    double                      totalScaleY = 1.0;
     QComboBox*                  comboBox;
     double                      resizedImageHeight = WorkspaceArea::SCENE_HEIGHT;
     double                      resizedImageWidth = WorkspaceArea::SCENE_WIDTH;
