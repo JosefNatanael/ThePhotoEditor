@@ -58,7 +58,7 @@ private slots:
     void                        applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength);
 
 private:
-    void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
+    void                        resizeGraphicsViewBoundaries(double newWidth, double newHeight);
     void                        reconnectConnection();
     void                        reconstructWorkspaceArea(int imageWidth, int imageHeight);
     void                        handleWheelEvent(QGraphicsSceneWheelEvent* event);
@@ -103,8 +103,8 @@ private:
     double                      currentZoom = 1.0;      // Saves our current zoom level
     double                      totalScale = 1.0;
     QComboBox*                  comboBox;
-    int                         resizedImageHeight = WorkspaceArea::SCENE_HEIGHT;
-    int                         resizedImageWidth = WorkspaceArea::SCENE_WIDTH;
+    double                      resizedImageHeight = WorkspaceArea::SCENE_HEIGHT;
+    double                      resizedImageWidth = WorkspaceArea::SCENE_WIDTH;
 };
 
 // Close the application
