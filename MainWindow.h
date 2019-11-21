@@ -2,25 +2,27 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "AboutUs.h"
 
 #include <QTreeWidgetItem>
 #include <QToolBar>
-
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QVector>
+
 #include "WindowHelper.h"
 
 #include "WorkspaceArea.h"
+
+#include "FilterTransform/AbstractImageFilterTransform.h"
 #include "Palette/Histogram.h"
 #include "Palette/Brush.h"
 #include "Palette/ColorControls.h"
 #include "Palette/BasicControls.h"
 #include "Palette/Effects.h"
+#include "AboutUs.h"
 
 namespace Ui {
 class MainWindow;
@@ -53,6 +55,7 @@ private slots:
     void                        onZoom(const QString&);
     void                        onCrossCursorChanged(bool);
     void                        onImageCropped(const QImage&, int width, int height);
+    void                        applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength);
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);

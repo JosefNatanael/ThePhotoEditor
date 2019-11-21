@@ -5,7 +5,7 @@ MeanBlurFilter::MeanBlurFilter(int size, QObject* parent) : AbstractKernelBasedI
     setKernel(size);
 }
 
-QImage MeanBlurFilter::applyFilter(const QImage &image, int size, double strength)
+QImage MeanBlurFilter::applyFilter(const QImage &image, int size, double)
 {
     setSize(size);
     setKernel(size);

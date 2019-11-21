@@ -3,6 +3,11 @@
 #include <QPixmap>
 #include <QDebug>
 
+#include "../FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.h"
+#include "../FilterTransform/NonKernelBased/ClockwiseRotationTransform.h"
+#include "../FilterTransform/NonKernelBased/FlipHorizontalTransform.h"
+#include "../FilterTransform/NonKernelBased/FlipVerticalTransform.h"
+
 BasicControls::BasicControls(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BasicControls)
@@ -71,8 +76,20 @@ void BasicControls::on_cancelCutoutPushButton_clicked()
 
 void BasicControls::on_applyPushButton_clicked()
 {
-    if(ui->ccwRadioButton->isChecked()){emit ccwRotationSignal();}
-    if(ui->cwRadioButton->isChecked()){emit cwRotationSignal();}
-    if(ui->horizontalRadioButton->isChecked()){emit horizontalFlipSignal();}
-    if(ui->verticalRadioButton->isChecked()){emit verticalFlipSignal();}
+    if(ui->ccwRadioButton->isChecked()) {
+        CounterClockwiseRotationTransform* ccwRotation = new CounterClockwiseRotationTransform();
+        emit applyTransformClicked(ccwRotation, 1, 1);
+    }
+    else if(ui->cwRadioButton->isChecked()) {
+        ClockwiseRotationTransform* cwRotation = new ClockwiseRotationTransform();
+        emit applyTransformClicked(cwRotation, 1, 1);
+    }
+    else if(ui->horizontalRadioButton->isChecked()) {
+        FlipHorizontalTransform* flipHorizontal = new FlipHorizontalTransform();
+        emit applyTransformClicked(flipHorizontal, 1, 1);
+    }
+    else if(ui->verticalRadioButton->isChecked()) {
+        FlipVerticalTransform* flipVertical = new FlipVerticalTransform();
+        emit applyTransformClicked(flipVertical, 1, 1);
+    }
 }

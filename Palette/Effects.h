@@ -17,14 +17,8 @@ public:
 
 private slots:
     void on_gaussianPushButton_clicked();
-
     void on_meanPushButton_clicked();
-
     void on_inpaintingPushButton_clicked();
-
-signals:
-    void gaussianBlurOnClicked();
-    void meanBlurOnClicked();
 
 private:
     Ui::Effects *ui;

@@ -23,12 +23,10 @@ Effects::~Effects()
 
 void Effects::on_gaussianPushButton_clicked()
 {
-    emit gaussianBlurOnClicked();
 }
 
 void Effects::on_meanPushButton_clicked()
 {
-    emit meanBlurOnClicked();
 }
 
 void Effects::on_inpaintingPushButton_clicked()

@@ -17,7 +17,7 @@
    <item row="0" column="2">
     <widget class="QPushButton" name="bnwButton">
      <property name="text">
-      <string>Off</string>
+      <string>Apply</string>
      </property>
     </widget>
    </item>
@@ -67,7 +67,7 @@
    <item row="1" column="2">
     <widget class="QPushButton" name="invertButton">
      <property name="text">
-      <string>Off</string>
+      <string>Apply</string>
      </property>
     </widget>
    </item>

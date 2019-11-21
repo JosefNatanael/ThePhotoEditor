@@ -6,15 +6,6 @@
 #if QT_CONFIG(printdialog)
 #include <QPrinter>
 #include <QPrintDialog>
-#include "FilterTransform/KernelBased/GaussianBlurFilter.h"
-#include "FilterTransform/KernelBased/MeanBlurFilter.h"
-#include "FilterTransform/NonKernelBased/GrayscaleFilter.h"
-#include "FilterTransform/NonKernelBased/InvertFilter.h"
-#include "FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.h"
-#include "FilterTransform/NonKernelBased/ClockwiseRotationTransform.h"
-#include "FilterTransform/NonKernelBased/FlipHorizontalTransform.h"
-#include "FilterTransform/NonKernelBased/FlipVerticalTransform.h"
-
 #endif
 #endif
 
@@ -242,63 +233,3 @@ void WorkspaceArea::print()
     }
 #endif // QT_CONFIG(printdialog)
 }
-
-void WorkspaceArea::ccwRotationSlot()
-{
-    CounterClockwiseRotationTransform ccw;
-    QImage result = ccw.applyFilter(image);
-    result.save("ccw.jpg");     //TODO: Add to history
-}
-
-void WorkspaceArea::cwRotationSlot()
-{
-    ClockwiseRotationTransform cw;
-    QImage result = cw.applyFilter(image);
-    result.save("cw.jpg");      //TODO: Add to history
-}
-
-void WorkspaceArea::horizontalFlipSlot()
-{
-    FlipHorizontalTransform horizontal;
-    QImage result = horizontal.applyFilter(image);
-    result.save("horizontal.jpg");     //TODO:Add to history
-}
-
-void WorkspaceArea::verticalFlipSlot()
-{
-    FlipVerticalTransform vertical;
-    QImage result = vertical.applyFilter(image);
-    result.save("vertical.jpg");        //TODO:Add to history
-}
-
-
-
-void WorkspaceArea::blackAndWhiteSlot()
-{
-    GrayscaleFilter gray;
-    QImage result = gray.applyFilter(image);
-    result.save("bnw.jpg");     //TODO: Add to history
-}
-
-void WorkspaceArea::invertSlot()
-{
-    InvertFilter i;
-    QImage result = i.applyFilter(image);
-    result.save("invert.jpg");
-}
-
-void WorkspaceArea::gaussianBlurSlot()
-{
-    GaussianBlurFilter g;
-    QImage result = g.applyFilter(image, 2.0);
-    result.save("gausswoi.jpg"); //TODO: Add to history or whatever.
-}
-
-void WorkspaceArea::meanBlurSlot()
-{
-    MeanBlurFilter m;
-    QImage result = m.applyFilter(image);
-    result.save("meanwoi.jpg"); //TODO: Add to history.
-}
-
-

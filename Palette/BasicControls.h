@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "../FilterTransform/AbstractImageFilterTransform.h"
+
 namespace Ui {
 class BasicControls;
 }
@@ -18,7 +20,6 @@ public:
 private slots:
     void on_beginCutoutPushButton_clicked();
     void on_cancelCutoutPushButton_clicked();
-
     void on_applyPushButton_clicked();
 
 private:
@@ -27,10 +28,7 @@ private:
 
 signals:
     void crossCursorChanged(bool);
-    void ccwRotationSignal();
-    void cwRotationSignal();
-    void horizontalFlipSignal();
-    void verticalFlipSignal();
+    void applyTransformClicked(AbstractImageFilterTransform* transform, int size, double strength);
 };
 
 #endif // BASICCONTROLS_H

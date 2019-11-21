@@ -115,9 +115,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     // Setup all our signal and slots
-    reconnectConnection();                                                                                      // Workspace related connection
-    connect(basics, &BasicControls::crossCursorChanged, this, &MainWindow::onCrossCursorChanged);                  // Cursor change connection
-    connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));         // Zoom level change connection
+    reconnectConnection();                                                                                  // Workspace related connection
+    connect(basics, &BasicControls::crossCursorChanged, this, &MainWindow::onCrossCursorChanged);           // Cursor change connection
+    connect(basics, &BasicControls::applyTransformClicked, this, &MainWindow::applyFilterTransform);        // Image transformation connection to basic controls
+    connect(colors, &ColorControls::applyColorFilterClicked, this, &MainWindow::applyFilterTransform);      // Image filters connection to color controls
+    connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));     // Zoom level change connection
 
 }
 
@@ -135,17 +137,6 @@ void MainWindow::reconnectConnection()
     connect(brush, &Brush::penColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::penWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
     connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::onImageCropped);
-
-    connect(basics, &BasicControls::ccwRotationSignal, workspaceArea, &WorkspaceArea::ccwRotationSlot);
-    connect(basics, &BasicControls::cwRotationSignal, workspaceArea, &WorkspaceArea::cwRotationSlot);
-    connect(basics, &BasicControls::horizontalFlipSignal, workspaceArea, &WorkspaceArea::horizontalFlipSlot);
-    connect(basics, &BasicControls::verticalFlipSignal, workspaceArea, &WorkspaceArea::verticalFlipSlot);
-
-    connect(colors, &ColorControls::blackAndWhiteApplied, workspaceArea, &WorkspaceArea::blackAndWhiteSlot);
-    connect(colors, &ColorControls::invertApplied, workspaceArea, &WorkspaceArea::invertSlot);
-
-    connect(effect, &Effects::gaussianBlurOnClicked, workspaceArea, &WorkspaceArea::gaussianBlurSlot);
-    connect(effect, &Effects::meanBlurOnClicked, workspaceArea, &WorkspaceArea::meanBlurSlot);
 }
 
 /*
@@ -587,4 +578,13 @@ void MainWindow::resetGraphicsViewScale()
 
     currentZoom = 1 / totalScale;
     graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+}
+
+void MainWindow::applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength)
+{
+    qDebug() << "hello";
+    QImage result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
+    result.save("test.jpg");     // TODO: Add to history
+    delete filterTransform;
+    filterTransform = nullptr;
 }
