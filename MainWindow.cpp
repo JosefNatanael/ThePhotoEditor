@@ -351,10 +351,8 @@ void MainWindow::on_actionOpen_triggered()
 
             workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
             resizeGraphicsViewBoundaries(imageWidth, imageHeight);
-            qDebug() << 1 << totalScale;
 
             fitImageToScreen(imageWidth, imageHeight);
-            qDebug() << 2 << totalScale;
         }
     }
 }
@@ -499,14 +497,14 @@ void MainWindow::onCrossCursorChanged(bool cross)
     }
 }
 
-void MainWindow::fitImageToScreen(int currentWidth, int currentHeight)
+void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
 {
-    const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
-    int screenWidth = screenSize.width();
-    int screenHeight = screenSize.height();
+    const QRect screenRect = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
+    int screenWidth = screenRect.width();
+    int screenHeight = screenRect.height();
 
-    if (currentWidth > screenWidth || currentHeight > screenHeight) {
-        double ratio = qMax((double) screenWidth / (double) currentWidth, (double) screenHeight / (double) currentHeight)*0.5;
+    if (currentImageWidth > screenWidth || currentImageHeight > screenHeight) {
+        double ratio = qMax((double) screenWidth / currentImageWidth, (double) screenHeight / currentImageHeight)*0.5;
         double a = resizedImageWidth*ratio;
         double b = resizedImageHeight*ratio;
         graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
@@ -518,8 +516,8 @@ void MainWindow::fitImageToScreen(int currentWidth, int currentHeight)
         graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
         comboBox->setCurrentText("Fit to screen");
 
-    } else if (currentWidth < screenWidth || currentHeight < screenHeight) {
-        double ratio = qMin((double) screenWidth / (double) currentWidth, (double) screenHeight / (double) currentHeight)*0.5;
+    } else if (currentImageWidth < screenWidth && currentImageHeight < screenHeight) {
+        double ratio = qMin((double) screenWidth / currentImageWidth, (double) screenHeight / currentImageHeight)*0.5;
         double a = resizedImageWidth*ratio;
         double b = resizedImageHeight*ratio;
         graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
@@ -532,9 +530,9 @@ void MainWindow::fitImageToScreen(int currentWidth, int currentHeight)
         comboBox->setCurrentText("Fit to screen");
 
     }
-    centerAndResize();
 }
 
+// TO BE REMOVED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void MainWindow::centerAndResize() {
     // get the dimension available on this screen
     QSize availableSize = WindowHelper::screenFromWidget(qApp->desktop())->availableSize();
@@ -551,6 +549,7 @@ void MainWindow::centerAndResize() {
         )
     );
 }
+// TO BE REMOVED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 void MainWindow::onImageCropped(const QImage& image, int width, int height) {
 
