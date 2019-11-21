@@ -9,9 +9,6 @@
 #endif
 #endif
 
-static const int SCENE_WIDTH = 720;    // The default width of the workspace
-static const int SCENE_HEIGHT = 480;   // The default height of the workspace
-
 WorkspaceArea::WorkspaceArea(QObject *parent)
     : QGraphicsScene (0, 0, SCENE_WIDTH, SCENE_HEIGHT, parent)
 {

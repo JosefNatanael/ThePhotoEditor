@@ -103,8 +103,8 @@ private:
     double                      currentZoom = 1.0;      // Saves our current zoom level
     double                      totalScale = 1.0;
     QComboBox*                  comboBox;
-    int                         resizedImageHeight;
-    int                         resizedImageWidth;
+    int                         resizedImageHeight = WorkspaceArea::SCENE_HEIGHT;
+    int                         resizedImageWidth = WorkspaceArea::SCENE_WIDTH;
 };
 
 // Close the application

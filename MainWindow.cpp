@@ -49,9 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    // Spawns a WorkspaceArea
-    graphicsView = new QGraphicsView(this);
     // Spawns a graphicsView
+    graphicsView = new QGraphicsView(this);
+    // Spawns a WorkspaceArea
     workspaceArea = new WorkspaceArea();
 
     // Adds the workspaceArea into our graphicsView
@@ -59,6 +59,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
     graphicsView->scene()->installEventFilter(this);
+
+    // Sets the graphicsViewBoundaries at launch, to the default width and height of the workspaceArea
+    resizeGraphicsViewBoundaries(WorkspaceArea::SCENE_WIDTH, WorkspaceArea::SCENE_HEIGHT);
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -120,7 +123,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(basics, &BasicControls::applyTransformClicked, this, &MainWindow::applyFilterTransform);        // Image transformation connection to basic controls
     connect(colors, &ColorControls::applyColorFilterClicked, this, &MainWindow::applyFilterTransform);      // Image filters connection to color controls
     connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));     // Zoom level change connection
-
 }
 
 MainWindow::~MainWindow()
