@@ -351,12 +351,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>163</x>
-     <y>175</y>
+     <x>173</x>
+     <y>161</y>
     </hint>
     <hint type="destinationlabel">
      <x>298</x>
-     <y>174</y>
+     <y>160</y>
     </hint>
    </hints>
   </connection>
@@ -367,12 +367,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>138</x>
-     <y>238</y>
+     <x>148</x>
+     <y>217</y>
     </hint>
     <hint type="destinationlabel">
      <x>298</x>
-     <y>237</y>
+     <y>216</y>
     </hint>
    </hints>
   </connection>
@@ -383,12 +383,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>302</y>
+     <x>172</x>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel">
      <x>298</x>
-     <y>301</y>
+     <y>272</y>
     </hint>
    </hints>
   </connection>
@@ -448,11 +448,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>298</x>
-     <y>174</y>
+     <y>160</y>
     </hint>
     <hint type="destinationlabel">
-     <x>223</x>
-     <y>175</y>
+     <x>233</x>
+     <y>161</y>
     </hint>
    </hints>
   </connection>
@@ -464,11 +464,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>298</x>
-     <y>237</y>
+     <y>216</y>
     </hint>
     <hint type="destinationlabel">
-     <x>222</x>
-     <y>238</y>
+     <x>232</x>
+     <y>217</y>
     </hint>
    </hints>
   </connection>
@@ -480,11 +480,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>298</x>
-     <y>301</y>
+     <y>272</y>
     </hint>
     <hint type="destinationlabel">
-     <x>219</x>
-     <y>302</y>
+     <x>229</x>
+     <y>273</y>
     </hint>
    </hints>
   </connection>
@@ -533,6 +533,38 @@
     <hint type="destinationlabel">
      <x>239</x>
      <y>568</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>temperatureSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>temperatureSpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>157</x>
+     <y>320</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>259</x>
+     <y>319</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>temperatureSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>temperatureSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>281</x>
+     <y>325</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>167</x>
+     <y>325</y>
     </hint>
    </hints>
   </connection>
