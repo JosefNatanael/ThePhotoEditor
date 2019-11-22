@@ -72,12 +72,12 @@ private:
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
     void                        fitImageToScreen(int, int);
-    void                        centerAndResize();
 
 private:
     Ui::MainWindow*             ui;
 
     WorkspaceArea*              workspaceArea;
+	WorkspaceArea*				temporaryArea = nullptr;
     QGraphicsView*              graphicsView;
     QVector<QGraphicsPathItem*> history;                // Saves the strokes created when drawing on the workspaceArea
 

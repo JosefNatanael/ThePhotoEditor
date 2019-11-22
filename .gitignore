@@ -9,6 +9,9 @@ object_script.*.Debug
 *.qbs.user
 *.qbs.user.*
 *.moc
+*.vcxproj
+*.vcxproj.filters
+*.vcsproj.user
 moc_*.cpp
 moc_*.h
 qrc_*.cpp

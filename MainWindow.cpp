@@ -128,6 +128,10 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+	if (temporaryArea != nullptr) {
+		delete temporaryArea;
+		temporaryArea = nullptr;
+	}
 }
 
 // Setup all connections related to the workspaceArea
@@ -343,6 +347,7 @@ void MainWindow::on_actionOpen_triggered()
             int imageHeight = sizeOfImage.height();
             int imageWidth = sizeOfImage.width();
 
+            // Recontruct our graphicsView and workspaceArea, according to the new image dimensions
             resetGraphicsViewScale();
             reconstructWorkspaceArea(imageWidth, imageHeight);
 
@@ -545,61 +550,40 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
     qDebug() << resizedImageWidth << resizedImageHeight;
 }
 
-// TO BE REMOVED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-void MainWindow::centerAndResize() {
-    // get the dimension available on this screen
-    QSize availableSize = WindowHelper::screenFromWidget(qApp->desktop())->availableSize();
-    int width = availableSize.width();
-    int height = availableSize.height();
-    QSize newSize( width, height );
-
-    setGeometry(
-        QStyle::alignedRect(
-            Qt::LeftToRight,
-            Qt::AlignCenter,
-            newSize,
-            WindowHelper::screenFromWidget(qApp->desktop())->availableGeometry()
-        )
-    );
-}
-// TO BE REMOVED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-void MainWindow::onImageCropped(const QImage& image, int width, int height)
+// Mechanism to view the cropped image:
+// 1. store current workspaceArea to a temporaryArea
+// 2. create a new workspaceArea to hold the new cropped image, and set the graphicsView to contain this new workspaceArea
+// 3. the temporaryArea will then be destroyed when a) destroyed by the destructor, or b) there is a new signal to crop the image.
+// We cannot destroy/reconstruct the workspaceArea in this slot, as this slot is connected (by signal) to the caller workspaceArea.
+void MainWindow::onImageCropped(const QImage& image, int imageWidth, int imageHeight)
 {
+	resetGraphicsViewScale();
+	// Removes previous temporaryArea. If temporaryArea is not nullptr, 
+	// this means temporaryArea holds the previous workspaceArea.
+	if (temporaryArea != nullptr) {
+		delete temporaryArea;
+	}
+	// Let the temporaryArea hold our current workspaceArea
+	temporaryArea = workspaceArea;
 
-    qDebug() << "CROPPED";
-    qDebug() << width << height << resizedImageWidth << resizedImageHeight;
+	// Create a new workspaceArea to hold the newly cropped image, while setting up all the connections needed.
+	workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
+	reconnectConnection();
 
-    double originalFactor = 1.0 / currentZoom;
-    double a = resizedImageWidth * originalFactor;
-    double b = resizedImageHeight * originalFactor;
-    graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-    totalScaleX *= originalFactor;
-    totalScaleY *= originalFactor;
-    resizeGraphicsViewBoundaries(resizedImageWidth*originalFactor, resizedImageHeight*originalFactor);
-    resizedImageWidth *= originalFactor;
-    resizedImageHeight *= originalFactor;
-    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    currentZoom = 1.0;
+	// Contain the new workspaceArea into our graphicsView
+	graphicsView->setScene(workspaceArea);
+	ui->workspaceView->addWidget(graphicsView);
+	workspaceArea->setParent(graphicsView);
+	graphicsView->scene()->installEventFilter(this);
 
-    qDebug() << width << height << resizedImageWidth << resizedImageHeight;
+	// Update our data members
+	resizedImageWidth = imageWidth;
+	resizedImageHeight = imageHeight;
 
-//    double ratioX = (double) resizedImageWidth / (double) width;
-//    double ratioY = (double) resizedImageHeight / (double) height;
-//    totalScaleX *= ratioX;
-//    totalScaleY *= ratioY;
-//    double totalScale = qMax(ratioX, ratioY);
-
-    resizedImageWidth = width;
-    resizedImageHeight = height;
-
-//    graphicsView->scale(totalScale, totalScale);
-//    currentZoom *= totalScale;
-
-    workspaceArea->openImage(image, width, height);
-    resizeGraphicsViewBoundaries(width, height);
-
-    fitImageToScreen(width, height);
+	// Actually open the cropped image
+	workspaceArea->openImage(image, imageWidth, imageHeight);
+	resizeGraphicsViewBoundaries(imageWidth, imageHeight);
+	fitImageToScreen(imageWidth, imageHeight);
 }
 
 void MainWindow::resetGraphicsViewScale()
@@ -609,7 +593,8 @@ void MainWindow::resetGraphicsViewScale()
 
     resizedImageWidth = workspaceAreaWidth / totalScaleX;
     resizedImageHeight = workspaceAreaHeight / totalScaleY;
-    graphicsView->scale(1 / totalScaleX, 1 / totalScaleY);
+//    graphicsView->scale(1 / totalScaleX, 1 / totalScaleY);
+    graphicsView->resetMatrix();
     resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
 
     currentZoom = 1 / totalScaleX;
