@@ -165,7 +165,7 @@ void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
  * Resize our graphicsView dimensions to a specified width and height.
  * This is done usually after we reconstruct our workspaceArea
  */
-void MainWindow::resizeGraphicsViewBoundaries(double newWidth, double newHeight)
+void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
 {
     graphicsView->setFixedSize(newWidth, newHeight);
     graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -422,20 +422,24 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
     if (event->orientation() == Qt::Vertical) {
         if (event->delta() > 7 && workspaceAreaWidth < screenSize.width() && workspaceAreaHeight < screenSize.height()) {
-            resizedImageWidth = workspaceAreaWidth * scaleFactor;
-            resizedImageHeight = workspaceAreaHeight * scaleFactor;
-            graphicsView->scale(resizedImageWidth / workspaceAreaWidth, resizedImageHeight / workspaceAreaHeight);
-            totalScaleX *= resizedImageWidth / workspaceAreaWidth;
-            totalScaleY *= resizedImageHeight / workspaceAreaHeight;
+            resizedImageWidth = (double) workspaceAreaWidth * scaleFactor;
+            resizedImageHeight = (double) workspaceAreaHeight * scaleFactor;
+            double imageWidthRatio = static_cast<double>(resizedImageWidth) / static_cast<double>(workspaceAreaWidth);
+            double imageHeightRatio = static_cast<double>(resizedImageHeight) / static_cast<double>(workspaceAreaHeight);
+            graphicsView->scale(imageWidthRatio, imageHeightRatio);
+            totalScaleX *= imageWidthRatio;
+            totalScaleY *= imageHeightRatio;
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom *= scaleFactor;
         }
         else if (event->delta() < -7 && workspaceAreaWidth > 200 && workspaceAreaHeight > 200) {
             resizedImageWidth = workspaceAreaWidth * (1.0 / scaleFactor);
             resizedImageHeight = workspaceAreaHeight * (1.0 / scaleFactor);
-            graphicsView->scale(resizedImageWidth / workspaceAreaWidth, resizedImageHeight / workspaceAreaHeight);
-            totalScaleX *= resizedImageWidth / workspaceAreaWidth;
-            totalScaleY *= resizedImageHeight / workspaceAreaHeight;
+            double imageWidthRatio = static_cast<double>(resizedImageWidth) / static_cast<double>(workspaceAreaWidth);
+            double imageHeightRatio = static_cast<double>(resizedImageHeight) / static_cast<double>(workspaceAreaHeight);
+            graphicsView->scale(imageWidthRatio, imageHeightRatio);
+            totalScaleX *= imageWidthRatio;
+            totalScaleY *= imageHeightRatio;
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom /= scaleFactor;
         }
