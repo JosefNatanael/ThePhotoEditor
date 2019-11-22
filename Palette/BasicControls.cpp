@@ -62,7 +62,9 @@ void BasicControls::on_beginCutoutPushButton_clicked()
     ui->applyPushButton->setEnabled(false);
     ui->cropPushButton->setEnabled(false);
     ui->beginCutoutPushButton->setEnabled(false);
-    emit crossCursorChanged(true);
+    if(ui->rectangleCutRadioButton->isChecked()){emit crossCursorChanged(true, CursorMode::RECTANGLECROP);}
+    else if(ui->magicCutRadioButton->isChecked()){emit crossCursorChanged(true, CursorMode::MAGICWAND);}
+    else{emit crossCursorChanged(true, CursorMode::LASSO);}
 }
 
 void BasicControls::on_cancelCutoutPushButton_clicked()
@@ -71,7 +73,7 @@ void BasicControls::on_cancelCutoutPushButton_clicked()
     ui->applyPushButton->setEnabled(true);
     ui->cropPushButton->setEnabled(true);
     ui->beginCutoutPushButton->setEnabled(true);
-    emit crossCursorChanged(false);
+    emit crossCursorChanged(false, CursorMode::SCRIBBLE);
 }
 
 void BasicControls::on_applyPushButton_clicked()

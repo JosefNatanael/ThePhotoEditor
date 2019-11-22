@@ -17,6 +17,14 @@ public:
     explicit BasicControls(QWidget *parent = nullptr);
     ~BasicControls();
 
+public:
+    enum class CursorMode {
+        SCRIBBLE,
+        RECTANGLECROP,
+        MAGICWAND,
+        LASSO
+    };
+
 private slots:
     void on_beginCutoutPushButton_clicked();
     void on_cancelCutoutPushButton_clicked();
@@ -27,7 +35,7 @@ private:
     bool beginButtonClicked = false;
 
 signals:
-    void crossCursorChanged(bool);
+    void crossCursorChanged(bool, CursorMode);
     void applyTransformClicked(AbstractImageFilterTransform* transform, int size, double strength);
 };
 

@@ -35,6 +35,13 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
+//public:
+//    enum class CursorMode {
+//        SCRIBBLE,
+//        RECTANGLECROP,
+//        MAGICWAND,
+//        LASSO
+//    };
 
 protected:
     void                        closeEvent(QCloseEvent* event) override;
@@ -53,7 +60,7 @@ private slots:
     void                        on_edit(QGraphicsPathItem*);
     void                        clearImage();
     void                        onZoom(const QString&);
-    void                        onCrossCursorChanged(bool);
+    void                        onCrossCursorChanged(bool, BasicControls::CursorMode);
     void                        onImageCropped(const QImage&, int width, int height);
     void                        applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength);
 

@@ -24,7 +24,9 @@ public:
 public:
     enum class CursorMode {
         SCRIBBLE,
-        RECTANGLECROP
+        RECTANGLECROP,
+        MAGICWAND,
+        LASSO
     };
 
 public:
@@ -85,6 +87,7 @@ private:
     QPoint                  cropOrigin;
     int                     cropX, cropY;
     double                  dx, dy;
+    QColor                  thisColor;                  //for magic wand
 };
 
 #endif // WORKSPACEAREA_H

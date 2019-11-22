@@ -498,11 +498,19 @@ void MainWindow::onZoom(const QString& level)
     graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 }
 
-void MainWindow::onCrossCursorChanged(bool cross)
+void MainWindow::onCrossCursorChanged(bool changed, BasicControls::CursorMode cursor)
 {
-    if (cross) {
+    if (changed) {
         graphicsView->setCursor(Qt::CrossCursor);
-        workspaceArea->setCursorMode(WorkspaceArea::CursorMode::RECTANGLECROP);
+        if(cursor == BasicControls::CursorMode::RECTANGLECROP){
+            workspaceArea->setCursorMode(WorkspaceArea::CursorMode::RECTANGLECROP);
+        }
+        else if(cursor == BasicControls::CursorMode::MAGICWAND){
+            workspaceArea->setCursorMode(WorkspaceArea::CursorMode::MAGICWAND);
+        }
+        else if(cursor == BasicControls::CursorMode::LASSO){
+            workspaceArea->setCursorMode(WorkspaceArea::CursorMode::LASSO);
+        }
     }
     else {
         graphicsView->setCursor(Qt::ArrowCursor);

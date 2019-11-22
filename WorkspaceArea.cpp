@@ -1,4 +1,6 @@
 #include "WorkspaceArea.h"
+#include "PixelHelper.h"
+#include "FilterTransform/NonKernelBased/MagicWand.h"
 
 #include <QtWidgets>
 #if defined(QT_PRINTSUPPORT_LIB)
@@ -118,6 +120,12 @@ void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent* event)
 			rubberBand->show();
 		}
 	}
+    else if(cursorMode == CursorMode::MAGICWAND){
+        cropOriginScreen = event->screenPos();
+        int x = cropOriginScreen.x();
+        int y = cropOriginScreen.y();
+        thisColor = PixelHelper::getPixel(image,x,y);
+    }
 	QGraphicsScene::mousePressEvent(event);
 }
 
@@ -203,6 +211,10 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 		emit imageCropped(croppedImage, cropX, cropY);
 		break;
 	}
+    case CursorMode::MAGICWAND:
+        MagicWand magic;
+        QImage newImage = magic.crop(image, cropX, cropY);
+        image = newImage;                                                   //plz check
 	}
 	QGraphicsScene::mouseReleaseEvent(event);
 }

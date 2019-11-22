@@ -41,6 +41,7 @@ SOURCES += \
         FilterTransform/NonKernelBased/GrayscaleFilter.cpp \
         FilterTransform/NonKernelBased/HueFilter.cpp \
         FilterTransform/NonKernelBased/InvertFilter.cpp \
+        FilterTransform/NonKernelBased/MagicWand.cpp \
         FilterTransform/NonKernelBased/SaturationFilter.cpp \
         FilterTransform/NonKernelBased/TemperatureFilter.cpp \
         FilterTransform/NonKernelBased/TintFilter.cpp \
@@ -73,6 +74,7 @@ HEADERS += \
         FilterTransform/NonKernelBased/GrayscaleFilter.h \
         FilterTransform/NonKernelBased/HueFilter.h \
         FilterTransform/NonKernelBased/InvertFilter.h \
+        FilterTransform/NonKernelBased/MagicWand.h \
         FilterTransform/NonKernelBased/SaturationFilter.h \
         FilterTransform/NonKernelBased/TemperatureFilter.h \
         FilterTransform/NonKernelBased/TintFilter.h \
