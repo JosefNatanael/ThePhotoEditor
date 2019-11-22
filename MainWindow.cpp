@@ -593,7 +593,6 @@ void MainWindow::resetGraphicsViewScale()
 
     resizedImageWidth = workspaceAreaWidth / totalScaleX;
     resizedImageHeight = workspaceAreaHeight / totalScaleY;
-//    graphicsView->scale(1 / totalScaleX, 1 / totalScaleY);
     graphicsView->resetMatrix();
     resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
 
@@ -605,9 +604,8 @@ void MainWindow::resetGraphicsViewScale()
 
 void MainWindow::applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength)
 {
-    qDebug() << "hello";
     QImage result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
-    result.save("test.jpg");     // TODO: Add to history
+    workspaceArea->openImage(result, result.width(), result.height());
     delete filterTransform;
     filterTransform = nullptr;
 }
