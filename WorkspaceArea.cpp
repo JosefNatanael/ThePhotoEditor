@@ -40,7 +40,7 @@ WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
 // Used to load the image and place it in the widget
 bool WorkspaceArea::openImage(const QImage& loadedImage, int imageWidth, int imageHeight)
 {
-    image = loadedImage;
+    image = loadedImage.copy();
     isImageLoaded = true;
     this->imageWidth = imageWidth;
     this->imageHeight = imageHeight;
@@ -197,7 +197,8 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
         QRect cropRect = QRect(cropOrigin.x(), cropOrigin.y(), cropX, cropY);
 
-        QImage croppedImage = image.copy(cropRect);
+        QImage notCroppedImage = commitImage();
+        QImage croppedImage = notCroppedImage.copy(cropRect);
 
         emit imageCropped(croppedImage, cropX, cropY);
         delete rubberBand;
