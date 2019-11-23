@@ -52,6 +52,9 @@ public:
 public slots:
     void                    print();
 
+private slots:
+    void                    onMagicWand(int x, int y, QRgb thisColor);
+
 public:
     static const int SCENE_WIDTH = 720;    // The default width of the workspace
     static const int SCENE_HEIGHT = 480;   // The default height of the workspace
@@ -60,6 +63,8 @@ signals:
     void                    imageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
     void                    edited(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
     void                    imageCropped(const QImage&, int width, int height);
+    void                    magicWandSignal(int x, int y, QRgb thisColor);
+    void                    finishMagicWandSignal();
 
 protected:
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -87,7 +92,7 @@ private:
     QPoint                  cropOrigin;
     int                     cropX, cropY;
     double                  dx, dy;
-    QColor                  thisColor;                  //for magic wand
+    QRgb                    thisColor;                  //for magic wand
 };
 
 #endif // WORKSPACEAREA_H

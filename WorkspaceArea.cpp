@@ -22,7 +22,8 @@ WorkspaceArea::WorkspaceArea(QObject* parent)
 	myPenWidth = 5;
 	myPenColor = Qt::blue;
 	pen.setCapStyle(Qt::RoundCap);
-	pen.setJoinStyle(Qt::RoundJoin);
+    pen.setJoinStyle(Qt::RoundJoin);
+    connect(this, &WorkspaceArea::magicWandSignal, this, &WorkspaceArea::onMagicWand);
 }
 
 WorkspaceArea::WorkspaceArea(int width, int height, QObject* parent)
@@ -37,6 +38,7 @@ WorkspaceArea::WorkspaceArea(int width, int height, QObject* parent)
 	myPenColor = Qt::blue;
 	pen.setCapStyle(Qt::RoundCap);
 	pen.setJoinStyle(Qt::RoundJoin);
+    connect(this, &WorkspaceArea::magicWandSignal, this, &WorkspaceArea::onMagicWand);
 }
 
 // Used to load the image and place it in the widget
@@ -122,9 +124,8 @@ void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent* event)
 	}
     else if(cursorMode == CursorMode::MAGICWAND){
         cropOriginScreen = event->screenPos();
-        int x = cropOriginScreen.x();
-        int y = cropOriginScreen.y();
-        thisColor = PixelHelper::getPixel(image,x,y);
+        cropOrigin = event->scenePos().toPoint();
+        QPointF point = event->pos();
     }
 	QGraphicsScene::mousePressEvent(event);
 }
@@ -212,9 +213,15 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 		break;
 	}
     case CursorMode::MAGICWAND:
-        MagicWand magic;
-        QImage newImage = magic.crop(image, cropX, cropY);
-        image = newImage;                                                   //plz check
+        int x = cropOrigin.y();
+        int y= cropOrigin.x();
+
+//        qDebug()<<x<<" "<<y;
+//        qDebug()<<imageHeight<<" "<<imageWidth;
+        thisColor = PixelHelper::getPixel(image,x,y);
+//        qDebug()<<thisColor<<" "<<qRed(thisColor)<<" "<<qGreen(thisColor)<<" "<<qBlue(thisColor);
+        emit magicWandSignal(x, y, thisColor);
+        break;
 	}
 	QGraphicsScene::mouseReleaseEvent(event);
 }
@@ -240,4 +247,11 @@ void WorkspaceArea::print()
 		painter.drawImage(0, 0, image);
 	}
 #endif // QT_CONFIG(printdialog)
+}
+
+void WorkspaceArea::onMagicWand(int x, int y, QRgb color){
+    MagicWand m;
+    QImage newImage = m.crop(image, x, y);
+    newImage.save("hasilmagicwand.png");            //still in save mode
+    emit finishMagicWandSignal();
 }

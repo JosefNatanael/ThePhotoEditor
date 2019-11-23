@@ -95,3 +95,12 @@ void BasicControls::on_applyPushButton_clicked()
         emit applyTransformClicked(flipVertical, 1, 1);
     }
 }
+
+void BasicControls::finishMagicWandSlot()//same as cancel button
+{
+    beginButtonClicked = false;
+    ui->applyPushButton->setEnabled(true);
+    ui->cropPushButton->setEnabled(true);
+    ui->beginCutoutPushButton->setEnabled(true);
+    emit crossCursorChanged(false, CursorMode::SCRIBBLE);
+}

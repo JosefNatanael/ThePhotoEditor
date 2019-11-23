@@ -3,8 +3,10 @@
 
 #include <QtWidgets>
 #include <QRubberBand>
+#include "FilterTransform/NonKernelBased/MagicWand.h"
 
 #include "WorkspaceArea.h"
+#include "Palette/BasicControls.h"
 #include "Palette/Brush.h"
 #include "Palette/Histogram.h"
 #include "Palette/ColorControls.h"
@@ -120,6 +122,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Setup all our signal and slots
     reconnectConnection();                                                                                  // Workspace related connection
     connect(basics, &BasicControls::crossCursorChanged, this, &MainWindow::onCrossCursorChanged);           // Cursor change connection
+    connect(workspaceArea, &WorkspaceArea::finishMagicWandSignal, basics, &BasicControls::finishMagicWandSlot);
     connect(basics, &BasicControls::applyTransformClicked, this, &MainWindow::applyFilterTransform);        // Image transformation connection to basic controls
     connect(colors, &ColorControls::applyColorFilterClicked, this, &MainWindow::applyFilterTransform);      // Image filters connection to color controls
     connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));     // Zoom level change connection
@@ -555,7 +558,7 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
         comboBox->setCurrentText("Fit to screen");
 
     }
-    qDebug() << resizedImageWidth << resizedImageHeight;
+    //qDebug() << resizedImageWidth << resizedImageHeight;
 }
 
 // Mechanism to view the cropped image:

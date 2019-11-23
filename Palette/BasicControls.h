@@ -30,6 +30,9 @@ private slots:
     void on_cancelCutoutPushButton_clicked();
     void on_applyPushButton_clicked();
 
+public slots:
+    void finishMagicWandSlot();
+
 private:
     Ui::BasicControls *ui;
     bool beginButtonClicked = false;
