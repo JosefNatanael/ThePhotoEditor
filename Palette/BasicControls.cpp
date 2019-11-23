@@ -8,9 +8,8 @@
 #include "../FilterTransform/NonKernelBased/FlipHorizontalTransform.h"
 #include "../FilterTransform/NonKernelBased/FlipVerticalTransform.h"
 
-BasicControls::BasicControls(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::BasicControls)
+BasicControls::BasicControls(QWidget *parent) : QWidget(parent),
+                                                ui(new Ui::BasicControls)
 {
     ui->setupUi(this);
 
@@ -62,9 +61,18 @@ void BasicControls::on_beginCutoutPushButton_clicked()
     ui->applyPushButton->setEnabled(false);
     ui->cropPushButton->setEnabled(false);
     ui->beginCutoutPushButton->setEnabled(false);
-    if(ui->rectangleCutRadioButton->isChecked()){emit crossCursorChanged(true, CursorMode::RECTANGLECROP);}
-    else if(ui->magicCutRadioButton->isChecked()){emit crossCursorChanged(true, CursorMode::MAGICWAND);}
-    else{emit crossCursorChanged(true, CursorMode::LASSO);}
+    if (ui->rectangleCutRadioButton->isChecked())
+    {
+        emit crossCursorChanged(WorkspaceArea::CursorMode::RECTANGLECROP);
+    }
+    else if (ui->magicCutRadioButton->isChecked())
+    {
+        emit crossCursorChanged(WorkspaceArea::CursorMode::MAGICWAND, ui->magicSpinBox->value());
+    }
+    else
+    {
+        emit crossCursorChanged(WorkspaceArea::CursorMode::LASSO);
+    }
 }
 
 void BasicControls::on_cancelCutoutPushButton_clicked()
@@ -73,34 +81,29 @@ void BasicControls::on_cancelCutoutPushButton_clicked()
     ui->applyPushButton->setEnabled(true);
     ui->cropPushButton->setEnabled(true);
     ui->beginCutoutPushButton->setEnabled(true);
-    emit crossCursorChanged(false, CursorMode::SCRIBBLE);
+    emit crossCursorChanged(WorkspaceArea::CursorMode::SCRIBBLE);
 }
 
 void BasicControls::on_applyPushButton_clicked()
 {
-    if(ui->ccwRadioButton->isChecked()) {
-        CounterClockwiseRotationTransform* ccwRotation = new CounterClockwiseRotationTransform();
+    if (ui->ccwRadioButton->isChecked())
+    {
+        CounterClockwiseRotationTransform *ccwRotation = new CounterClockwiseRotationTransform();
         emit applyTransformClicked(ccwRotation, 1, 1);
     }
-    else if(ui->cwRadioButton->isChecked()) {
-        ClockwiseRotationTransform* cwRotation = new ClockwiseRotationTransform();
+    else if (ui->cwRadioButton->isChecked())
+    {
+        ClockwiseRotationTransform *cwRotation = new ClockwiseRotationTransform();
         emit applyTransformClicked(cwRotation, 1, 1);
     }
-    else if(ui->horizontalRadioButton->isChecked()) {
-        FlipHorizontalTransform* flipHorizontal = new FlipHorizontalTransform();
+    else if (ui->horizontalRadioButton->isChecked())
+    {
+        FlipHorizontalTransform *flipHorizontal = new FlipHorizontalTransform();
         emit applyTransformClicked(flipHorizontal, 1, 1);
     }
-    else if(ui->verticalRadioButton->isChecked()) {
-        FlipVerticalTransform* flipVertical = new FlipVerticalTransform();
+    else if (ui->verticalRadioButton->isChecked())
+    {
+        FlipVerticalTransform *flipVertical = new FlipVerticalTransform();
         emit applyTransformClicked(flipVertical, 1, 1);
     }
-}
-
-void BasicControls::finishMagicWandSlot()//same as cancel button
-{
-    beginButtonClicked = false;
-    ui->applyPushButton->setEnabled(true);
-    ui->cropPushButton->setEnabled(true);
-    ui->beginCutoutPushButton->setEnabled(true);
-    emit crossCursorChanged(false, CursorMode::SCRIBBLE);
 }

@@ -15,9 +15,9 @@ public:
     virtual QImage applyFilter(const QImage &img, double strength) const override;
     virtual QImage applyFilter(const QImage &img) const override;
 public:
-    QImage crop(const QImage& img, int x, int y);
+    QImage crop(const QImage& img, int x, int y, int threshold);
     //helper with PixelHelper
-    void recursiveMagic(QImage& img, int x, int y, QRgb);
+    void recursiveMagic(QImage& img, int x, int y, QRgb, int threshold);
 };
 
 #endif // MAGICWAND_H

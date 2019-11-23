@@ -46,14 +46,12 @@ public:
     void                    setModified(bool modified) { this->modified = modified; }
     void                    setImageLoaded(bool isImageLoaded) { this->isImageLoaded = isImageLoaded ; }
     void                    setCursorMode(CursorMode cursorMode) { this->cursorMode = cursorMode; }
+    void                    setMagicWandThreshold(int threshold) { this->magicWandThreshold = threshold; }
 
     QImage                  commitImage();
 
 public slots:
     void                    print();
-
-private slots:
-    void                    onMagicWand(int x, int y, QRgb thisColor);
 
 public:
     static const int SCENE_WIDTH = 720;    // The default width of the workspace
@@ -63,8 +61,6 @@ signals:
     void                    imageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
     void                    edited(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
     void                    imageCropped(const QImage&, int width, int height);
-    void                    magicWandSignal(int x, int y, QRgb thisColor);
-    void                    finishMagicWandSignal();
 
 protected:
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -72,8 +68,8 @@ protected:
     virtual void            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
-    bool                    modified;                   // Workspace was modified
-    bool                    isImageLoaded = false;        // If true, loaded image can be drawn without new canvas
+    bool                    modified;                           // Workspace was modified
+    bool                    isImageLoaded = false;              // If true, loaded image can be drawn without new canvas
     CursorMode              cursorMode = CursorMode::SCRIBBLE;  // Mouse events will be used to scribble the workspacearea
     QRubberBand*            rubberBand = nullptr;
     QPoint                  rubberBandOrigin;
@@ -93,6 +89,7 @@ private:
     int                     cropX, cropY;
     double                  dx, dy;
     QRgb                    thisColor;                  //for magic wand
+    int                     magicWandThreshold = 5;
 };
 
 #endif // WORKSPACEAREA_H

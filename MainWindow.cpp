@@ -12,9 +12,8 @@
 #include "Palette/ColorControls.h"
 #include "Palette/Effects.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
+                                          ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -28,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->toolBar->setStyleSheet("QToolBar{spacing:30px;}");
 
     // 2. Setup the toolbar alignment
-    QWidget* spacerWidget = new QWidget(this);
+    QWidget *spacerWidget = new QWidget(this);
     spacerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     spacerWidget->setVisible(true);
 
@@ -84,11 +83,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Setup a treeWidget, which are the menus in our palette
     ui->palette->setColumnCount(1);
-    histogram       = new QTreeWidgetItem(ui->palette);
-    basicControls   = new QTreeWidgetItem(ui->palette);
-    colorControls   = new QTreeWidgetItem(ui->palette);
-    brushControls   = new QTreeWidgetItem(ui->palette);
-    effects         = new QTreeWidgetItem(ui->palette);
+    histogram = new QTreeWidgetItem(ui->palette);
+    basicControls = new QTreeWidgetItem(ui->palette);
+    colorControls = new QTreeWidgetItem(ui->palette);
+    brushControls = new QTreeWidgetItem(ui->palette);
+    effects = new QTreeWidgetItem(ui->palette);
 
     /*
      * Fills in our treeWidget palette with all the widgets it has
@@ -120,21 +119,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     // Setup all our signal and slots
-    reconnectConnection();                                                                                  // Workspace related connection
-    connect(basics, &BasicControls::crossCursorChanged, this, &MainWindow::onCrossCursorChanged);           // Cursor change connection
-    connect(workspaceArea, &WorkspaceArea::finishMagicWandSignal, basics, &BasicControls::finishMagicWandSlot);
-    connect(basics, &BasicControls::applyTransformClicked, this, &MainWindow::applyFilterTransform);        // Image transformation connection to basic controls
-    connect(colors, &ColorControls::applyColorFilterClicked, this, &MainWindow::applyFilterTransform);      // Image filters connection to color controls
-    connect(comboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onZoom(const QString&)));     // Zoom level change connection
+    reconnectConnection();                                                                                // Workspace related connection
+    connect(basics, &BasicControls::crossCursorChanged, this, &MainWindow::onCrossCursorChanged);         // Cursor change connection
+    connect(basics, &BasicControls::applyTransformClicked, this, &MainWindow::applyFilterTransform);      // Image transformation connection to basic controls
+    connect(colors, &ColorControls::applyColorFilterClicked, this, &MainWindow::applyFilterTransform);    // Image filters connection to color controls
+    connect(comboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onZoom(const QString &))); // Zoom level change connection
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-	if (temporaryArea != nullptr) {
-		delete temporaryArea;
-		temporaryArea = nullptr;
-	}
+    if (temporaryArea != nullptr)
+    {
+        delete temporaryArea;
+        temporaryArea = nullptr;
+    }
 }
 
 // Setup all connections related to the workspaceArea
@@ -152,8 +151,10 @@ void MainWindow::reconnectConnection()
  * Delete the current workspaceArea and recreate it with the new image dimensions
  * Then resetup our graphicsView
  */
-void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
-    if(workspaceArea != nullptr) {
+void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight)
+{
+    if (workspaceArea != nullptr)
+    {
         delete workspaceArea;
         workspaceArea = nullptr;
     }
@@ -165,7 +166,6 @@ void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight){
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
     graphicsView->scene()->installEventFilter(this);
-
 }
 
 /*
@@ -179,11 +179,11 @@ void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
     graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     graphicsView->setFocusPolicy(Qt::NoFocus);
-    graphicsView->setSceneRect(0, 0, newWidth - 2, newHeight - 2);    // Allow for extra 2px boundaries, 1px on the left/top and 1px on the right/bottom
+    graphicsView->setSceneRect(0, 0, newWidth - 2, newHeight - 2); // Allow for extra 2px boundaries, 1px on the left/top and 1px on the right/bottom
 }
 
 // Adds a root into a parent widget, in the palette treeWidget
-void MainWindow::addRoot(QTreeWidgetItem* parent, QString name)
+void MainWindow::addRoot(QTreeWidgetItem *parent, QString name)
 {
     parent->setText(0, name);
     ui->palette->addTopLevelItem(parent);
@@ -193,9 +193,9 @@ void MainWindow::addRoot(QTreeWidgetItem* parent, QString name)
  * Adds a child to a parent, this is a custom implementation of the addChild function
  * This child is a QWidget
  */
-void MainWindow::customAddChild(QTreeWidgetItem* parent, QWidget* widget)
+void MainWindow::customAddChild(QTreeWidgetItem *parent, QWidget *widget)
 {
-    QTreeWidgetItem* item = new QTreeWidgetItem();
+    QTreeWidgetItem *item = new QTreeWidgetItem();
     parent->addChild(item);
     ui->palette->setItemWidget(item, 0, widget);
 }
@@ -203,11 +203,13 @@ void MainWindow::customAddChild(QTreeWidgetItem* parent, QWidget* widget)
 // When user is closing the app, spawn a "do you want to save" widget
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (maybeSave()) {
-        event->accept();    // If no changes have been made and the app closes
+    if (maybeSave())
+    {
+        event->accept(); // If no changes have been made and the app closes
     }
-    else {
-        event->ignore();    // If there have been changes ignore the event
+    else
+    {
+        event->ignore(); // If there have been changes ignore the event
     }
 }
 
@@ -217,10 +219,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
  */
 void MainWindow::saveAs()
 {
-    QAction *action = qobject_cast<QAction *>(sender());        // Represents the action of the user clicking
-    QByteArray defaultFormat("jpg", 3);                         // Sets default
-    fileFormat = action->data().toByteArray();                  // Stores the array of bytes of the users data
-    if (fileFormat.isEmpty()) {
+    QAction *action = qobject_cast<QAction *>(sender()); // Represents the action of the user clicking
+    QByteArray defaultFormat("jpg", 3);                  // Sets default
+    fileFormat = action->data().toByteArray();           // Stores the array of bytes of the users data
+    if (fileFormat.isEmpty())
+    {
         fileFormat = defaultFormat;
     }
 
@@ -233,7 +236,7 @@ void MainWindow::clearImage()
     reconstructWorkspaceArea(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
     workspaceArea->setModified(true);
     update();
-    workspaceArea ->setImageLoaded(false);
+    workspaceArea->setImageLoaded(false);
 }
 
 // Define menu actions for SaveAs and clearScreen
@@ -241,12 +244,13 @@ void MainWindow::createActions()
 {
     // Get a list of the supported file formats
     // QImageWriter is used to write images to files
-    foreach (QByteArray format, QImageWriter::supportedImageFormats()) {
+    foreach (QByteArray format, QImageWriter::supportedImageFormats())
+    {
         QString text = tr("%1...").arg(QString(format).toUpper());
-        QAction *action = new QAction(text, this);                      // Create an action for each file format
+        QAction *action = new QAction(text, this); // Create an action for each file format
 
-        action->setData(format);                                        // Set an action for each file format
-        saveAsActs.append(action);                                      // Attach each file format option menu item to Save As
+        action->setData(format);   // Set an action for each file format
+        saveAsActs.append(action); // Attach each file format option menu item to Save As
         connect(action, SIGNAL(triggered()), this, SLOT(saveAs()));
     }
 
@@ -277,7 +281,8 @@ void MainWindow::createMenus()
 bool MainWindow::maybeSave()
 {
     // Check for changes since last save
-    if (workspaceArea->isModified()) {
+    if (workspaceArea->isModified())
+    {
         QMessageBox::StandardButton ret;
 
         ret = QMessageBox::warning(this, tr("Scribble"),
@@ -285,10 +290,12 @@ bool MainWindow::maybeSave()
                                       "Do you want to save your changes?"),
                                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 
-        if (ret == QMessageBox::Save) {
+        if (ret == QMessageBox::Save)
+        {
             return saveAsFile("png");
         }
-        else if (ret == QMessageBox::Cancel) {
+        else if (ret == QMessageBox::Cancel)
+        {
             return false;
         }
     }
@@ -304,18 +311,22 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
     fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
                                             initialPath,
                                             tr("%1 Files (*.%2);;All Files (*)")
-                                            .arg(QString::fromLatin1(fileFormat.toUpper()))
-                                            .arg(QString::fromLatin1(fileFormat)));
+                                                .arg(QString::fromLatin1(fileFormat.toUpper()))
+                                                .arg(QString::fromLatin1(fileFormat)));
 
-    if (fileName.isEmpty()) {
+    if (fileName.isEmpty())
+    {
         return false;
     }
-    else {
-        bool saved = workspaceArea->saveImage(fileName, fileFormat.constData());    // Call for the file to be saved
-        if (saved) {
+    else
+    {
+        bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
+        if (saved)
+        {
             fileSaved = true;
         }
-        else {
+        else
+        {
             fileSaved = false;
         }
         return saved;
@@ -325,7 +336,8 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
 // Clears the workspaceArea
 void MainWindow::on_actionNew_triggered()
 {
-    if (maybeSave()) {
+    if (maybeSave())
+    {
         clearImage();
     }
     workspaceArea->setModified(false);
@@ -334,12 +346,15 @@ void MainWindow::on_actionNew_triggered()
 // Check if the current image has been changed and then open a dialog to open a file
 void MainWindow::on_actionOpen_triggered()
 {
-    if (maybeSave()) {      // Check if changes have been made since last save
+    if (maybeSave())
+    { // Check if changes have been made since last save
         // Get the file to open from a dialog
         QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
         QImage loadedImage;
-        if (!fileName.isEmpty()){
-            if (!loadedImage.load(fileName)) {
+        if (!fileName.isEmpty())
+        {
+            if (!loadedImage.load(fileName))
+            {
                 return;
             }
             this->fileName = fileName;
@@ -368,16 +383,20 @@ void MainWindow::on_actionOpen_triggered()
 // Tries to save the file instead of saveAs the file, if it has once been saved.
 void MainWindow::on_actionSave_triggered()
 {
-    if (fileSaved) {
-        bool saved = workspaceArea->saveImage(fileName, fileFormat.constData());    // Call for the file to be saved
-        if (saved) {
+    if (fileSaved)
+    {
+        bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
+        if (saved)
+        {
             fileSaved = true;
         }
-        else {
+        else
+        {
             fileSaved = false;
         }
     }
-    else {
+    else
+    {
         saveAs();
     }
 }
@@ -385,10 +404,11 @@ void MainWindow::on_actionSave_triggered()
 // Undo brush stroke
 void MainWindow::on_actionUndo_triggered()
 {
-    if (history.isEmpty()) {
+    if (history.isEmpty())
+    {
         return;
     }
-    QGraphicsPathItem* toBeDeleted = history.back();
+    QGraphicsPathItem *toBeDeleted = history.back();
     history.pop_back();
     workspaceArea->removeItem(toBeDeleted);
 }
@@ -408,10 +428,11 @@ void MainWindow::on_actionAbout_Us_triggered()
     aboutUs.exec();
 }
 
-bool MainWindow::eventFilter(QObject*, QEvent* event)
+bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
-    if (event->type() == QEvent::GraphicsSceneWheel) {
-        handleWheelEvent(static_cast<QGraphicsSceneWheelEvent*> (event));
+    if (event->type() == QEvent::GraphicsSceneWheel)
+    {
+        handleWheelEvent(static_cast<QGraphicsSceneWheelEvent *>(event));
 
         // Don't propagate event to the whole maindinwo
         event->accept();
@@ -428,10 +449,12 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     int workspaceAreaWidth = resizedImageWidth;
     int workspaceAreaHeight = resizedImageHeight;
     const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
-    if (event->orientation() == Qt::Vertical) {
-        if (event->delta() > 7 && workspaceAreaWidth < screenSize.width() && workspaceAreaHeight < screenSize.height()) {
-            resizedImageWidth = (double) workspaceAreaWidth * scaleFactor;
-            resizedImageHeight = (double) workspaceAreaHeight * scaleFactor;
+    if (event->orientation() == Qt::Vertical)
+    {
+        if (event->delta() > 7 && workspaceAreaWidth < screenSize.width() && workspaceAreaHeight < screenSize.height())
+        {
+            resizedImageWidth = (double)workspaceAreaWidth * scaleFactor;
+            resizedImageHeight = (double)workspaceAreaHeight * scaleFactor;
             double imageWidthRatio = static_cast<double>(resizedImageWidth) / static_cast<double>(workspaceAreaWidth);
             double imageHeightRatio = static_cast<double>(resizedImageHeight) / static_cast<double>(workspaceAreaHeight);
             graphicsView->scale(imageWidthRatio, imageHeightRatio);
@@ -440,7 +463,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom *= scaleFactor;
         }
-        else if (event->delta() < -7 && workspaceAreaWidth > 200 && workspaceAreaHeight > 200) {
+        else if (event->delta() < -7 && workspaceAreaWidth > 200 && workspaceAreaHeight > 200)
+        {
             resizedImageWidth = workspaceAreaWidth * (1.0 / scaleFactor);
             resizedImageHeight = workspaceAreaHeight * (1.0 / scaleFactor);
             double imageWidthRatio = static_cast<double>(resizedImageWidth) / static_cast<double>(workspaceAreaWidth);
@@ -452,12 +476,13 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
             currentZoom /= scaleFactor;
         }
     }
-    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
-void MainWindow::onZoom(const QString& level)
+void MainWindow::onZoom(const QString &level)
 {
-    if (level == "Fit to screen") {
+    if (level == "Fit to screen")
+    {
         fitImageToScreen(resizedImageWidth, resizedImageHeight);
         return;
     }
@@ -468,23 +493,25 @@ void MainWindow::onZoom(const QString& level)
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
     totalScaleX *= originalFactor;
     totalScaleY *= originalFactor;
-    resizeGraphicsViewBoundaries(resizedImageWidth*originalFactor, resizedImageHeight*originalFactor);
+    resizeGraphicsViewBoundaries(resizedImageWidth * originalFactor, resizedImageHeight * originalFactor);
     resizedImageWidth *= originalFactor;
     resizedImageHeight *= originalFactor;
-    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-
+    graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
     double scaleFactor = 1.0;
 
-    if (level == "50%") {
+    if (level == "50%")
+    {
         scaleFactor = 0.5;
         currentZoom = 0.5;
     }
-    else if (level == "100%") {
+    else if (level == "100%")
+    {
         scaleFactor = 1.0;
         currentZoom = 1.0;
     }
-    else if (level == "120%") {
+    else if (level == "120%")
+    {
         scaleFactor = 1.2;
         currentZoom = 1.2;
     }
@@ -494,30 +521,31 @@ void MainWindow::onZoom(const QString& level)
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
     totalScaleX *= a / resizedImageWidth;
     totalScaleY *= a / resizedImageHeight;
-    resizeGraphicsViewBoundaries(resizedImageWidth*scaleFactor, resizedImageHeight*scaleFactor);
+    resizeGraphicsViewBoundaries(resizedImageWidth * scaleFactor, resizedImageHeight * scaleFactor);
     resizedImageWidth *= scaleFactor;
     resizedImageHeight *= scaleFactor;
 
-    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
-void MainWindow::onCrossCursorChanged(bool changed, BasicControls::CursorMode cursor)
+void MainWindow::onCrossCursorChanged(WorkspaceArea::CursorMode cursor, int data)
 {
-    if (changed) {
-        graphicsView->setCursor(Qt::CrossCursor);
-        if(cursor == BasicControls::CursorMode::RECTANGLECROP){
-            workspaceArea->setCursorMode(WorkspaceArea::CursorMode::RECTANGLECROP);
-        }
-        else if(cursor == BasicControls::CursorMode::MAGICWAND){
-            workspaceArea->setCursorMode(WorkspaceArea::CursorMode::MAGICWAND);
-        }
-        else if(cursor == BasicControls::CursorMode::LASSO){
-            workspaceArea->setCursorMode(WorkspaceArea::CursorMode::LASSO);
-        }
-    }
-    else {
+    graphicsView->setCursor(Qt::CrossCursor);
+    switch(cursor) {
+    case WorkspaceArea::CursorMode::RECTANGLECROP:
+        workspaceArea->setCursorMode(WorkspaceArea::CursorMode::RECTANGLECROP);
+        break;
+    case WorkspaceArea::CursorMode::MAGICWAND:
+        workspaceArea->setCursorMode(WorkspaceArea::CursorMode::MAGICWAND);
+        workspaceArea->setMagicWandThreshold(data);
+        break;
+    case WorkspaceArea::CursorMode::LASSO:
+        workspaceArea->setCursorMode(WorkspaceArea::CursorMode::LASSO);
+        break;
+    case WorkspaceArea::CursorMode::SCRIBBLE:
         graphicsView->setCursor(Qt::ArrowCursor);
         workspaceArea->setCursorMode(WorkspaceArea::CursorMode::SCRIBBLE);
+        break;
     }
 }
 
@@ -527,11 +555,12 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
     int screenWidth = screenRect.width();
     int screenHeight = screenRect.height();
 
-    if (currentImageWidth > screenWidth || currentImageHeight > screenHeight) {
-        double ratio = qMax((double) screenWidth / (double) currentImageWidth, (double) screenHeight / (double) currentImageHeight)*0.5;
-        int a = resizedImageWidth*ratio;
-        int b = resizedImageHeight*ratio;
-        double realRatio = qMax((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
+    if (currentImageWidth > screenWidth || currentImageHeight > screenHeight)
+    {
+        double ratio = qMax((double)screenWidth / (double)currentImageWidth, (double)screenHeight / (double)currentImageHeight) * 0.5;
+        int a = resizedImageWidth * ratio;
+        int b = resizedImageHeight * ratio;
+        double realRatio = qMax((double)a / (double)resizedImageWidth, (double)b / (double)resizedImageHeight);
         graphicsView->scale(realRatio, realRatio);
         totalScaleX *= realRatio;
         totalScaleY *= realRatio;
@@ -539,14 +568,15 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
         resizedImageWidth *= realRatio;
         resizedImageHeight *= realRatio;
         currentZoom *= realRatio;
-        graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+        graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
         comboBox->setCurrentText("Fit to screen");
-
-    } else if (currentImageWidth < screenWidth && currentImageHeight < screenHeight) {
-        double ratio = qMin((double) screenWidth / (double) currentImageWidth, (double) screenHeight / (double) currentImageHeight)*0.5;
-        int a = resizedImageWidth*ratio;
-        int b = resizedImageHeight*ratio;
-        double realRatio = qMin((double) a / (double) resizedImageWidth, (double) b / (double) resizedImageHeight);
+    }
+    else if (currentImageWidth < screenWidth && currentImageHeight < screenHeight)
+    {
+        double ratio = qMin((double)screenWidth / (double)currentImageWidth, (double)screenHeight / (double)currentImageHeight) * 0.5;
+        int a = resizedImageWidth * ratio;
+        int b = resizedImageHeight * ratio;
+        double realRatio = qMin((double)a / (double)resizedImageWidth, (double)b / (double)resizedImageHeight);
         graphicsView->scale(realRatio, realRatio);
         totalScaleX *= realRatio;
         totalScaleY *= realRatio;
@@ -554,9 +584,8 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
         resizedImageWidth *= realRatio;
         resizedImageHeight *= realRatio;
         currentZoom *= realRatio;
-        graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+        graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
         comboBox->setCurrentText("Fit to screen");
-
     }
     //qDebug() << resizedImageWidth << resizedImageHeight;
 }
@@ -566,35 +595,39 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
 // 2. create a new workspaceArea to hold the new cropped image, and set the graphicsView to contain this new workspaceArea
 // 3. the temporaryArea will then be destroyed when a) destroyed by the destructor, or b) there is a new signal to crop the image.
 // We cannot destroy/reconstruct the workspaceArea in this slot, as this slot is connected (by signal) to the caller workspaceArea.
-void MainWindow::onImageCropped(const QImage& image, int imageWidth, int imageHeight)
+void MainWindow::onImageCropped(QImage image, int imageWidth, int imageHeight)
 {
-	resetGraphicsViewScale();
-	// Removes previous temporaryArea. If temporaryArea is not nullptr, 
-	// this means temporaryArea holds the previous workspaceArea.
-	if (temporaryArea != nullptr) {
-		delete temporaryArea;
-	}
-	// Let the temporaryArea hold our current workspaceArea
-	temporaryArea = workspaceArea;
+    resetGraphicsViewScale();
+    // Removes previous temporaryArea. If temporaryArea is not nullptr,
+    // this means temporaryArea holds the previous workspaceArea.
+    if (temporaryArea != nullptr)
+    {
+        delete temporaryArea;
+    }
+    // Let the temporaryArea hold our current workspaceArea
+    temporaryArea = workspaceArea;
 
-	// Create a new workspaceArea to hold the newly cropped image, while setting up all the connections needed.
-	workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
-	reconnectConnection();
+    // Create a new workspaceArea to hold the newly cropped image, while setting up all the connections needed.
+    workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
+    reconnectConnection();
 
-	// Contain the new workspaceArea into our graphicsView
-	graphicsView->setScene(workspaceArea);
-	ui->workspaceView->addWidget(graphicsView);
-	workspaceArea->setParent(graphicsView);
-	graphicsView->scene()->installEventFilter(this);
+    // Contain the new workspaceArea into our graphicsView
+    graphicsView->setScene(workspaceArea);
+    ui->workspaceView->addWidget(graphicsView);
+    workspaceArea->setParent(graphicsView);
+    graphicsView->scene()->installEventFilter(this);
 
-	// Update our data members
-	resizedImageWidth = imageWidth;
-	resizedImageHeight = imageHeight;
+    // Update our data members
+    resizedImageWidth = imageWidth;
+    resizedImageHeight = imageHeight;
 
-	// Actually open the cropped image
-	workspaceArea->openImage(image, imageWidth, imageHeight);
-	resizeGraphicsViewBoundaries(imageWidth, imageHeight);
-	fitImageToScreen(imageWidth, imageHeight);
+    // Actually open the cropped image
+    workspaceArea->openImage(image, imageWidth, imageHeight);
+    resizeGraphicsViewBoundaries(imageWidth, imageHeight);
+    fitImageToScreen(imageWidth, imageHeight);
+
+    // Reset crop buttons state (make buttons pressable after crop is finished)
+    basics->on_cancelCutoutPushButton_clicked();
 }
 
 void MainWindow::resetGraphicsViewScale()
@@ -610,10 +643,10 @@ void MainWindow::resetGraphicsViewScale()
     currentZoom = 1 / totalScaleX;
     totalScaleX = 1;
     totalScaleY = 1;
-    graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
-void MainWindow::applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength)
+void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransform, int size, double strength)
 {
     QImage result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
     workspaceArea->openImage(result, result.width(), result.height());

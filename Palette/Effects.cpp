@@ -4,9 +4,8 @@
 #include "FilterTransform/KernelBased/MeanBlurFilter.h"
 #include <QDebug>
 
-Effects::Effects(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Effects)
+Effects::Effects(QWidget *parent) : QWidget(parent),
+                                    ui(new Ui::Effects)
 {
     ui->setupUi(this);
 
