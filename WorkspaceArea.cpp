@@ -215,8 +215,8 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 		QRect cropRect = QRect(cropOrigin.x(), cropOrigin.y(), cropX, cropY);
 
-		QImage notCroppedImage = commitImage();
-		QImage croppedImage = notCroppedImage.copy(cropRect);
+        QImage&& notCroppedImage = commitImage();
+        QImage&& croppedImage = notCroppedImage.copy(cropRect);
 
 		delete rubberBand;
 		rubberBand = nullptr;
@@ -226,8 +226,8 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	case CursorMode::MAGICWAND:
 		thisColor = PixelHelper::getPixel(image, cropOrigin.y(), cropOrigin.x());
 		MagicWand m;
-        commitImage();
-        QImage newImage = m.crop(image, cropOrigin.y(), cropOrigin.x(), magicWandThreshold);
+        commitImageAndSet();
+        QImage&& newImage = m.crop(image, cropOrigin.y(), cropOrigin.x(), magicWandThreshold);
         emit imageCropped(newImage, newImage.width(), newImage.height());
 		break;
 	}

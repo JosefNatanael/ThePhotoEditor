@@ -54,7 +54,7 @@ private slots:
     void                        clearImage();
     void                        onZoom(const QString&);
     void                        onCrossCursorChanged(WorkspaceArea::CursorMode, int data);
-    void                        onImageCropped(QImage, int width, int height);
+    void                        rerenderWorkspaceArea(const QImage&, int width, int height);
     void                        applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength);
 
 private:

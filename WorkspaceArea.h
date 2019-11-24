@@ -47,7 +47,9 @@ public:
     void                    setImageLoaded(bool isImageLoaded) { this->isImageLoaded = isImageLoaded ; }
     void                    setCursorMode(CursorMode cursorMode) { this->cursorMode = cursorMode; }
     void                    setMagicWandThreshold(int threshold) { this->magicWandThreshold = threshold; }
+    void                    commitImageAndSet() { image = commitImage(); }
 
+private:
     QImage                  commitImage();
 
 public slots:

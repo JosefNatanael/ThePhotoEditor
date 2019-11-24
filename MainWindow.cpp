@@ -144,7 +144,7 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::imageLoaded, histo, &Histogram::onImageLoaded);
     connect(brush, &Brush::penColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::penWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
-    connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::onImageCropped);
+    connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::rerenderWorkspaceArea);
 }
 
 /*
@@ -153,11 +153,8 @@ void MainWindow::reconnectConnection()
  */
 void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight)
 {
-    if (workspaceArea != nullptr)
-    {
-        delete workspaceArea;
-        workspaceArea = nullptr;
-    }
+    delete workspaceArea;
+    workspaceArea = nullptr;
 
     workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
     reconnectConnection();
@@ -590,20 +587,18 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
     //qDebug() << resizedImageWidth << resizedImageHeight;
 }
 
-// Mechanism to view the cropped image:
+// Mechanism to view the cropped/filtered/transformed image:
 // 1. store current workspaceArea to a temporaryArea
 // 2. create a new workspaceArea to hold the new cropped image, and set the graphicsView to contain this new workspaceArea
 // 3. the temporaryArea will then be destroyed when a) destroyed by the destructor, or b) there is a new signal to crop the image.
 // We cannot destroy/reconstruct the workspaceArea in this slot, as this slot is connected (by signal) to the caller workspaceArea.
-void MainWindow::onImageCropped(QImage image, int imageWidth, int imageHeight)
+void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int imageHeight)
 {
     resetGraphicsViewScale();
     // Removes previous temporaryArea. If temporaryArea is not nullptr,
     // this means temporaryArea holds the previous workspaceArea.
-    if (temporaryArea != nullptr)
-    {
-        delete temporaryArea;
-    }
+    delete temporaryArea;
+
     // Let the temporaryArea hold our current workspaceArea
     temporaryArea = workspaceArea;
 
@@ -648,8 +643,8 @@ void MainWindow::resetGraphicsViewScale()
 
 void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransform, int size, double strength)
 {
-    QImage result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
-    workspaceArea->openImage(result, result.width(), result.height());
+    workspaceArea->commitImageAndSet();
+    QImage&& result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
+    rerenderWorkspaceArea(result, result.width(), result.height());
     delete filterTransform;
-    filterTransform = nullptr;
 }
