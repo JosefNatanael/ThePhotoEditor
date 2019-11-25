@@ -9,7 +9,7 @@ class MagicWand: public AbstractNonKernelBasedImageFilterTransform
 {
 public:
     Q_OBJECT
-    //function from AbstractNonKernelBasedImageFilterTransform
+
 public:
     explicit MagicWand(QObject* parent = nullptr);
     virtual QString getName() const override;
@@ -18,7 +18,6 @@ public:
 
 public:
     QImage crop(const QImage& img, int x, int y, int threshold);
-    void recursiveMagic(QImage& img, int x, int y);
     void forestFire(QImage& img, int x, int y);
 
 private:

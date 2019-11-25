@@ -31,13 +31,15 @@ QImage MagicWand::crop(const QImage &image, int x, int y, int threshold)
     originalColorGreen = qGreen(originalColor);
     originalColorBlue = qBlue(originalColor);
     this->threshold = threshold;
-//    recursiveMagic(newImage, x, y);
     forestFire(newImage, x, y);
     return newImage;
 }
 
 bool MagicWand::colorWithinThreshold(QRgb colorToCheck)
 {
+    if (colorToCheck == Qt::transparent) {
+        return false;
+    }
     if (abs(originalColorRed - qRed(colorToCheck)) <= threshold
             && abs(originalColorGreen - qGreen(colorToCheck)) <= threshold
             && abs(originalColorBlue - qBlue(colorToCheck)) <= threshold) {
@@ -65,7 +67,6 @@ void MagicWand::forestFire(QImage &img, int x, int y)
     Point n;
     while (!forestFireQueue.empty()) {
         n = forestFireQueue.dequeue();
-        qDebug() << forestFireQueue.size();
 
         // If the color of adjacent pixels is within the threshold,
         // set the adjacent pixels to transparent, and add them to the end of the queue.
@@ -95,19 +96,4 @@ void MagicWand::forestFire(QImage &img, int x, int y)
         }
     }
 
-}
-
-void MagicWand::recursiveMagic(QImage &img, int x, int y)
-{
-    if ((x >= 0 && x < img.width()) && (y >= 0 && y < img.height()))
-    {
-        if (colorWithinThreshold(PixelHelper::getPixel(img, x, y)))
-        {
-            PixelHelper::setPixel(img, x, y, Qt::transparent);
-            recursiveMagic(img, x + 1, y);
-            recursiveMagic(img, x - 1, y);
-            recursiveMagic(img, x, y - 1);
-            recursiveMagic(img, x, y + 1);
-        }
-    }
 }
