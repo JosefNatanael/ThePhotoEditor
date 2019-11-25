@@ -23,14 +23,17 @@ public:
 
 private:
     class Point {
-        int x;
-        int y;
+        int x = -1;
+        int y = -1;
     public:
         Point() : x(-1), y(-1) {}
         Point(int x, int y) : x(x), y(y) {}
         int getX() const { return x; }
         int getY() const { return y; }
     };
+
+private:
+    bool colorWithinThreshold(QRgb colorToCheck);
 
 private:
     int originalColorRed;
