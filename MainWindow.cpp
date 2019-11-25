@@ -382,7 +382,7 @@ void MainWindow::on_actionOpen_triggered()
     }
 }
 
-// Tries to save the file instead of saveAs the file, if it has once been saved.
+// Tries to save the file instead of saveAs the file, if it was once saved.
 void MainWindow::on_actionSave_triggered()
 {
     if (fileSaved)
@@ -430,6 +430,8 @@ void MainWindow::on_actionAbout_Us_triggered()
     aboutUs.exec();
 }
 
+// Filter mouse scroll event to not propagate to the whole mainwindow, instead only to the workspaceArea
+// Mouse scroll/wheel event will be handled by MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent*)
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
     if (event->type() == QEvent::GraphicsSceneWheel)
@@ -443,41 +445,47 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     return false;
 }
 
+// Zooms in/out the workspaceArea/graphicsView on mouse scroll/wheel event
 void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
 {
+    // Sets how the view should position during scene transformations
     graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-    double scaleFactor = 1.1;
-    graphicsView->centerOn(0, 0);
-    int workspaceAreaWidth = resizedImageWidth;
-    int workspaceAreaHeight = resizedImageHeight;
+
+    // Sets up the zooming properties,
+    // Saves the current screen size in a QRect for the upper bound of zooming
+    const double scaleFactor = 1.1;
     const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
+    const int upperBound = qMin(screenSize.width(), screenSize.height());
+    const int lowerBound = 100;
+
+    /*
+     * Register a scroll if the scroll is vertical, within 7 (or -7) degree
+     * with maximum workspaceArea dimensions equal to the upperbound
+     * and minimum workspaceArea dimensions to the lowerbound
+     */
     if (event->orientation() == Qt::Vertical)
     {
-        if (event->delta() > 7 && workspaceAreaWidth < screenSize.width() && workspaceAreaHeight < screenSize.height())
+        if (event->delta() > 7 && resizedImageWidth < upperBound  && resizedImageHeight < upperBound)
         {
-            resizedImageWidth = (double)workspaceAreaWidth * scaleFactor;
-            resizedImageHeight = (double)workspaceAreaHeight * scaleFactor;
-            double imageWidthRatio = static_cast<double>(resizedImageWidth) / static_cast<double>(workspaceAreaWidth);
-            double imageHeightRatio = static_cast<double>(resizedImageHeight) / static_cast<double>(workspaceAreaHeight);
-            graphicsView->scale(imageWidthRatio, imageHeightRatio);
-            totalScaleX *= imageWidthRatio;
-            totalScaleY *= imageHeightRatio;
+            // Update resizedImage dimensions
+            resizedImageWidth = static_cast<int>(resizedImageWidth * scaleFactor);
+            resizedImageHeight = static_cast<int>(resizedImageHeight * scaleFactor);
+            graphicsView->scale(scaleFactor, scaleFactor);
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom *= scaleFactor;
         }
-        else if (event->delta() < -7 && workspaceAreaWidth > 200 && workspaceAreaHeight > 200)
+        else if (event->delta() < -7 && resizedImageWidth > lowerBound && resizedImageHeight > lowerBound)
         {
-            resizedImageWidth = workspaceAreaWidth * (1.0 / scaleFactor);
-            resizedImageHeight = workspaceAreaHeight * (1.0 / scaleFactor);
-            double imageWidthRatio = static_cast<double>(resizedImageWidth) / static_cast<double>(workspaceAreaWidth);
-            double imageHeightRatio = static_cast<double>(resizedImageHeight) / static_cast<double>(workspaceAreaHeight);
-            graphicsView->scale(imageWidthRatio, imageHeightRatio);
-            totalScaleX *= imageWidthRatio;
-            totalScaleY *= imageHeightRatio;
+            resizedImageWidth = static_cast<int>(resizedImageWidth * (1.0 / scaleFactor));
+            resizedImageHeight = static_cast<int>(resizedImageHeight * (1.0 / scaleFactor));
+            graphicsView->scale(1.0/ scaleFactor, 1.0/ scaleFactor);
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom /= scaleFactor;
         }
     }
+
+    // Scrolls the contents of the view to ensure the item(workspaceArea) will always be fully visible in the view
+    graphicsView->centerOn(0, 0);
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
@@ -493,8 +501,6 @@ void MainWindow::onZoom(const QString &level)
     double a = resizedImageWidth * originalFactor;
     double b = resizedImageHeight * originalFactor;
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-    totalScaleX *= originalFactor;
-    totalScaleY *= originalFactor;
     resizeGraphicsViewBoundaries(resizedImageWidth * originalFactor, resizedImageHeight * originalFactor);
     resizedImageWidth *= originalFactor;
     resizedImageHeight *= originalFactor;
@@ -521,8 +527,6 @@ void MainWindow::onZoom(const QString &level)
     a = resizedImageWidth * scaleFactor;
     b = resizedImageHeight * scaleFactor;
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-    totalScaleX *= a / resizedImageWidth;
-    totalScaleY *= a / resizedImageHeight;
     resizeGraphicsViewBoundaries(resizedImageWidth * scaleFactor, resizedImageHeight * scaleFactor);
     resizedImageWidth *= scaleFactor;
     resizedImageHeight *= scaleFactor;
@@ -530,6 +534,8 @@ void MainWindow::onZoom(const QString &level)
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
+// This slot will receive basic controls' cursor change signals.
+// Drawing/Cropping/cutting an image will be signaled by the change of cursor state
 void MainWindow::onCrossCursorChanged(WorkspaceArea::CursorMode cursor, int data)
 {
     graphicsView->setCursor(Qt::CrossCursor);
@@ -557,45 +563,40 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
     int screenWidth = screenRect.width();
     int screenHeight = screenRect.height();
 
+    double ratio;
+    /*
+     * If any of the currentImage dimensions is larger than the screen dimensions, we would like to scale down
+     * Else if any of the currentImage dimensions is smaller than the screen dimensions, we would like to scale up
+     * Otherwise, both dimensions are equal, we can leave the function.
+     */
     if (currentImageWidth > screenWidth || currentImageHeight > screenHeight)
     {
-        double ratio = qMax((double)screenWidth / (double)currentImageWidth, (double)screenHeight / (double)currentImageHeight) * 0.5;
-        int a = resizedImageWidth * ratio;
-        int b = resizedImageHeight * ratio;
-        double realRatio = qMax((double)a / (double)resizedImageWidth, (double)b / (double)resizedImageHeight);
-        graphicsView->scale(realRatio, realRatio);
-        totalScaleX *= realRatio;
-        totalScaleY *= realRatio;
-        resizeGraphicsViewBoundaries(a, b);
-        resizedImageWidth *= realRatio;
-        resizedImageHeight *= realRatio;
-        currentZoom *= realRatio;
-        graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-        comboBox->setCurrentText("Fit to screen");
+        ratio = qMax((double)screenWidth / currentImageWidth, (double)screenHeight / currentImageHeight) * 0.5;
     }
-    else if (currentImageWidth < screenWidth && currentImageHeight < screenHeight)
+    else if (currentImageWidth < screenWidth || currentImageHeight < screenHeight)
     {
-        double ratio = qMin((double)screenWidth / (double)currentImageWidth, (double)screenHeight / (double)currentImageHeight) * 0.5;
-        int a = resizedImageWidth * ratio;
-        int b = resizedImageHeight * ratio;
-        double realRatio = qMin((double)a / (double)resizedImageWidth, (double)b / (double)resizedImageHeight);
-        graphicsView->scale(realRatio, realRatio);
-        totalScaleX *= realRatio;
-        totalScaleY *= realRatio;
-        resizeGraphicsViewBoundaries(a, b);
-        resizedImageWidth *= realRatio;
-        resizedImageHeight *= realRatio;
-        currentZoom *= realRatio;
-        graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-        comboBox->setCurrentText("Fit to screen");
+        ratio = qMin((double)screenWidth / currentImageWidth, (double)screenHeight / currentImageHeight) * 0.5;
     }
+    else
+    {
+        return;
+    }
+    graphicsView->scale(ratio, ratio);
+    resizeGraphicsViewBoundaries(static_cast<int>(resizedImageWidth * ratio), static_cast<int>(resizedImageHeight * ratio));
+    resizedImageWidth *= ratio;
+    resizedImageHeight *= ratio;
+    currentZoom *= ratio;
+    graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    comboBox->setCurrentText("Fit to screen");
 }
 
-// Mechanism to view the cropped/filtered/transformed image:
-// 1. store current workspaceArea to a temporaryArea
-// 2. create a new workspaceArea to hold the new cropped image, and set the graphicsView to contain this new workspaceArea
-// 3. the temporaryArea will then be destroyed when a) destroyed by the destructor, or b) there is a new signal to crop the image.
-// We cannot destroy/reconstruct the workspaceArea in this slot, as this slot is connected (by signal) to the caller workspaceArea.
+/*
+ * Mechanism to view the cropped/filtered/transformed image:
+ 1. store current workspaceArea to a temporaryArea
+ 2. create a new workspaceArea to hold the new cropped image, and set the graphicsView to contain this new workspaceArea
+ 3. the temporaryArea will then be destroyed when a) destroyed by the destructor, or b) there is a new signal to crop the image.
+ * We cannot destroy/reconstruct the workspaceArea in this slot, as this slot is connected (by signal) to the caller workspaceArea.
+ */
 void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int imageHeight)
 {
     resetGraphicsViewScale();
@@ -633,24 +634,27 @@ void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int 
 
 void MainWindow::resetGraphicsViewScale()
 {
-    int workspaceAreaWidth = resizedImageWidth;
-    int workspaceAreaHeight = resizedImageHeight;
+    // Resize image dimensions properties by reverting horizontal/vertical scaling factor changes
+    resizedImageWidth /= graphicsView->matrix().m11();
+    resizedImageHeight /= graphicsView->matrix().m22();
 
-    resizedImageWidth = workspaceAreaWidth / totalScaleX;
-    resizedImageHeight = workspaceAreaHeight / totalScaleY;
+    // Reset graphics view scaling factor
     graphicsView->resetMatrix();
-    resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
 
-    currentZoom = 1 / totalScaleX;
-    totalScaleX = 1;
-    totalScaleY = 1;
+    resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+    //    currentZoom = 1 / totalScaleX;        // is this needed?????
 }
 
 void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransform, int size, double strength)
 {
+    // Commit all brush changes before applying transform
     workspaceArea->commitImageAndSet();
+
+    // Get filtered image and rerender the workspaceArea with the new image.
     QImage&& result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
     rerenderWorkspaceArea(result, result.width(), result.height());
+
     delete filterTransform;
 }
