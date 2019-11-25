@@ -224,10 +224,10 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		break;
 	}
 	case CursorMode::MAGICWAND:
-		thisColor = PixelHelper::getPixel(image, cropOrigin.y(), cropOrigin.x());
+        thisColor = PixelHelper::getPixel(image, cropOrigin.x(), cropOrigin.y());
 		MagicWand m;
         commitImageAndSet();
-        QImage&& newImage = m.crop(image, cropOrigin.y(), cropOrigin.x(), magicWandThreshold);
+        QImage&& newImage = m.crop(image, cropOrigin.x(), cropOrigin.y(), magicWandThreshold);
         emit imageCropped(newImage, newImage.width(), newImage.height());
 		break;
 	}

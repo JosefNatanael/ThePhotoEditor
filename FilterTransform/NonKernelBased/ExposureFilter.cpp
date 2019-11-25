@@ -21,8 +21,8 @@ QImage ExposureFilter::applyFilter(const QImage &image, double strength) const
     // 1. we turn from rgb to hsl
     // 2. modification of luminance, with formula newLight = oldLight * 2 ^ exposure compensation. Exposure compensation is simply strength/100
     // 3. we turn hsl back to rgb
-    for (int i = 0; i < image.height(); ++i) {
-        for (int j = 0; j < image.width(); ++j) {
+    for (int i = 0; i < image.width(); ++i) {
+        for (int j = 0; j < image.height(); ++j) {
             QRgb pixel = PixelHelper::getPixel(image, i, j);
             QColor pixelColor = QColor::fromRgb(pixel);
             double exposureCompensation = strength / 100;

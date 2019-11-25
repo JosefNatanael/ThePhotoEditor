@@ -18,8 +18,8 @@ QImage TemperatureFilter::applyFilter(const QImage &image, double strength) cons
         return newImage;
     }
     // Add integer strength to red and blue
-    for (int i = 0; i < image.height(); ++i) {
-        for (int j = 0; j < image.width(); ++j) {
+    for (int i = 0; i < image.width(); ++i) {
+        for (int j = 0; j < image.height(); ++j) {
             QRgb pixel = PixelHelper::getPixel(image, i, j);
             int newRed = qBound(0, qRed(pixel) + static_cast<int>(strength), 255);
             int newBlue = qBound(0, qBlue(pixel) - static_cast<int>(strength), 255);

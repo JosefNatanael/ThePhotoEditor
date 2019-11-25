@@ -25,7 +25,7 @@ QImage AbstractKernelBasedImageFilterTransform::convolution(const QImage &img) c
             for(int dx = -size + 1; dx < size; ++dx) {
                 for(int dy = -size + 1; dy < size; ++dy) {
                     int X = i + dx, Y = j + dy;
-                    if((0 < X && X < img.height()) && (0 < Y && Y < img.width())) {
+                    if((0 < X && X < img.width()) && (0 < Y && Y < img.height())) {
                         normalizeFactor += getEntry(dx, dy);
                         QRgb pixel = PixelHelper::getPixel(img, X,Y);
                         rTotal += getEntry(dx, dy) * qRed(pixel);

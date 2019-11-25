@@ -18,8 +18,8 @@ QImage GrayscaleFilter::applyFilter(const QImage &image, double) const
 QImage GrayscaleFilter::applyFilter(const QImage &image) const
 {
     QImage newImage{image};
-    for (int i = 0; i < image.height(); ++i) {
-        for (int j = 0; j < image.width(); ++j) {
+    for (int i = 0; i < image.width(); ++i) {
+        for (int j = 0; j < image.height(); ++j) {
             QRgb pixel = PixelHelper::getPixel(image, i, j);
             int avg = (qRed(pixel) + qGreen(pixel) + qBlue(pixel)) / 3;
             PixelHelper::setPixel(newImage, i, j, qRgb(avg, avg, avg));

@@ -21,8 +21,8 @@ QImage ContrastFilter::applyFilter(const QImage &image, double strength) const
     // 2. perform the actual contrast adjustment with the formula newrgb = factor * (rgb - 128) + 128
     // 3. Bound the resulting rgb between 0 and 255
     double correctionFactor = (259 * (static_cast<int>(strength) + 255)) / (255 * (259 - static_cast<int>(strength)));
-    for (int i = 0; i < image.height(); ++i) {
-        for (int j = 0; j < image.width(); ++j) {
+    for (int i = 0; i < image.width(); ++i) {
+        for (int j = 0; j < image.height(); ++j) {
             QRgb pixel = PixelHelper::getPixel(image, i, j);
             int newRed = qBound(0, static_cast<int>(correctionFactor * (qRed(pixel) - 128) + 128), 255);
             int newGreen = qBound(0, static_cast<int>(correctionFactor * (qGreen(pixel) - 128) + 128), 255);

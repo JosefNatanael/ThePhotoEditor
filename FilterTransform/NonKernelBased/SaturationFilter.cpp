@@ -20,8 +20,8 @@ QImage SaturationFilter::applyFilter(const QImage &image, double strength) const
     // 1. we turn from rgb to saturation
     // 2. simple hsv filter, adds the strength directly to the saturation value, but with upper and lower bounds
     // 3. we turn saturation back to rgb
-    for (int i = 0; i < image.height(); ++i) {
-        for (int j = 0; j < image.width(); ++j) {
+    for (int i = 0; i < image.width(); ++i) {
+        for (int j = 0; j < image.height(); ++j) {
             QRgb pixel = PixelHelper::getPixel(image, i, j);
             QColor pixelColor = QColor::fromRgb(pixel);
             int hsvSaturation = qBound(0, pixelColor.hsvSaturation() + static_cast<int>(strength), 255);
