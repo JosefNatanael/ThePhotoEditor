@@ -140,22 +140,16 @@
        <item>
         <widget class="QLabel" name="cropWidthLabel">
          <property name="text">
-          <string>Width</string>
+          <string>Percentage</string>
          </property>
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer">
+        <widget class="QSlider" name="resizeSlider">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>47</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
        <item>
         <widget class="QSpinBox" name="cropWidthSpinBox"/>
@@ -163,11 +157,17 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="cropHeightLabel">
+        <widget class="QLabel" name="originalSizeLabel">
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+           <italic>true</italic>
+          </font>
+         </property>
          <property name="text">
-          <string>Height</string>
+          <string>Original : </string>
          </property>
         </widget>
        </item>
@@ -185,29 +185,35 @@
         </spacer>
        </item>
        <item>
-        <widget class="QSpinBox" name="cropHeightSpinBox"/>
+        <widget class="QLabel" name="modifiedSizeLabel">
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+           <italic>true</italic>
+          </font>
+         </property>
+         <property name="text">
+          <string>Modified :</string>
+         </property>
+        </widget>
        </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <spacer name="horizontalSpacer_3">
+        <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>100</width>
-           <height>17</height>
+           <width>40</width>
+           <height>20</height>
           </size>
          </property>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="cropPushButton">
+        <widget class="QPushButton" name="resizePushButton">
          <property name="text">
-          <string>Crop</string>
+          <string>Resize</string>
          </property>
         </widget>
        </item>

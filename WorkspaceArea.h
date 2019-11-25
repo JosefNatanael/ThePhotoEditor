@@ -54,6 +54,7 @@ private:
 
 public slots:
     void                    print();
+    void                    resizeImage(int, int);
 
 public:
     static const int SCENE_WIDTH = 720;    // The default width of the workspace
@@ -63,6 +64,7 @@ signals:
     void                    imageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
     void                    edited(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
     void                    imageCropped(const QImage&, int width, int height);
+    void                    imageResized(const QImage&, int width, int height);
 
 protected:
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;

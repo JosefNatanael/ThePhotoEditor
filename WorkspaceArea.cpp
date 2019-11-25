@@ -215,8 +215,8 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 		QRect cropRect = QRect(cropOrigin.x(), cropOrigin.y(), cropX, cropY);
 
-        QImage&& notCroppedImage = commitImage();
-        QImage&& croppedImage = notCroppedImage.copy(cropRect);
+        QImage&& uncroppedImage = commitImage();
+        QImage&& croppedImage = uncroppedImage.copy(cropRect);
 
 		delete rubberBand;
 		rubberBand = nullptr;
@@ -232,6 +232,14 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		break;
 	}
 	QGraphicsScene::mouseReleaseEvent(event);
+}
+
+void WorkspaceArea::resizeImage(int width, int height)
+{
+    QImage&& unresizedImage = commitImage();
+    QImage&& resizedImage = unresizedImage.scaled(width, height, Qt::AspectRatioMode::KeepAspectRatio);
+
+    emit imageResized(resizedImage, width, height);
 }
 
 // Print the image

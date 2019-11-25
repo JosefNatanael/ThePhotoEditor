@@ -145,6 +145,9 @@ void MainWindow::reconnectConnection()
     connect(brush, &Brush::penColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::penWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
     connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::rerenderWorkspaceArea);
+    connect(basics, &BasicControls::resizeButtonClicked, workspaceArea, &WorkspaceArea::resizeImage);
+    connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
+
 }
 
 /*
@@ -369,6 +372,8 @@ void MainWindow::on_actionOpen_triggered()
             resizedImageWidth = imageWidth;
             resizedImageHeight = imageHeight;
 
+            basics->setImageDimensions(resizedImageWidth, resizedImageHeight);
+
             workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
             resizeGraphicsViewBoundaries(imageWidth, imageHeight);
 
@@ -431,7 +436,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     {
         handleWheelEvent(static_cast<QGraphicsSceneWheelEvent *>(event));
 
-        // Don't propagate event to the whole maindinwo
+        // Don't propagate event to the whole mainwindow
         event->accept();
         return true;
     }
@@ -584,7 +589,6 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
         graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
         comboBox->setCurrentText("Fit to screen");
     }
-    //qDebug() << resizedImageWidth << resizedImageHeight;
 }
 
 // Mechanism to view the cropped/filtered/transformed image:
@@ -623,6 +627,8 @@ void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int 
 
     // Reset crop buttons state (make buttons pressable after crop is finished)
     basics->on_cancelCutoutPushButton_clicked();
+    basics->setImageDimensions(imageWidth, imageHeight);
+
 }
 
 void MainWindow::resetGraphicsViewScale()
