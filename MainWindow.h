@@ -79,7 +79,8 @@ private:
     WorkspaceArea*              workspaceArea;
 	WorkspaceArea*				temporaryArea = nullptr;
     QGraphicsView*              graphicsView;
-    QVector<QGraphicsPathItem*> history;                // Saves the strokes created when drawing on the workspaceArea
+    QVector<QGraphicsPathItem*> strokeHistory;                // Saves the strokes created when drawing on the workspaceArea
+    QVector<QImage>             imageHistory;           // In progress ...
 
     QMenu*                      optionMenu;             // optionMenu is generated during runtime
     QList<QAction *>            saveAsActs;             // all possible image format that can be used to save the image
@@ -115,7 +116,7 @@ inline void MainWindow::on_actionExit_triggered()
 // Saves the stroke history to the history
 inline void MainWindow::on_edit(QGraphicsPathItem* item)
 {
-    history.push_back(item);
+    strokeHistory.push_back(item);
 }
 
 

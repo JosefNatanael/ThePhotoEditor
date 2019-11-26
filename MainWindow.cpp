@@ -156,6 +156,11 @@ void MainWindow::reconnectConnection()
  */
 void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight)
 {
+    // Before reconstructing new workspaceArea, we need to clean stroke history
+    while (!strokeHistory.isEmpty()) {
+        on_actionUndo_triggered();
+    }
+
     delete workspaceArea;
     workspaceArea = nullptr;
 
@@ -406,12 +411,12 @@ void MainWindow::on_actionSave_triggered()
 // Undo brush stroke
 void MainWindow::on_actionUndo_triggered()
 {
-    if (history.isEmpty())
+    if (strokeHistory.isEmpty())
     {
         return;
     }
-    QGraphicsPathItem *toBeDeleted = history.back();
-    history.pop_back();
+    QGraphicsPathItem *toBeDeleted = strokeHistory.back();
+    strokeHistory.pop_back();
     workspaceArea->removeItem(toBeDeleted);
 }
 
