@@ -604,6 +604,11 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
  */
 void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int imageHeight)
 {
+    // Before rerenderingWorkspaceArea, we make sure our stroke history is clean
+    while (!strokeHistory.isEmpty()) {
+        on_actionUndo_triggered();
+    }
+
     resetGraphicsViewScale();
     // Removes previous temporaryArea. If temporaryArea is not nullptr,
     // this means temporaryArea holds the previous workspaceArea.
