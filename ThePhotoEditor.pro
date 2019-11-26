@@ -53,6 +53,7 @@ SOURCES += \
         Palette/Effects.cpp \
         Palette/Histogram.cpp \
         Utilities/PixelHelper.cpp \
+        Utilities/VersionControl.cpp \
         Utilities/WindowHelper.cpp \
         WorkspaceArea.cpp \
         main.cpp \
@@ -89,6 +90,7 @@ HEADERS += \
         Palette/Effects.h \
         Palette/Histogram.h \
         Utilities/PixelHelper.h \
+        Utilities/VersionControl.h \
         Utilities/WindowHelper.h \
         WorkspaceArea.h \
         qcustomplot.h
