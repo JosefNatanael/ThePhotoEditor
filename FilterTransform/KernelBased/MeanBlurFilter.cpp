@@ -29,6 +29,6 @@ void MeanBlurFilter::setKernel(int size, double)
     redefineKernel(size);
     for (int dx = -size + 1; dx < size; ++dx)
         for (int dy = -size + 1; dy < size; ++dy) {
-            setEntry(dx, dy, 1 / (size + 1) * (size + 1));               // set the entry to be 1/(size+1)^2
+            setEntry(dx, dy, 1.0 / (size + 1) * (size + 1));               // set the entry to be 1/(size+1)^2
     }                                                                    // if size is 2, the kernel would be 3x3, from 2*size -1
 }
