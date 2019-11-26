@@ -19,6 +19,8 @@ public:
 private slots:
     void on_gaussianPushButton_clicked();
     void on_meanPushButton_clicked();
+    void on_embossPushButton_clicked();
+    void on_edgePushButton_clicked();
     void on_inpaintingPushButton_clicked();
 
 private:

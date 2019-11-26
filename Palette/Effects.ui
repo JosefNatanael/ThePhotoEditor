@@ -6,15 +6,98 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>358</width>
-    <height>343</height>
+    <width>357</width>
+    <height>581</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="2">
+   <item row="6" column="0">
+    <widget class="QLabel" name="meanSizeLabel">
+     <property name="text">
+      <string>Size</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QLabel" name="gaussianBlurLabel">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Gaussian Blur</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="3">
+    <widget class="QSpinBox" name="edgeSizeSpinBox">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="QPushButton" name="meanPushButton">
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="5">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QSlider" name="gaussianSizeSlider">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>5</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="4">
+    <widget class="QPushButton" name="edgePushButton">
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="4">
+    <widget class="QPushButton" name="inpaintingPushButton">
+     <property name="text">
+      <string>TODO</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="2">
+    <widget class="QSlider" name="edgeSizeSlider">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>5</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="effectsLabel">
@@ -37,47 +120,27 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QLabel" name="gaussianBlurLabel">
+   <item row="7" column="0" colspan="3">
+    <widget class="QLabel" name="embossFilterLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Gaussian Blur</string>
+      <string>Emboss</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="gaussianSizeLabel">
+   <item row="10" column="0">
+    <widget class="QLabel" name="edgeDetectionSizeLabel">
      <property name="text">
       <string>Size</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QSlider" name="gaussianSizeSlider">
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>5</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QSpinBox" name="gaussianSizeSpinBox">
+   <item row="6" column="3">
+    <widget class="QSpinBox" name="meanSizeSpinBox">
      <property name="minimum">
       <number>1</number>
      </property>
@@ -86,14 +149,26 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="gaussianStrengthLabel">
+   <item row="4" column="4">
+    <widget class="QPushButton" name="gaussianPushButton">
      <property name="text">
-      <string>Strength</string>
+      <string>Apply</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="9" column="0" colspan="3">
+    <widget class="QLabel" name="edgeDetectionLabel">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Edge Detection</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
     <widget class="QSlider" name="gaussianStrengthSlider">
      <property name="minimum">
       <number>1</number>
@@ -109,49 +184,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="2">
-    <widget class="QLabel" name="meanBlurLabel">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Mean Blur</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="meanSizeLabel">
-     <property name="text">
-      <string>Size</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QSlider" name="meanSizeSlider">
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>5</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="invertedAppearance">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="3">
-    <widget class="QPushButton" name="meanPushButton">
-     <property name="text">
-      <string>Apply</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0" colspan="2">
+   <item row="11" column="0" colspan="3">
     <widget class="QLabel" name="imageInpaintingLabel">
      <property name="font">
       <font>
@@ -163,22 +196,22 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="2">
-    <widget class="QPushButton" name="inpaintingPushButton">
+   <item row="4" column="0">
+    <widget class="QLabel" name="gaussianStrengthLabel">
      <property name="text">
-      <string>TODO</string>
+      <string>Strength</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="embossSizeLabel">
+     <property name="text">
+      <string>Size</string>
      </property>
     </widget>
    </item>
    <item row="4" column="3">
-    <widget class="QPushButton" name="gaussianPushButton">
-     <property name="text">
-      <string>Apply</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="2">
-    <widget class="QSpinBox" name="meanSizeSpinBox">
+    <widget class="QSpinBox" name="gaussianStrengthSpinBox">
      <property name="minimum">
       <number>1</number>
      </property>
@@ -187,8 +220,76 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="QSpinBox" name="gaussianStrengthSpinBox">
+   <item row="3" column="0">
+    <widget class="QLabel" name="gaussianSizeLabel">
+     <property name="text">
+      <string>Size</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QSpinBox" name="gaussianSizeSpinBox">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QSlider" name="meanSizeSlider">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>5</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="4">
+    <widget class="QPushButton" name="embossPushButton">
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="3">
+    <widget class="QLabel" name="meanBlurLabel">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Mean Blur</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2">
+    <widget class="QSlider" name="embossSizeSlider">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>5</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="3">
+    <widget class="QSpinBox" name="embossSizeSpinBox">
      <property name="minimum">
       <number>1</number>
      </property>
@@ -202,6 +303,22 @@
  <resources/>
  <connections>
   <connection>
+   <sender>gaussianStrengthSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>gaussianStrengthSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>215</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>140</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>gaussianSizeSlider</sender>
    <signal>valueChanged(int)</signal>
    <receiver>gaussianSizeSpinBox</receiver>
@@ -212,8 +329,56 @@
      <y>163</y>
     </hint>
     <hint type="destinationlabel">
+     <x>245</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edgeSizeSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>edgeSizeSpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>187</x>
+     <y>521</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>234</x>
+     <y>517</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edgeSizeSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>edgeSizeSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>231</x>
+     <y>530</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>167</x>
+     <y>531</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>meanSizeSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>meanSizeSpinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
      <x>197</x>
-     <y>162</y>
+     <y>320</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>245</x>
+     <y>320</y>
     </hint>
    </hints>
   </connection>
@@ -234,34 +399,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>meanSizeSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>meanSizeSpinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>130</x>
-     <y>292</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>185</x>
-     <y>288</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>meanSizeSpinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>meanSizeSlider</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>226</x>
-     <y>284</y>
+     <x>245</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
-     <x>133</x>
-     <y>286</y>
+     <x>200</x>
+     <y>320</y>
     </hint>
    </hints>
   </connection>
@@ -272,28 +421,44 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>115</x>
-     <y>190</y>
+     <x>182</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel">
-     <x>208</x>
-     <y>192</y>
+     <x>245</x>
+     <y>215</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>gaussianStrengthSpinBox</sender>
+   <sender>embossSizeSlider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>gaussianStrengthSlider</receiver>
+   <receiver>embossSizeSpinBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>211</x>
-     <y>196</y>
+     <x>146</x>
+     <y>414</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>197</y>
+     <x>233</x>
+     <y>413</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>embossSizeSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>embossSizeSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>234</x>
+     <y>424</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>181</x>
+     <y>422</y>
     </hint>
    </hints>
   </connection>
