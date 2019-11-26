@@ -21,12 +21,20 @@ private slots:
     void on_invertButton_clicked();
     void on_applyColorButton_clicked();
     void on_applyLightingButton_clicked();
+    void onSliderValueChanged(int, int);
 
 private:
     Ui::ColorControls *ui;
 
+public:
+    QPixmap imagePreview;
+
+    void setImagePreview(const QImage&);
+    void resetSliders();
+
 signals:
     void applyColorFilterClicked(AbstractImageFilterTransform* transform, int size, double strength);
+    void applyColorFilterOnPreview(AbstractImageFilterTransform* transform, int size, double strength);
 
 };
 

@@ -125,6 +125,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(colors, &ColorControls::applyColorFilterClicked, this, &MainWindow::applyFilterTransform);    // Image filters connection to color controls
     connect(effect, &Effects::applyEffectClicked, this, &MainWindow::applyFilterTransform);               // Image effects connection to effects widget
     connect(comboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onZoom(const QString &))); // Zoom level change connection
+    connect(colors, &ColorControls::applyColorFilterOnPreview, this, &MainWindow::applyFilterTransformOnPreview);
 }
 
 MainWindow::~MainWindow()
@@ -148,6 +149,7 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::rerenderWorkspaceArea);
     connect(basics, &BasicControls::resizeButtonClicked, workspaceArea, &WorkspaceArea::resizeImage);
     connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
+    connect(workspaceArea, &WorkspaceArea::updateImagePreview, this, &MainWindow::onUpdateImagePreview);
 }
 
 /*
@@ -383,6 +385,9 @@ void MainWindow::on_actionOpen_triggered()
             resizeGraphicsViewBoundaries(imageWidth, imageHeight);
 
             fitImageToScreen(imageWidth, imageHeight);
+
+            colors->setImagePreview(workspaceArea->commitImageForPreview());
+            colors->resetSliders();
         }
     }
 }
@@ -639,6 +644,10 @@ void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int 
     // Reset crop buttons state (make buttons pressable after crop is finished)
     basics->on_cancelCutoutPushButton_clicked();
     basics->setImageDimensions(imageWidth, imageHeight);
+    colors->setImagePreview(workspaceArea->commitImageForPreview());
+    colors->resetSliders();
+
+    onUpdateImagePreview();
 
 }
 
@@ -667,4 +676,17 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
     rerenderWorkspaceArea(result, result.width(), result.height());
 
     delete filterTransform;
+}
+
+void MainWindow::applyFilterTransformOnPreview(AbstractImageFilterTransform *filterTransform, int size, double strength)
+{
+    QImage&& previewImageNoFilter = workspaceArea->commitImageForPreview();
+    QImage&& result = filterTransform->applyFilter(previewImageNoFilter, size, strength);
+    colors->setImagePreview(result);
+    delete filterTransform;
+}
+
+void MainWindow::onUpdateImagePreview() {
+     QImage&& previewImage = workspaceArea->commitImageForPreview();
+     colors->setImagePreview(previewImage);
 }

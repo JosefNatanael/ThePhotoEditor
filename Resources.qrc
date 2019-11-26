@@ -21,5 +21,6 @@
         <file>resources/save-solid.svg</file>
         <file>resources/server-solid.svg</file>
         <file>resources/users-solid.svg</file>
+        <file>resources/noimageavail.png</file>
     </qresource>
 </RCC>

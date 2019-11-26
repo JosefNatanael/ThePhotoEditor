@@ -139,7 +139,6 @@ void BasicControls::on_sliderChange(int value)
 
 }
 
-
 void BasicControls::on_resizePushButton_clicked()
 {
     int newWidth = (ui->cropWidthSpinBox->value() / 100.0) * imageWidth;

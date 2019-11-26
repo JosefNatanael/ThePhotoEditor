@@ -56,6 +56,8 @@ private slots:
     void                        onCrossCursorChanged(WorkspaceArea::CursorMode, int data);
     void                        rerenderWorkspaceArea(const QImage&, int width, int height);
     void                        applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength);
+    void                        applyFilterTransformOnPreview(AbstractImageFilterTransform* filterTransform, int size, double strength);
+    void                        onUpdateImagePreview();
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);

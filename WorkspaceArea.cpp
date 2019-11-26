@@ -197,6 +197,7 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	switch (cursorMode)
 	{
 	case CursorMode::SCRIBBLE:
+        emit updateImagePreview();
 		pathItem = nullptr;
 		break;
 	case CursorMode::RECTANGLECROP:
@@ -240,6 +241,31 @@ void WorkspaceArea::resizeImage(int width, int height)
     QImage&& resizedImage = unresizedImage.scaled(width, height, Qt::AspectRatioMode::KeepAspectRatio);
 
     emit imageResized(resizedImage, width, height);
+}
+
+QImage WorkspaceArea::commitImageForPreview() {
+    if (isImageLoaded)
+    {
+        int width = 200;
+        int height = 200;
+        int x = imageWidth/2;
+        int y = imageHeight/2;
+        if (imageWidth < 400 || imageHeight < 400) {
+            width = height = qMin(imageWidth, imageHeight);
+            x = y = 0;
+        }
+        QRect previewRect = QRect(x, y, width, height);
+        QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+        QPainter painter;
+        painter.begin(&commitImage);
+        render(&painter); // Renders the Workspace area to the image
+        painter.end();
+        return commitImage.copy(previewRect).scaled(200, 200, Qt::KeepAspectRatio);
+    } else {
+        QImage commitImage(200, 200, QImage::Format_ARGB32_Premultiplied);
+        commitImage.fill(Qt::white);
+        return commitImage;
+    }
 }
 
 // Print the image

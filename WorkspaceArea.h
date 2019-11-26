@@ -48,6 +48,7 @@ public:
     void                    setCursorMode(CursorMode cursorMode) { this->cursorMode = cursorMode; }
     void                    setMagicWandThreshold(int threshold) { this->magicWandThreshold = threshold; }
     void                    commitImageAndSet() { image = commitImage(); }
+    QImage                  commitImageForPreview();
 
 private:
     QImage                  commitImage();
@@ -65,6 +66,7 @@ signals:
     void                    edited(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
     void                    imageCropped(const QImage&, int width, int height);
     void                    imageResized(const QImage&, int width, int height);
+    void                    updateImagePreview();
 
 protected:
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;

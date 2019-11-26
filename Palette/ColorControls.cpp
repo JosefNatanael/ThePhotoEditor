@@ -1,5 +1,6 @@
 #include "ColorControls.h"
 #include "ui_ColorControls.h"
+#include <QSignalMapper>
 
 #include "../FilterTransform/NonKernelBased/GrayscaleFilter.h"
 #include "../FilterTransform/NonKernelBased/InvertFilter.h"
@@ -17,6 +18,32 @@ ColorControls::ColorControls(QWidget *parent) : QWidget(parent),
                                                 ui(new Ui::ColorControls)
 {
     ui->setupUi(this);
+    imagePreview.load(":/icons/resources/noimageavail.png");
+    imagePreview = imagePreview.scaled(200, 200, Qt::IgnoreAspectRatio);
+    ui->imagePreviewLabel->setPixmap(imagePreview);
+
+
+    connect(ui->hueSlider, &QSlider::valueChanged, this, [=](int value) {
+        emit onSliderValueChanged(0, value);
+    });
+    connect(ui->saturationSlider, &QSlider::valueChanged, this, [=](int value) {
+        emit onSliderValueChanged(1, value);
+    });
+    connect(ui->tintSlider, &QSlider::valueChanged, this, [=](int value) {
+        emit onSliderValueChanged(2, value);
+    });
+    connect(ui->temperatureSlider, &QSlider::valueChanged, this, [=](int value) {
+        emit onSliderValueChanged(3, value);
+    });
+    connect(ui->brightnessSlider, &QSlider::valueChanged, this, [=](int value) {
+        emit onSliderValueChanged(4, value);
+    });
+    connect(ui->exposureSlider, &QSlider::valueChanged, this, [=](int value) {
+        emit onSliderValueChanged(5, value);
+    });
+    connect(ui->contrastSlider, &QSlider::valueChanged, this, [=](int value) {
+        emit onSliderValueChanged(6, value);
+    });
 }
 
 ColorControls::~ColorControls()
@@ -85,4 +112,59 @@ void ColorControls::on_applyLightingButton_clicked()
         ContrastFilter *contrastFilter = new ContrastFilter();
         emit applyColorFilterClicked(contrastFilter, 1, contrastStrength);
     }
+}
+
+void ColorControls::setImagePreview(const QImage& image) {
+
+    ui->imagePreviewLabel->setPixmap(QPixmap::fromImage(image));
+}
+
+void ColorControls::onSliderValueChanged(int id, int value) {
+    switch (id) {
+        case 0: {
+            HueFilter *hueFilter = new HueFilter();
+            emit applyColorFilterOnPreview(hueFilter, 1, value);
+            break;
+        }
+        case 1: {
+            SaturationFilter *saturationFilter = new SaturationFilter();
+            emit applyColorFilterOnPreview(saturationFilter, 1, value);
+            break;
+        }
+        case 2: {
+            TintFilter *tintFilter = new TintFilter();
+            emit applyColorFilterOnPreview(tintFilter, 1, value);
+            break;
+        }
+        case 3: {
+            TemperatureFilter *temperatureFilter = new TemperatureFilter();
+            emit applyColorFilterOnPreview(temperatureFilter, 1, value);
+            break;
+        }
+        case 4: {
+            BrightnessFilter *brightnessFilter = new BrightnessFilter();
+            emit applyColorFilterOnPreview(brightnessFilter, 1, value);
+            break;
+        }
+        case 5: {
+            ExposureFilter *exposureFilter = new ExposureFilter();
+            emit applyColorFilterOnPreview(exposureFilter, 1, value);
+            break;
+        }
+        case 6: {
+            ContrastFilter *contrastFilter = new ContrastFilter();
+            emit applyColorFilterOnPreview(contrastFilter, 1, value);
+            break;
+        }
+    }
+}
+
+void ColorControls::resetSliders() {
+    ui->hueSlider->setValue(0);
+    ui->saturationSlider->setValue(0);
+    ui->tintSlider->setValue(0);
+    ui->temperatureSlider->setValue(0);
+    ui->brightnessSlider->setValue(0);
+    ui->exposureSlider->setValue(0);
+    ui->contrastSlider->setValue(0);
 }
