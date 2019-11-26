@@ -12,7 +12,7 @@
 #include <QPrintDialog>
 #include <QVector>
 
-#include "WindowHelper.h"
+#include "Utilities/WindowHelper.h"
 
 #include "WorkspaceArea.h"
 

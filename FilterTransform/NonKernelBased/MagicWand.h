@@ -2,7 +2,6 @@
 #define MAGICWAND_H
 
 #include "../AbstractNonKernelBasedImageFilterTransform.h"
-#include "PixelHelper.h"
 #include <QQueue>
 
 class MagicWand: public AbstractNonKernelBasedImageFilterTransform

@@ -50,8 +50,8 @@ SOURCES += \
         Palette/ColorControls.cpp \
         Palette/Effects.cpp \
         Palette/Histogram.cpp \
-        PixelHelper.cpp \
-        WindowHelper.cpp \
+        Utilities/PixelHelper.cpp \
+        Utilities/WindowHelper.cpp \
         WorkspaceArea.cpp \
         main.cpp \
         MainWindow.cpp \
@@ -84,8 +84,8 @@ HEADERS += \
         Palette/ColorControls.h \
         Palette/Effects.h \
         Palette/Histogram.h \
-        PixelHelper.h \
-        WindowHelper.h \
+        Utilities/PixelHelper.h \
+        Utilities/WindowHelper.h \
         WorkspaceArea.h \
         qcustomplot.h
 

@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QImage>
-#include "../PixelHelper.h"
+#include "../Utilities/PixelHelper.h"
 
 class AbstractImageFilterTransform : public QObject
 {

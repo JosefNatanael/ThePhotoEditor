@@ -1,6 +1,4 @@
 #include "MagicWand.h"
-#include "PixelHelper.h"
-#include <QDebug>
 #include <QtMath>
 
 MagicWand::MagicWand(QObject *parent) : AbstractNonKernelBasedImageFilterTransform(parent)
