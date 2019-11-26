@@ -19,14 +19,14 @@ public:
     virtual void setKernel(int size, double strength) = 0;
 
 protected:
-    int getEntry(int x, int y) const;
-    void setEntry(int x, int y, int value);
+    double getEntry(int x, int y) const;
+    void setEntry(int x, int y, double value);
     void setSize(int newSize);
     void redefineKernel(int size);
 
 private:
     int size;
-    QVector<QVector<int>> kernel;
+    QVector<QVector<double>> kernel;
 
 };
 

@@ -123,6 +123,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(basics, &BasicControls::crossCursorChanged, this, &MainWindow::onCrossCursorChanged);         // Cursor change connection
     connect(basics, &BasicControls::applyTransformClicked, this, &MainWindow::applyFilterTransform);      // Image transformation connection to basic controls
     connect(colors, &ColorControls::applyColorFilterClicked, this, &MainWindow::applyFilterTransform);    // Image filters connection to color controls
+    connect(effect, &Effects::applyEffectClicked, this, &MainWindow::applyFilterTransform);               // Image effects connection to effects widget
     connect(comboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onZoom(const QString &))); // Zoom level change connection
 }
 
@@ -147,7 +148,6 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::rerenderWorkspaceArea);
     connect(basics, &BasicControls::resizeButtonClicked, workspaceArea, &WorkspaceArea::resizeImage);
     connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
-
 }
 
 /*

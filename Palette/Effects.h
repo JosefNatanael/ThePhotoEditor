@@ -2,6 +2,7 @@
 #define EFFECTS_H
 
 #include <QWidget>
+#include "../FilterTransform/AbstractImageFilterTransform.h"
 
 namespace Ui {
 class Effects;
@@ -22,6 +23,9 @@ private slots:
 
 private:
     Ui::Effects *ui;
+
+signals:
+    void applyEffectClicked(AbstractImageFilterTransform* transform, int size, double strength);
 };
 
 #endif // EFFECTS_H

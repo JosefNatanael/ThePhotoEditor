@@ -1,10 +1,9 @@
 #include "AbstractKernelBasedImageFilterTransform.h"
-#include <QDebug>       // erase thissss
 
 AbstractKernelBasedImageFilterTransform::AbstractKernelBasedImageFilterTransform(int size, QObject* parent)
     : AbstractImageFilterTransform(parent)
     , size(size)
-    , kernel(size * 2 - 1, QVector<int>(size * 2 - 1, 0))
+    , kernel(size * 2 - 1, QVector<double>(size * 2 - 1, 0))
 {
     setEntry(0, 0, 1);
 }
@@ -17,8 +16,8 @@ QImage AbstractKernelBasedImageFilterTransform::applyFilter(const QImage &img, i
 QImage AbstractKernelBasedImageFilterTransform::convolution(const QImage &img) const
 {
     QImage newImage{img}; // create new image
-    for (int i = 0; i < img.height(); ++i) {
-        for (int j = 0; j < img.width(); ++j) {
+    for (int i = 0; i < img.width(); ++i) {
+        for (int j = 0; j < img.height(); ++j) {
             QRgb color = qRgb(0, 0, 0);//initialize to black
             int normalizeFactor = 0;
             int rTotal = 0, gTotal = 0, bTotal = 0;
@@ -49,12 +48,12 @@ QImage AbstractKernelBasedImageFilterTransform::convolution(const QImage &img) c
     return newImage;
 }
 
-int AbstractKernelBasedImageFilterTransform::getEntry(int x, int y) const
+double AbstractKernelBasedImageFilterTransform::getEntry(int x, int y) const
 {
     return kernel[x + size - 1][y + size - 1]; // add back the offset for storage or access
 }
 
-void AbstractKernelBasedImageFilterTransform::setEntry(int x, int y, int value)
+void AbstractKernelBasedImageFilterTransform::setEntry(int x, int y, double value)
 {
     kernel[x + size - 1][y + size - 1] = value;
 }
@@ -66,6 +65,6 @@ void AbstractKernelBasedImageFilterTransform::setSize(int newSize)
 
 void AbstractKernelBasedImageFilterTransform::redefineKernel(int size)
 {
-    QVector<QVector<int>> newVector{size * 2 - 1, QVector<int>(size * 2 - 1, 0)};
+    QVector<QVector<double>> newVector{size * 2 - 1, QVector<double>(size * 2 - 1, 0)};
     kernel = newVector;
 }

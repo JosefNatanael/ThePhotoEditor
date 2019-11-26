@@ -22,10 +22,14 @@ Effects::~Effects()
 
 void Effects::on_gaussianPushButton_clicked()
 {
+    GaussianBlurFilter* gaussianFilter = new GaussianBlurFilter();
+    emit applyEffectClicked(gaussianFilter, ui->gaussianSizeSlider->value(), ui->gaussianStrengthSlider->value());
 }
 
 void Effects::on_meanPushButton_clicked()
 {
+    MeanBlurFilter* meanFilter = new MeanBlurFilter();
+    emit applyEffectClicked(meanFilter, ui->meanSizeSlider->value(), 1);
 }
 
 void Effects::on_inpaintingPushButton_clicked()
