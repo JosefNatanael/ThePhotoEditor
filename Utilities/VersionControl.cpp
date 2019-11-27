@@ -1,8 +1,8 @@
 #include "VersionControl.h"
 
-VersionControl::VersionControl(QImage image)
+VersionControl::VersionControl(QImage image, QString changes)
 {
-    masterBranch.push_front(MasterNode(image));
+    masterBranch.push_front(MasterNode(image, changes));
     masterBranchLength = 1;
 }
 
@@ -11,18 +11,17 @@ VersionControl::VersionControl()
     masterBranchLength = 0;
 }
 
-// Master Node constructor
-VersionControl::MasterNode::MasterNode(QImage image)
+VersionControl::MasterNode::MasterNode(QImage image, QString changes)
+    : changes(changes), sideBranchLength(1)
 {
-    sideBranch.push_front(image);
-    sideBranchLength = 1;
+    sideBranch.push_front(SideNode(image, changes));
 }
 
-void VersionControl::MasterNode::commitImage(QImage image)
+void VersionControl::MasterNode::commitImage(QImage image, QString changes)
 {
     if (!canCommitImage())
         return;
-    sideBranch.push_front(image);
+    sideBranch.push_front(SideNode(image, changes));
     ++sideBranchLength;
 }
 
@@ -36,22 +35,22 @@ void VersionControl::MasterNode::reverseCommit()
 
 const QImage& VersionControl::MasterNode::getImageAtIndex(int index)
 {
-    QLinkedList<QImage>::iterator it = sideBranch.begin();
+    QLinkedList<SideNode>::iterator it = sideBranch.begin();
     for (int i = 0; i < index - 1; ++i) {
         ++it;
     }
-    return *it;
+    return it->currentImage;
 }
 
-void VersionControl::commitImage(QImage image)
+void VersionControl::commitImage(QImage image, QString changes)
 {
     if (masterBranchLength + 1 <= maxMasterBranchLength) {
-        masterBranch.push_front(MasterNode(image));
+        masterBranch.push_front(MasterNode(image, changes));
         ++masterBranchLength;
     }
     else {
         masterBranch.pop_back();
-        masterBranch.push_front(MasterNode(image));
+        masterBranch.push_front(MasterNode(image, changes));
     }
 }
 

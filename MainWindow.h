@@ -72,6 +72,7 @@ private:
 
     void                        createActions();
     void                        generateHistoryMenu();
+    void                        checkoutCommit(int masterNodeNumber, int sideNodeNumber);
     void                        createMenus();
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
