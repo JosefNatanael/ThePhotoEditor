@@ -74,7 +74,7 @@
      <x>0</x>
      <y>0</y>
      <width>1366</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -98,8 +98,14 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionHistory"/>
+    <widget class="QMenu" name="menuHistory">
+     <property name="title">
+      <string>History</string>
+     </property>
+     <addaction name="separator"/>
+    </widget>
     <addaction name="actionUndo"/>
+    <addaction name="menuHistory"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">

@@ -6,26 +6,30 @@
 
 class VersionControl
 {
+    friend class MainWindow;
 private:
     class MasterNode {
-        QLinkedList<QImage>     sideBranch;
-        QImage                  nodeImage;
-        int                     sideBranchLength;
+        friend class MainWindow;
+    private:
+        QLinkedList<QImage>         sideBranch;
+        QImage                      nodeImage;
+        int                         sideBranchLength;
 
     public:
         MasterNode(QImage);
 
     public:
-        int                     getBranchLength() const { return sideBranchLength; }
-        void                    commitImage(QImage);
-        void                    reverseCommit();
-        const QImage&           getImageAtIndex(int index);
-        bool                    canCommitImage() const { return sideBranchLength <= maxSideBranchLength - 1; }
-        bool                    canReverseCommit() const { return sideBranchLength >= 2; }
+        int                         getBranchLength() const { return sideBranchLength; }
+        void                        commitImage(QImage);
+        void                        reverseCommit();
+        const QImage&               getImageAtIndex(int index);
+        bool                        canCommitImage() const { return sideBranchLength <= maxSideBranchLength - 1; }
+        bool                        canReverseCommit() const { return sideBranchLength >= 2; }
 
     };
 
 public:
+    VersionControl();
     VersionControl(QImage);
 
     int                         getBranchLength() const { return masterBranchLength; }
@@ -33,6 +37,7 @@ public:
     void                        reverseCommit();
     const QImage&               getImageAtIndex(int index);
     bool                        canReverseCommit() const { return masterBranchLength >= 2; }
+
 
 private:
     QLinkedList<MasterNode>     masterBranch;

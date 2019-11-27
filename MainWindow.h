@@ -13,6 +13,7 @@
 #include <QVector>
 
 #include "Utilities/WindowHelper.h"
+#include "Utilities/VersionControl.h"
 
 #include "WorkspaceArea.h"
 
@@ -70,6 +71,7 @@ private:
     void                        customAddChild(QTreeWidgetItem* parent, QWidget* widget);
 
     void                        createActions();
+    void                        generateHistoryMenu();
     void                        createMenus();
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
@@ -81,8 +83,9 @@ private:
     WorkspaceArea*              workspaceArea;
 	WorkspaceArea*				temporaryArea = nullptr;
     QGraphicsView*              graphicsView;
-    QVector<QGraphicsPathItem*> strokeHistory;                // Saves the strokes created when drawing on the workspaceArea
-    QVector<QImage>             imageHistory;           // In progress ...
+    QVector<QGraphicsPathItem*> strokeHistory;          // Saves the strokes created when drawing on the workspaceArea
+    VersionControl              imageHistory;           // In progress ...
+    QVector<QMenu*>             imageHistoryMenu;       // Stores our QMenus used for displaying our imageHistory
 
     QMenu*                      optionMenu;             // optionMenu is generated during runtime
     QList<QAction *>            saveAsActs;             // all possible image format that can be used to save the image

@@ -6,6 +6,11 @@ VersionControl::VersionControl(QImage image)
     masterBranchLength = 1;
 }
 
+VersionControl::VersionControl()
+{
+    masterBranchLength = 0;
+}
+
 // Master Node constructor
 VersionControl::MasterNode::MasterNode(QImage image)
 {
