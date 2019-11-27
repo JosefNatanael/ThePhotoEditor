@@ -763,6 +763,7 @@ void MainWindow::onCreateRoom(QString name) {
     }
 
     server = new Server(this);
+    connect(server, &Server::newPlayerConnected, this, &MainWindow::sendInitialImage);
     ip = server->getIP();
     port = server->getPort();
     isHost = true;
@@ -800,7 +801,7 @@ void MainWindow::joinRoom() {
     room->setServerRoom();
     connect(client, &Client::receiveJson, this, &MainWindow::clientJsonReceived);
     connect(client, &Client::connected, this, &MainWindow::sendPlayerName);
-    connect(client, &Client::connected, this, &MainWindow::sendInitialImage);
+    //connect(client, &Client::connected, this, &MainWindow::sendInitialImage);
     //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
 }
 

@@ -86,6 +86,7 @@ void Server::incomingConnection(qintptr socketDesriptor) {
     connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
     connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
     clients.append(worker);
+    emit newPlayerConnected();
 }
 
 /*
