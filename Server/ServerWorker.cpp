@@ -85,6 +85,7 @@ void ServerWorker::sendJson(const QJsonObject &json) {
     QDataStream socketStream(serverSocket);
     socketStream.setVersion(QDataStream::Qt_5_11);
     socketStream << QJsonDocument(json).toJson(QJsonDocument::Compact);
+    qDebug() << "on sendJson";
 }
 
 void ServerWorker::setPlayerName(const QString &playerName) {

@@ -90,6 +90,7 @@ private:
     bool                        saveAsFile(const QByteArray &fileFormat);
     void                        fitImageToScreen(int, int);
     void                        joinRoom();
+    void                        sendInitialImage();
 
 private:
     Ui::MainWindow*             ui;

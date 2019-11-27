@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include <QRubberBand>
 #include "FilterTransform/NonKernelBased/MagicWand.h"
+#include <QJsonObject>
 
 #include "WorkspaceArea.h"
 #include "Palette/BasicControls.h"
@@ -788,6 +789,7 @@ void MainWindow::joinRoom() {
     room->setServerRoom();
     connect(client, &Client::receiveJson, this, &MainWindow::clientJsonReceived);
     connect(client, &Client::connected, this, &MainWindow::sendPlayerName);
+    connect(client, &Client::connected, this, &MainWindow::sendInitialImage);
     //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
 }
 
@@ -798,7 +800,6 @@ void MainWindow::on_actionCreate_Room_triggered()
     connect(room, &ServerRoom::createRoom, this, &MainWindow::onCreateRoom);
     room->setModal(true);
     room->exec();
-
 }
 
 void MainWindow::on_actionJoin_Room_triggered()
@@ -813,9 +814,18 @@ void MainWindow::on_actionJoin_Room_triggered()
 void MainWindow::clientJsonReceived(const QJsonObject &json) {
     qDebug() << json;
     const QString type = json.value(QString("type")).toString();
-    if (type == "newPlayer") {
+    if (type == "newPlayer" || type == "playerList") {
         //addPlayer(json.value(QString("playerName")).toString());
-        room->addPlayer(username);
+        room->addPlayer(json.value(QString("playerName")).toString());
+    } else if (type == "initialImage") {
+        QByteArray ba = QByteArray::fromBase64(json.value(QString("data")).toString().toLatin1());
+        QImage img = QImage::fromData(ba, "PNG");
+        if (img.isNull()) {
+            qDebug() << "image error";
+        } else {
+            qDebug() << "image success";
+        }
+        rerenderWorkspaceArea(img, img.width(), img.height());
     }
 }
 
@@ -826,4 +836,20 @@ void MainWindow::sendPlayerName() {
     client->sendJson(playerNameMsg);
 }
 
-
+void MainWindow::sendInitialImage() {
+    if (isHost) {
+        qDebug() << "I am server";
+        QImage image = workspaceArea->getImage();
+//        QByteArray ba;
+//        QBuffer buffer(&ba);
+        QBuffer buffer;
+        buffer.open(QIODevice::WriteOnly);
+        image.save(&buffer, "PNG");
+        QJsonObject json;
+        json["type"] = "initialImage";
+        json["data"] = QJsonValue(QLatin1String(buffer.data().toBase64()));
+        //qDebug() << QString(QLatin1String(buffer.data().toBase64()));
+        server->sendInitialImage(json);
+        qDebug() << "image sent";
+    }
+}

@@ -208,3 +208,11 @@ void Server::stopServer() {
         worker->disconnectFromClient();
     close();
 }
+
+void Server::sendInitialImage(const QJsonObject& json) {
+    for (ServerWorker *worker : clients) {
+        Q_ASSERT(worker);
+        qDebug() << "on sendInitialImage";
+        sendJson(worker, json);
+    }
+}
