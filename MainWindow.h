@@ -25,8 +25,8 @@
 #include "Palette/Effects.h"
 #include "AboutUs.h"
 #include "serverroom.h"
-#include "Server/server.h"
-#include "Server/client.h"
+#include "Server/Server.h"
+#include "Server/Client.h"
 
 namespace Ui {
 class MainWindow;

@@ -169,13 +169,13 @@
    <item row="21" column="1">
     <widget class="QSpinBox" name="contrastSpinBox">
      <property name="minimum">
-      <number>-255</number>
+      <number>0</number>
      </property>
      <property name="maximum">
       <number>255</number>
      </property>
      <property name="value">
-      <number>0</number>
+      <number>127</number>
      </property>
     </widget>
    </item>
@@ -248,13 +248,13 @@
    <item row="21" column="0">
     <widget class="QSlider" name="contrastSlider">
      <property name="minimum">
-      <number>-255</number>
+      <number>0</number>
      </property>
      <property name="maximum">
       <number>255</number>
      </property>
      <property name="value">
-      <number>0</number>
+      <number>127</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

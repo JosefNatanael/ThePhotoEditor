@@ -52,6 +52,9 @@ SOURCES += \
         Palette/ColorControls.cpp \
         Palette/Effects.cpp \
         Palette/Histogram.cpp \
+        Server/Client.cpp \
+        Server/Server.cpp \
+        Server/ServerWorker.cpp \
         Utilities/PixelHelper.cpp \
         Utilities/VersionControl.cpp \
         Utilities/WindowHelper.cpp \

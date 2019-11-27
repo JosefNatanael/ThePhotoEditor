@@ -719,13 +719,13 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
     // Commit all brush strokes before applying transform
     workspaceArea->commitImageAndSet();
 
-    // Add before-filter-applied image to our image history version control, generate our history menu
-    imageHistory.commitImage(workspaceArea->getImage(), filterTransform->getName());
-    generateHistoryMenu();
-
     // Get filtered image and rerender the workspaceArea with the new image.
     QImage&& result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
     rerenderWorkspaceArea(result, result.width(), result.height());
+
+    // Add after-filter-applied image to our image history version control, generate our history menu
+    imageHistory.commitImage(workspaceArea->getImage(), filterTransform->getName());
+    generateHistoryMenu();
 
     delete filterTransform;
 }
