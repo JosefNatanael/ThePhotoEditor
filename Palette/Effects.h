@@ -21,10 +21,13 @@ private slots:
     void on_meanPushButton_clicked();
     void on_embossPushButton_clicked();
     void on_edgePushButton_clicked();
+    void on_inpaintingAddMaskPushButton_clicked();
     void on_inpaintingPushButton_clicked();
 
 private:
     Ui::Effects *ui;
+    QString maskFileName;
+    QImage mask;
 
 signals:
     void applyEffectClicked(AbstractImageFilterTransform* transform, int size, double strength);

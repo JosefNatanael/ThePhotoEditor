@@ -16,16 +16,22 @@ QImage AbstractKernelBasedImageFilterTransform::applyFilter(const QImage &img, i
 QImage AbstractKernelBasedImageFilterTransform::convolution(const QImage &img) const
 {
     QImage newImage{img}; // create new image
+    int normalizeFactor = 0;                    //normalize the kernel
+    for(int dx = -size +1 ; dx<size; ++dx){
+        for(int dy = -size + 1; dy<size; ++dy){
+            normalizeFactor += getEntry(dx, dy);
+        }
+    }
+
     for (int i = 0; i < img.width(); ++i) {
         for (int j = 0; j < img.height(); ++j) {
             QRgb color = qRgb(0, 0, 0);//initialize to black
-            int normalizeFactor = 0;
+
             int rTotal = 0, gTotal = 0, bTotal = 0;
             for(int dx = -size + 1; dx < size; ++dx) {
                 for(int dy = -size + 1; dy < size; ++dy) {
                     int X = i + dx, Y = j + dy;
-                    if((0 < X && X < img.width()) && (0 < Y && Y < img.height())) {
-                        normalizeFactor += getEntry(dx, dy);
+                    if((0 <= X && X < img.width()) && (0 <= Y && Y < img.height())) {
                         QRgb pixel = PixelHelper::getPixel(img, X,Y);
                         rTotal += getEntry(dx, dy) * qRed(pixel);
                         gTotal += getEntry(dx, dy) * qGreen(pixel);

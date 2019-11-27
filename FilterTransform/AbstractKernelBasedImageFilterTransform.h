@@ -15,7 +15,7 @@ public:
     virtual QImage applyFilter(const QImage &img, int size, double strength) override;
     virtual QImage applyFilter(const QImage &img, int size) = 0;
 
-    QImage convolution(const QImage& image) const;
+    virtual QImage convolution(const QImage& image) const;
     virtual void setKernel(int size, double strength) = 0;
 
 protected:

@@ -32,6 +32,7 @@ SOURCES += \
         FilterTransform/KernelBased/EdgeDetectionFilter.cpp \
         FilterTransform/KernelBased/EmbossFilter.cpp \
         FilterTransform/KernelBased/GaussianBlurFilter.cpp \
+        FilterTransform/KernelBased/ImageInpainting.cpp \
         FilterTransform/KernelBased/MeanBlurFilter.cpp \
         FilterTransform/NonKernelBased/BrightnessFilter.cpp \
         FilterTransform/NonKernelBased/ClockwiseRotationTransform.cpp \
@@ -68,6 +69,7 @@ HEADERS += \
         FilterTransform/KernelBased/EdgeDetectionFilter.h \
         FilterTransform/KernelBased/EmbossFilter.h \
         FilterTransform/KernelBased/GaussianBlurFilter.h \
+        FilterTransform/KernelBased/ImageInpainting.h \
         FilterTransform/KernelBased/MeanBlurFilter.h \
         FilterTransform/NonKernelBased/BrightnessFilter.h \
         FilterTransform/NonKernelBased/ClockwiseRotationTransform.h \

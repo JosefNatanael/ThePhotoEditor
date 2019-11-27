@@ -4,8 +4,10 @@
 #include "FilterTransform/KernelBased/MeanBlurFilter.h"
 #include "FilterTransform/KernelBased/EmbossFilter.h"
 #include "FilterTransform/KernelBased/EdgeDetectionFilter.h"
+#include "FilterTransform/KernelBased/ImageInpainting.h"
 
 #include <QDebug>
+#include <QFileDialog>
 
 Effects::Effects(QWidget *parent) : QWidget(parent),
                                     ui(new Ui::Effects)
@@ -50,4 +52,24 @@ void Effects::on_edgePushButton_clicked()
 void Effects::on_inpaintingPushButton_clicked()
 {
     //TODO
+    //dummy:
+    ImageInpainting* imageInpainting = new ImageInpainting();
+    imageInpainting->mask = mask;
+    emit applyEffectClicked(imageInpainting, 5 , 1);
+}
+
+void Effects::on_inpaintingAddMaskPushButton_clicked()
+{
+    //TODO
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
+    QImage imageLoaded;
+    if (!fileName.isEmpty())
+    {
+        if (!imageLoaded.load(fileName))
+        {
+            return;
+        }
+        mask = imageLoaded.copy();
+        //mask.save("mask.jpg");//works well here
+    }
 }
