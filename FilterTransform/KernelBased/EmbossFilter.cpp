@@ -21,7 +21,7 @@ QImage EmbossFilter::applyFilter(const QImage &image, int size)
 
 QString EmbossFilter::getName() const
 {
-    return "EmbossFilter";
+    return "Emboss Filter";
 }
 
 void EmbossFilter::setKernel(int size, double)

@@ -102,7 +102,7 @@
      <property name="title">
       <string>History</string>
      </property>
-     <addaction name="actionCommit_Image"/>
+     <addaction name="actionCommit_Changes"/>
      <addaction name="separator"/>
     </widget>
     <addaction name="actionUndo"/>
@@ -240,13 +240,13 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionCommit_Image">
+  <action name="actionCommit_Changes">
    <property name="icon">
     <iconset resource="Resources.qrc">
      <normaloff>:/icons/resources/commit.svg</normaloff>:/icons/resources/commit.svg</iconset>
    </property>
    <property name="text">
-    <string>Commit Image</string>
+    <string>Commit_Changes</string>
    </property>
   </action>
  </widget>

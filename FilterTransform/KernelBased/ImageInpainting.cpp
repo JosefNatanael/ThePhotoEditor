@@ -22,7 +22,7 @@ QImage ImageInpainting::applyFilter(const QImage &image, int size)
 
 QString ImageInpainting::getName() const
 {
-    return "ImageInpainting";
+    return "Image Inpainting";
 }
 
 void ImageInpainting::setKernel(int size, double)

@@ -7,7 +7,7 @@ ContrastFilter::ContrastFilter(QObject* parent) : AbstractNonKernelBasedImageFil
 
 QString ContrastFilter::getName() const
 {
-    return "ContrastFilter";
+    return "Contrast Filter";
 }
 
 QImage ContrastFilter::applyFilter(const QImage &image, double strength) const

@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(ui->actionSave);
     ui->toolBar->addSeparator();
-    ui->toolBar->addAction(ui->actionCommit_Image);
+    ui->toolBar->addAction(ui->actionCommit_Changes);
 
     // Setup our actions shortcuts
     ui->actionNew->setShortcuts(QKeySequence::New);
@@ -153,6 +153,7 @@ void MainWindow::reconnectConnection()
     connect(basics, &BasicControls::resizeButtonClicked, workspaceArea, &WorkspaceArea::resizeImage);
     connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
     connect(workspaceArea, &WorkspaceArea::updateImagePreview, this, &MainWindow::onUpdateImagePreview);
+    connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::commitChanges);
 }
 
 /*
@@ -379,7 +380,8 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            imageHistory.commitImage(workspaceArea->getImage(), "Save Image");
+            imageHistory.commitChanges(workspaceArea->getImage(), "Save Image");
+            generateHistoryMenu();
             fileSaved = true;
         }
         else
@@ -438,6 +440,8 @@ void MainWindow::on_actionOpen_triggered()
 
             colors->setImagePreview(workspaceArea->commitImageForPreview());
             colors->resetSliders();
+            imageHistory.commitChanges(loadedImage, "Original Image");
+            generateHistoryMenu();
         }
     }
 }
@@ -450,7 +454,8 @@ void MainWindow::on_actionSave_triggered()
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            imageHistory.commitImage(workspaceArea->getImage(), "Save Image");
+            imageHistory.commitChanges(workspaceArea->getImage(), "Save Image");
+            generateHistoryMenu();
             fileSaved = true;
         }
         else
@@ -730,7 +735,7 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
     rerenderWorkspaceArea(result, result.width(), result.height());
 
     // Add after-filter-applied image to our image history version control, generate our history menu
-    imageHistory.commitImage(workspaceArea->getImage(), filterTransform->getName());
+    imageHistory.commitChanges(workspaceArea->getImage(), filterTransform->getName());
     generateHistoryMenu();
 
     delete filterTransform;
@@ -832,9 +837,15 @@ void MainWindow::sendPlayerName() {
     client->sendJson(playerNameMsg);
 }
 
-
-
-void MainWindow::on_actionCommit_Image_triggered()
+void MainWindow::on_actionCommit_Changes_triggered()
 {
+    CommitDialog commitDialog;
+    commitDialog.setModal(true);
+    commitDialog.exec();
+}
 
+void MainWindow::commitChanges(QString changes)
+{
+    imageHistory.commitChanges(workspaceArea->getImage(), changes);
+    generateHistoryMenu();
 }

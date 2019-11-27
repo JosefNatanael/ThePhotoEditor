@@ -30,7 +30,7 @@ private:
     public:
         int                         getBranchLength() const { return sideBranchLength; }
         QString                     getName() const { return changes; }
-        void                        commitImage(QImage, QString);
+        void                        commitChanges(QImage, QString);
         void                        reverseCommit();
         const QImage&               getImageAtIndex(int index);
         bool                        canCommitImage() const { return sideBranchLength <= maxSideBranchLength - 1; }
@@ -43,7 +43,7 @@ public:
     VersionControl(QImage, QString);
 
     int                         getBranchLength() const { return masterBranchLength; }
-    void                        commitImage(QImage, QString);
+    void                        commitChanges(QImage, QString);
     void                        reverseCommit();
     const QImage&               getImageAtIndex(int index);
     bool                        canReverseCommit() const { return masterBranchLength >= 2; }

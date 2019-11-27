@@ -21,7 +21,7 @@ QImage GaussianBlurFilter::applyFilter(const QImage &image, int size)
 
 QString GaussianBlurFilter::getName() const
 {
-    return "GaussianBlurFilter";
+    return "Gaussian Blur Filter";
 }
 
 void GaussianBlurFilter::setKernel(int size, double sd)

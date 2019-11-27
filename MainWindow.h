@@ -14,6 +14,7 @@
 
 #include "Utilities/WindowHelper.h"
 #include "Utilities/VersionControl.h"
+#include "Utilities/CommitDialog.h"
 
 #include "WorkspaceArea.h"
 
@@ -65,14 +66,13 @@ private slots:
 
     void                        on_actionCreate_Room_triggered();
     void                        on_actionJoin_Room_triggered();
-
     void                        onCreateRoom(QString);
     void                        onJoinRoom(QString, QString, quint16);
-
     void                        sendPlayerName();
     void                        clientJsonReceived(const QJsonObject&);
 
-    void                        on_actionCommit_Image_triggered();
+    void                        on_actionCommit_Changes_triggered();
+    void                        commitChanges(QString changes);
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
@@ -99,6 +99,7 @@ private:
     WorkspaceArea*              workspaceArea;
 	WorkspaceArea*				temporaryArea = nullptr;
     QGraphicsView*              graphicsView;
+
     QVector<QGraphicsPathItem*> strokeHistory;          // Saves the strokes created when drawing on the workspaceArea
     VersionControl              imageHistory;           // In progress ...
     QVector<QMenu*>             imageHistoryMenu;       // Stores our QMenus used for displaying our imageHistory

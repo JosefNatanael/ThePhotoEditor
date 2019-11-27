@@ -8,7 +8,7 @@ FlipVerticalTransform::FlipVerticalTransform(QObject* parent) : AbstractNonKerne
 
 QString FlipVerticalTransform::getName() const
 {
-    return "FlipVerticalTransform";
+    return "Flip Vertical";
 }
 
 QImage FlipVerticalTransform::applyFilter(const QImage &image, double) const

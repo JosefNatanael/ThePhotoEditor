@@ -7,7 +7,7 @@ CounterClockwiseRotationTransform::CounterClockwiseRotationTransform(QObject* pa
 
 QString CounterClockwiseRotationTransform::getName() const
 {
-    return "CounterClockwiseRotationTransform";
+    return "Counter Clockwise Rotation";
 }
 
 QImage CounterClockwiseRotationTransform::applyFilter(const QImage &image, double) const

@@ -17,7 +17,7 @@ VersionControl::MasterNode::MasterNode(QImage image, QString changes)
     sideBranch.push_front(SideNode(image, changes));
 }
 
-void VersionControl::MasterNode::commitImage(QImage image, QString changes)
+void VersionControl::MasterNode::commitChanges(QImage image, QString changes)
 {
     if (!canCommitImage())
         return;
@@ -42,7 +42,7 @@ const QImage& VersionControl::MasterNode::getImageAtIndex(int index)
     return it->currentImage;
 }
 
-void VersionControl::commitImage(QImage image, QString changes)
+void VersionControl::commitChanges(QImage image, QString changes)
 {
     if (masterBranchLength + 1 <= maxMasterBranchLength) {
         masterBranch.push_front(MasterNode(image, changes));

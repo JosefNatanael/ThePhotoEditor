@@ -2,8 +2,8 @@
  <author/>
  <comment/>
  <exportmacro/>
- <class>CommitImage</class>
- <widget name="CommitImage" class="QDialog">
+ <class>CommitDialog</class>
+ <widget name="CommitDialog" class="QDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -38,7 +38,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CommitImage</receiver>
+   <receiver>CommitDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -54,7 +54,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CommitImage</receiver>
+   <receiver>CommitDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

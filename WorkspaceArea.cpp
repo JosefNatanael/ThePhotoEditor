@@ -222,6 +222,7 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		delete rubberBand;
 		rubberBand = nullptr;
 		emit imageCropped(croppedImage, cropX, cropY);
+        emit commitChanges("Rectangle Crop");
 		break;
 	}
 	case CursorMode::MAGICWAND:
@@ -230,8 +231,9 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         commitImageAndSet();
         QImage&& newImage = m.crop(image, cropOrigin.x(), cropOrigin.y(), magicWandThreshold);
         emit imageCropped(newImage, newImage.width(), newImage.height());
+        emit commitChanges("Magic Removal");
 		break;
-	}
+    }
 	QGraphicsScene::mouseReleaseEvent(event);
 }
 
@@ -241,6 +243,7 @@ void WorkspaceArea::resizeImage(int width, int height)
     QImage&& resizedImage = unresizedImage.scaled(width, height, Qt::AspectRatioMode::KeepAspectRatio);
 
     emit imageResized(resizedImage, width, height);
+    emit commitChanges("Image Resized");
 }
 
 QImage WorkspaceArea::commitImageForPreview() {

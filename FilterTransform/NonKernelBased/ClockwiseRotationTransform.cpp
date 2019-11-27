@@ -8,7 +8,7 @@ ClockwiseRotationTransform::ClockwiseRotationTransform(QObject* parent) : Abstra
 
 QString ClockwiseRotationTransform::getName() const
 {
-    return "ClockwiseRotationTransform";
+    return "Clockwise Rotation";
 }
 
 QImage ClockwiseRotationTransform::applyFilter(const QImage &image, double) const

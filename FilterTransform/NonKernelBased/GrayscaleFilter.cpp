@@ -7,7 +7,7 @@ GrayscaleFilter::GrayscaleFilter(QObject* parent) : AbstractNonKernelBasedImageF
 
 QString GrayscaleFilter::getName() const
 {
-    return "GrayscaleFilter";
+    return "Grayscale Filter";
 }
 
 QImage GrayscaleFilter::applyFilter(const QImage &image, double) const

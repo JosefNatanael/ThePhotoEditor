@@ -7,7 +7,7 @@ SaturationFilter::SaturationFilter(QObject* parent) : AbstractNonKernelBasedImag
 
 QString SaturationFilter::getName() const
 {
-    return "SaturationFilter";
+    return "Saturation Filter";
 }
 
 QImage SaturationFilter::applyFilter(const QImage &image, double strength) const
