@@ -24,6 +24,9 @@
 #include "Palette/BasicControls.h"
 #include "Palette/Effects.h"
 #include "AboutUs.h"
+#include "serverroom.h"
+#include "Server/server.h"
+#include "Server/client.h"
 
 namespace Ui {
 class MainWindow;
@@ -60,6 +63,15 @@ private slots:
     void                        applyFilterTransformOnPreview(AbstractImageFilterTransform* filterTransform, int size, double strength);
     void                        onUpdateImagePreview();
 
+    void on_actionCreate_Room_triggered();
+    void on_actionJoin_Room_triggered();
+
+    void onCreateRoom(QString);
+    void onJoinRoom(QString, QString, quint16);
+
+    void sendPlayerName();
+    void clientJsonReceived(const QJsonObject&);
+
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
     void                        reconnectConnection();
@@ -77,6 +89,7 @@ private:
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
     void                        fitImageToScreen(int, int);
+    void                        joinRoom();
 
 private:
     Ui::MainWindow*             ui;
@@ -111,6 +124,15 @@ private:
     QComboBox*                  comboBox;
     int                         resizedImageHeight = WorkspaceArea::SCENE_HEIGHT;
     int                         resizedImageWidth = WorkspaceArea::SCENE_WIDTH;
+
+    ServerRoom*                 room = nullptr;
+    QString                     username;
+    Server*                     server;
+    Client*                     client;
+    QString                     ip;
+    quint16                     port;
+    bool                        isHost = false;
+
 };
 
 // Close the application

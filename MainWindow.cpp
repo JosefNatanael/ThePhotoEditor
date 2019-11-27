@@ -12,6 +12,8 @@
 #include "Palette/ColorControls.h"
 #include "Palette/Effects.h"
 
+#include "serverroom.h"
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
                                           ui(new Ui::MainWindow)
 {
@@ -740,3 +742,88 @@ void MainWindow::onUpdateImagePreview() {
      QImage&& previewImage = workspaceArea->commitImageForPreview();
      colors->setImagePreview(previewImage);
 }
+
+void MainWindow::onCreateRoom(QString name) {
+    username = name;
+    if (name.isEmpty()) {
+        QMessageBox::information(this, QString("Empty Name"), QString("Name cannot be empty"));
+        return;
+    }
+
+    server = new Server(this);
+    ip = server->getIP();
+    port = server->getPort();
+    isHost = true;
+    qDebug() << ip << port;
+    joinRoom();
+
+}
+
+void MainWindow::onJoinRoom(QString name, QString address, quint16 port) {
+    ip = address;
+    if (ip.isEmpty()) {
+        QMessageBox::information(this, QString("Empty Server Name"), QString("Server name cannot be empty"));
+        return;
+    }
+
+    this->port = port;
+    if (!port) {
+        QMessageBox::information(this, QString("Invalid Port"), QString("Invalid Port"));
+        return;
+    }
+
+    username = name;
+    if (username.isEmpty()) {
+        QMessageBox::information(this, QString("Empty Name"), QString("Name cannot be empty"));
+        return;
+    }
+
+    isHost = false;
+    joinRoom();
+}
+
+void MainWindow::joinRoom() {
+    client = new Client();
+    client->connectToServer(QHostAddress(ip), port);
+    room->setServerRoom();
+    connect(client, &Client::receiveJson, this, &MainWindow::clientJsonReceived);
+    connect(client, &Client::connected, this, &MainWindow::sendPlayerName);
+    //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
+}
+
+void MainWindow::on_actionCreate_Room_triggered()
+{
+    room = new ServerRoom();
+    room->setCreateRoom();
+    connect(room, &ServerRoom::createRoom, this, &MainWindow::onCreateRoom);
+    room->setModal(true);
+    room->exec();
+
+}
+
+void MainWindow::on_actionJoin_Room_triggered()
+{
+    room = new ServerRoom();
+    room->setJoinRoom();
+    connect(room, &ServerRoom::joinRoom, this, &MainWindow::onJoinRoom);
+    room->setModal(true);
+    room->exec();
+}
+
+void MainWindow::clientJsonReceived(const QJsonObject &json) {
+    qDebug() << json;
+    const QString type = json.value(QString("type")).toString();
+    if (type == "newPlayer") {
+        //addPlayer(json.value(QString("playerName")).toString());
+        room->addPlayer(username);
+    }
+}
+
+void MainWindow::sendPlayerName() {
+    QJsonObject playerNameMsg;
+    playerNameMsg["type"] = "playerName";
+    playerNameMsg["playerName"] = username;
+    client->sendJson(playerNameMsg);
+}
+
+
