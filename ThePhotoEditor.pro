@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui printsupport
+QT       += core gui printsupport network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -51,11 +51,15 @@ SOURCES += \
         Palette/Effects.cpp \
         Palette/Histogram.cpp \
         PixelHelper.cpp \
+        Server/Client.cpp \
+        Server/Server.cpp \
+        Server/ServerWorker.cpp \
         WindowHelper.cpp \
         WorkspaceArea.cpp \
         main.cpp \
         MainWindow.cpp \
-        qcustomplot.cpp
+        qcustomplot.cpp \
+        serverroom.cpp
 
 HEADERS += \
         AboutUs.h \
@@ -85,9 +89,13 @@ HEADERS += \
         Palette/Effects.h \
         Palette/Histogram.h \
         PixelHelper.h \
+        Server/Client.h \
+        Server/Server.h \
+        Server/ServerWorker.h \
         WindowHelper.h \
         WorkspaceArea.h \
-        qcustomplot.h
+        qcustomplot.h \
+        serverroom.h
 
 FORMS += \
         AboutUs.ui \
@@ -96,7 +104,8 @@ FORMS += \
         Palette/Brush.ui \
         Palette/ColorControls.ui \
         Palette/Effects.ui \
-        Palette/Histogram.ui
+        Palette/Histogram.ui \
+        serverroom.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
