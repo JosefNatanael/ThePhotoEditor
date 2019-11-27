@@ -63,14 +63,16 @@ private slots:
     void                        applyFilterTransformOnPreview(AbstractImageFilterTransform* filterTransform, int size, double strength);
     void                        onUpdateImagePreview();
 
-    void on_actionCreate_Room_triggered();
-    void on_actionJoin_Room_triggered();
+    void                        on_actionCreate_Room_triggered();
+    void                        on_actionJoin_Room_triggered();
 
-    void onCreateRoom(QString);
-    void onJoinRoom(QString, QString, quint16);
+    void                        onCreateRoom(QString);
+    void                        onJoinRoom(QString, QString, quint16);
 
-    void sendPlayerName();
-    void clientJsonReceived(const QJsonObject&);
+    void                        sendPlayerName();
+    void                        clientJsonReceived(const QJsonObject&);
+
+    void                        on_actionCommit_Image_triggered();
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);

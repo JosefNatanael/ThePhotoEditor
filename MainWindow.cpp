@@ -40,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui->toolBar->addAction(ui->actionOpen);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(ui->actionSave);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(ui->actionCommit_Image);
 
     // Setup our actions shortcuts
     ui->actionNew->setShortcuts(QKeySequence::New);
@@ -516,6 +518,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
     const int upperBound = qMin(screenSize.width(), screenSize.height());
     const int lowerBound = 100;
+    int originalResizedImageWidth = resizedImageWidth;
+    int originalResizedImageHeight = resizedImageHeight;
 
     /*
      * Register a scroll if the scroll is vertical, within 7 (or -7) degree
@@ -529,7 +533,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
             // Update resizedImage dimensions
             resizedImageWidth = static_cast<int>(resizedImageWidth * scaleFactor);
             resizedImageHeight = static_cast<int>(resizedImageHeight * scaleFactor);
-            graphicsView->scale(scaleFactor, scaleFactor);
+//            graphicsView->scale(scaleFactor, scaleFactor);
+            graphicsView->scale((double)resizedImageWidth / (double) originalResizedImageWidth, (double)resizedImageHeight / (double)originalResizedImageHeight);
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom *= scaleFactor;
         }
@@ -537,7 +542,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
         {
             resizedImageWidth = static_cast<int>(resizedImageWidth * (1.0 / scaleFactor));
             resizedImageHeight = static_cast<int>(resizedImageHeight * (1.0 / scaleFactor));
-            graphicsView->scale(1.0/ scaleFactor, 1.0/ scaleFactor);
+//            graphicsView->scale(1.0/ scaleFactor, 1.0/ scaleFactor);
+            graphicsView->scale((double) resizedImageWidth/ (double)originalResizedImageWidth, (double) resizedImageHeight / (double)originalResizedImageHeight);
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom /= scaleFactor;
         }
@@ -815,7 +821,7 @@ void MainWindow::clientJsonReceived(const QJsonObject &json) {
     const QString type = json.value(QString("type")).toString();
     if (type == "newPlayer") {
         //addPlayer(json.value(QString("playerName")).toString());
-        room->addPlayer(username);
+        room->addPlayer(json.value(QString("playerName")).toString());
     }
 }
 
@@ -827,3 +833,8 @@ void MainWindow::sendPlayerName() {
 }
 
 
+
+void MainWindow::on_actionCommit_Image_triggered()
+{
+
+}

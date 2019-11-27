@@ -22,5 +22,7 @@
         <file>resources/server-solid.svg</file>
         <file>resources/users-solid.svg</file>
         <file>resources/noimageavail.png</file>
+        <file>resources/commit.svg</file>
+        <file>resources/merge.svg</file>
     </qresource>
 </RCC>

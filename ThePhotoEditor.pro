@@ -56,6 +56,7 @@ SOURCES += \
         Server/Client.cpp \
         Server/Server.cpp \
         Server/ServerWorker.cpp \
+        Utilities/CommitImage.cpp \
         Utilities/PixelHelper.cpp \
         Utilities/VersionControl.cpp \
         Utilities/WindowHelper.cpp \
@@ -95,6 +96,7 @@ HEADERS += \
         Palette/ColorControls.h \
         Palette/Effects.h \
         Palette/Histogram.h \
+        Utilities/CommitImage.h \
         Utilities/PixelHelper.h \
         Utilities/VersionControl.h \
         Server/Client.h \
@@ -113,6 +115,7 @@ FORMS += \
         Palette/ColorControls.ui \
         Palette/Effects.ui \
         Palette/Histogram.ui \
+        Utilities/CommitImage.ui \
         serverroom.ui
 
 # Default rules for deployment.
