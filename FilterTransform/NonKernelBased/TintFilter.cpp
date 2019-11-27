@@ -7,7 +7,7 @@ TintFilter::TintFilter(QObject* parent) : AbstractNonKernelBasedImageFilterTrans
 
 QString TintFilter::getName() const
 {
-    return "TintFilter";
+    return "Tint Filter";
 }
 
 QImage TintFilter::applyFilter(const QImage &image, double strength) const

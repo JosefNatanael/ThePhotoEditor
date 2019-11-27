@@ -21,7 +21,7 @@ QImage MeanBlurFilter::applyFilter(const QImage &image, int size)
 
 QString MeanBlurFilter::getName() const
 {
-    return "MeanBlurFilter";
+    return "Mean Blur Filter";
 }
 
 void MeanBlurFilter::setKernel(int size, double)

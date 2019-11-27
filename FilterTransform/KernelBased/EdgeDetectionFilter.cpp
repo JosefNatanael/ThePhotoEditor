@@ -21,7 +21,7 @@ QImage EdgeDetectionFilter::applyFilter(const QImage &image, int size)
 
 QString EdgeDetectionFilter::getName() const
 {
-    return "EmbossFilter";
+    return "Edge Detection Filter";
 }
 
 void EdgeDetectionFilter::setKernel(int size, double)

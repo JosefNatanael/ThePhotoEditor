@@ -102,6 +102,7 @@
      <property name="title">
       <string>History</string>
      </property>
+     <addaction name="actionCommit_Changes"/>
      <addaction name="separator"/>
     </widget>
     <addaction name="actionUndo"/>
@@ -237,6 +238,15 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionCommit_Changes">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/resources/commit.svg</normaloff>:/icons/resources/commit.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Commit_Changes</string>
    </property>
   </action>
  </widget>

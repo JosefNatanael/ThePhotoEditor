@@ -7,7 +7,7 @@ FlipHorizontalTransform::FlipHorizontalTransform(QObject* parent) : AbstractNonK
 
 QString FlipHorizontalTransform::getName() const
 {
-    return "FlipHorizontalTransform";
+    return "Flip Horizontal";
 }
 
 QImage FlipHorizontalTransform::applyFilter(const QImage &image, double) const

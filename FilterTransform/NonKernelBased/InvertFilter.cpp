@@ -7,7 +7,7 @@ InvertFilter::InvertFilter(QObject* parent) : AbstractNonKernelBasedImageFilterT
 
 QString InvertFilter::getName() const
 {
-    return "InvertFilter";
+    return "Invert Filter";
 }
 
 QImage InvertFilter::applyFilter(const QImage &image, double) const

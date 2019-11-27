@@ -7,7 +7,7 @@ TemperatureFilter::TemperatureFilter(QObject* parent) : AbstractNonKernelBasedIm
 
 QString TemperatureFilter::getName() const
 {
-    return "TemperatureFilter";
+    return "Temperature Filter";
 }
 
 QImage TemperatureFilter::applyFilter(const QImage &image, double strength) const

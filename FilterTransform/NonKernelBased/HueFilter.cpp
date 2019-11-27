@@ -7,7 +7,7 @@ HueFilter::HueFilter(QObject* parent) : AbstractNonKernelBasedImageFilterTransfo
 
 QString HueFilter::getName() const
 {
-    return "HueFilter";
+    return "Hue Filter";
 }
 
 QImage HueFilter::applyFilter(const QImage &image, double strength) const

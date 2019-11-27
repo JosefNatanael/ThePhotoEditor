@@ -7,7 +7,7 @@ BrightnessFilter::BrightnessFilter(QObject* parent) : AbstractNonKernelBasedImag
 
 QString BrightnessFilter::getName() const
 {
-    return "BrightnessFilter";
+    return "Brightness Filter";
 }
 
 QImage BrightnessFilter::applyFilter(const QImage &image, double strength) const

@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui->toolBar->addAction(ui->actionOpen);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(ui->actionSave);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(ui->actionCommit_Changes);
 
     // Setup our actions shortcuts
     ui->actionNew->setShortcuts(QKeySequence::New);
@@ -152,6 +154,7 @@ void MainWindow::reconnectConnection()
     connect(basics, &BasicControls::resizeButtonClicked, workspaceArea, &WorkspaceArea::resizeImage);
     connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
     connect(workspaceArea, &WorkspaceArea::updateImagePreview, this, &MainWindow::onUpdateImagePreview);
+    connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::commitChanges);
 }
 
 /*
@@ -378,7 +381,8 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            imageHistory.commitImage(workspaceArea->getImage(), "Save Image");
+            imageHistory.commitChanges(workspaceArea->getImage(), "Save Image");
+            generateHistoryMenu();
             fileSaved = true;
         }
         else
@@ -437,6 +441,8 @@ void MainWindow::on_actionOpen_triggered()
 
             colors->setImagePreview(workspaceArea->commitImageForPreview());
             colors->resetSliders();
+            imageHistory.commitChanges(loadedImage, "Original Image");
+            generateHistoryMenu();
         }
     }
 }
@@ -449,7 +455,8 @@ void MainWindow::on_actionSave_triggered()
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            imageHistory.commitImage(workspaceArea->getImage(), "Save Image");
+            imageHistory.commitChanges(workspaceArea->getImage(), "Save Image");
+            generateHistoryMenu();
             fileSaved = true;
         }
         else
@@ -517,6 +524,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
     const int upperBound = qMin(screenSize.width(), screenSize.height());
     const int lowerBound = 100;
+    int originalResizedImageWidth = resizedImageWidth;
+    int originalResizedImageHeight = resizedImageHeight;
 
     /*
      * Register a scroll if the scroll is vertical, within 7 (or -7) degree
@@ -530,7 +539,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
             // Update resizedImage dimensions
             resizedImageWidth = static_cast<int>(resizedImageWidth * scaleFactor);
             resizedImageHeight = static_cast<int>(resizedImageHeight * scaleFactor);
-            graphicsView->scale(scaleFactor, scaleFactor);
+//            graphicsView->scale(scaleFactor, scaleFactor);
+            graphicsView->scale((double)resizedImageWidth / (double) originalResizedImageWidth, (double)resizedImageHeight / (double)originalResizedImageHeight);
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom *= scaleFactor;
         }
@@ -538,7 +548,8 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
         {
             resizedImageWidth = static_cast<int>(resizedImageWidth * (1.0 / scaleFactor));
             resizedImageHeight = static_cast<int>(resizedImageHeight * (1.0 / scaleFactor));
-            graphicsView->scale(1.0/ scaleFactor, 1.0/ scaleFactor);
+//            graphicsView->scale(1.0/ scaleFactor, 1.0/ scaleFactor);
+            graphicsView->scale((double) resizedImageWidth/ (double)originalResizedImageWidth, (double) resizedImageHeight / (double)originalResizedImageHeight);
             resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
             currentZoom /= scaleFactor;
         }
@@ -725,7 +736,7 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
     rerenderWorkspaceArea(result, result.width(), result.height());
 
     // Add after-filter-applied image to our image history version control, generate our history menu
-    imageHistory.commitImage(workspaceArea->getImage(), filterTransform->getName());
+    imageHistory.commitChanges(workspaceArea->getImage(), filterTransform->getName());
     generateHistoryMenu();
 
     delete filterTransform;
@@ -840,8 +851,8 @@ void MainWindow::sendInitialImage() {
     if (isHost) {
         qDebug() << "I am server";
         QImage image = workspaceArea->getImage();
-//        QByteArray ba;
-//        QBuffer buffer(&ba);
+        //        QByteArray ba;
+        //        QBuffer buffer(&ba);
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);
         image.save(&buffer, "PNG");
@@ -852,4 +863,18 @@ void MainWindow::sendInitialImage() {
         server->sendInitialImage(json);
         qDebug() << "image sent";
     }
+}
+
+void MainWindow::on_actionCommit_Changes_triggered()
+{
+    CommitDialog commitDialog;
+    commitDialog.setModal(true);
+    commitDialog.exec();
+    
+}
+
+void MainWindow::commitChanges(QString changes)
+{
+    imageHistory.commitChanges(workspaceArea->getImage(), changes);
+    generateHistoryMenu();
 }

@@ -66,6 +66,7 @@ signals:
     void                    edited(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
     void                    imageCropped(const QImage&, int width, int height);
     void                    imageResized(const QImage&, int width, int height);
+    void                    commitChanges(QString changes);
     void                    updateImagePreview();
 
 protected:

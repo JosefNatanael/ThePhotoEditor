@@ -8,7 +8,7 @@ ExposureFilter::ExposureFilter(QObject* parent) : AbstractNonKernelBasedImageFil
 
 QString ExposureFilter::getName() const
 {
-    return "ExposureFilter";
+    return "Exposure Filter";
 }
 
 QImage ExposureFilter::applyFilter(const QImage &image, double strength) const

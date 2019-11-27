@@ -7,7 +7,7 @@ MagicWand::MagicWand(QObject *parent) : AbstractNonKernelBasedImageFilterTransfo
 
 QString MagicWand::getName() const
 {
-    return "MagicWand";
+    return "Magic Wand";
 }
 
 QImage MagicWand::applyFilter(const QImage &image, double) const
