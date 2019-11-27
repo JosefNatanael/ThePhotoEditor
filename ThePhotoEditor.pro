@@ -29,6 +29,8 @@ SOURCES += \
         FilterTransform/AbstractImageFilterTransform.cpp \
         FilterTransform/AbstractKernelBasedImageFilterTransform.cpp \
         FilterTransform/AbstractNonKernelBasedImageFilterTransform.cpp \
+        FilterTransform/KernelBased/EdgeDetectionFilter.cpp \
+        FilterTransform/KernelBased/EmbossFilter.cpp \
         FilterTransform/KernelBased/GaussianBlurFilter.cpp \
         FilterTransform/KernelBased/MeanBlurFilter.cpp \
         FilterTransform/NonKernelBased/BrightnessFilter.cpp \
@@ -50,11 +52,9 @@ SOURCES += \
         Palette/ColorControls.cpp \
         Palette/Effects.cpp \
         Palette/Histogram.cpp \
-        PixelHelper.cpp \
-        Server/Client.cpp \
-        Server/Server.cpp \
-        Server/ServerWorker.cpp \
-        WindowHelper.cpp \
+        Utilities/PixelHelper.cpp \
+        Utilities/VersionControl.cpp \
+        Utilities/WindowHelper.cpp \
         WorkspaceArea.cpp \
         main.cpp \
         MainWindow.cpp \
@@ -66,6 +66,8 @@ HEADERS += \
         FilterTransform/AbstractImageFilterTransform.h \
         FilterTransform/AbstractKernelBasedImageFilterTransform.h \
         FilterTransform/AbstractNonKernelBasedImageFilterTransform.h \
+        FilterTransform/KernelBased/EdgeDetectionFilter.h \
+        FilterTransform/KernelBased/EmbossFilter.h \
         FilterTransform/KernelBased/GaussianBlurFilter.h \
         FilterTransform/KernelBased/MeanBlurFilter.h \
         FilterTransform/NonKernelBased/BrightnessFilter.h \
@@ -88,11 +90,12 @@ HEADERS += \
         Palette/ColorControls.h \
         Palette/Effects.h \
         Palette/Histogram.h \
-        PixelHelper.h \
+        Utilities/PixelHelper.h \
+        Utilities/VersionControl.h \
         Server/Client.h \
         Server/Server.h \
         Server/ServerWorker.h \
-        WindowHelper.h \
+        Utilities/WindowHelper.h \
         WorkspaceArea.h \
         qcustomplot.h \
         serverroom.h

@@ -1,5 +1,5 @@
 #include "WorkspaceArea.h"
-#include "PixelHelper.h"
+#include "Utilities/PixelHelper.h"
 #include "FilterTransform/NonKernelBased/MagicWand.h"
 
 #include <QtWidgets>

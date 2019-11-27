@@ -47,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui->actionSave->setShortcuts(QKeySequence::Save);
     ui->actionUndo->setShortcuts(QKeySequence::Undo);
     ui->actionPrint->setShortcuts(QKeySequence::Print);
-    ui->actionHistory->setShortcut(tr("Ctrl+H"));
     ui->actionExit->setShortcuts(QKeySequence::Quit);
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -269,6 +268,52 @@ void MainWindow::createActions()
     connect(clearScreenAct, SIGNAL(triggered()), this, SLOT(clearImage()));
 }
 
+void MainWindow::generateHistoryMenu()
+{
+    // Clean image history menu
+    for (QMenu* i : imageHistoryMenu) {
+        delete imageHistoryMenu[0];
+        imageHistoryMenu.pop_front();
+    }
+
+    // Traverse the imageHistory (Version Control)
+    QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
+    // 1a. Traverse nodes in master branch
+    for (int masterNodeNumber = 0; it != imageHistory.masterBranch.end(); ++it, ++masterNodeNumber) {
+
+        // 1b. Create a menu for each master node
+        QMenu* masterNodeMenu = new QMenu(it->changes, this);
+
+        // 2a. Traverse images in side branches
+        QLinkedList<VersionControl::SideNode>::iterator i = it->sideBranch.begin();
+        for (int sideNodeNumber = 0; i != it->sideBranch.end(); ++i, ++sideNodeNumber) {
+
+            // 2b. Create an action for each image
+            QAction* action = new QAction(i->changes, masterNodeMenu);
+            masterNodeMenu->addAction(action);
+            connect(action, &QAction::triggered, this, [=](){ checkoutCommit(masterNodeNumber, sideNodeNumber); });
+        }
+
+        // 3. Add the menu to our menuHistory
+        ui->menuHistory->addMenu(masterNodeMenu);
+        imageHistoryMenu.append(masterNodeMenu);
+    }
+}
+
+void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber)
+{
+    // Traverse the imageHistory (Version Control)
+    QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
+    // 1. Traverse nodes in master branch
+    for (int i = 0; i < masterNodeNumber; ++i, ++it) {
+    }
+    // 2. Traverse images in the side branch
+    QLinkedList<VersionControl::SideNode>::iterator it2 = it->sideBranch.begin();
+    for (int j = 0; j < sideNodeNumber; ++j, ++it2) {
+    }
+    rerenderWorkspaceArea(it2->currentImage, it2->currentImage.width(), it2->currentImage.height());
+}
+
 // Create additional menus for certain actions, i.e. clearScreen action
 void MainWindow::createMenus()
 {
@@ -332,6 +377,7 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
+            imageHistory.commitImage(workspaceArea->getImage(), "Save Image");
             fileSaved = true;
         }
         else
@@ -402,6 +448,7 @@ void MainWindow::on_actionSave_triggered()
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
+            imageHistory.commitImage(workspaceArea->getImage(), "Save Image");
             fileSaved = true;
         }
         else
@@ -650,7 +697,6 @@ void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int 
     colors->resetSliders();
 
     onUpdateImagePreview();
-
 }
 
 void MainWindow::resetGraphicsViewScale()
@@ -669,9 +715,13 @@ void MainWindow::resetGraphicsViewScale()
 }
 
 void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransform, int size, double strength)
-{
-    // Commit all brush changes before applying transform
+{    
+    // Commit all brush strokes before applying transform
     workspaceArea->commitImageAndSet();
+
+    // Add before-filter-applied image to our image history version control, generate our history menu
+    imageHistory.commitImage(workspaceArea->getImage(), filterTransform->getName());
+    generateHistoryMenu();
 
     // Get filtered image and rerender the workspaceArea with the new image.
     QImage&& result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
