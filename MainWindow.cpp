@@ -12,6 +12,8 @@
 #include "Palette/ColorControls.h"
 #include "Palette/Effects.h"
 
+#include "serverroom.h"
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
                                           ui(new Ui::MainWindow)
 {
@@ -268,30 +270,48 @@ void MainWindow::createActions()
 
 void MainWindow::generateHistoryMenu()
 {
-    for (QMenu* menu : imageHistoryMenu) {
-        delete menu;
-        menu = nullptr;
+    // Clean image history menu
+    for (QMenu* i : imageHistoryMenu) {
+        delete imageHistoryMenu[0];
+        imageHistoryMenu.pop_front();
     }
 
     // Traverse the imageHistory (Version Control)
     QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
     // 1a. Traverse nodes in master branch
-    for (; it != imageHistory.masterBranch.end(); ++it) {
+    for (int masterNodeNumber = 0; it != imageHistory.masterBranch.end(); ++it, ++masterNodeNumber) {
 
         // 1b. Create a menu for each master node
-        QMenu* masterNodeMenu = new QMenu(tr("&Test Menu"), this);
+        QMenu* masterNodeMenu = new QMenu(it->changes, this);
 
         // 2a. Traverse images in side branches
-        for (QLinkedList<QImage>::iterator i = it->sideBranch.begin(); i != it->sideBranch.end(); ++i) {
+        QLinkedList<VersionControl::SideNode>::iterator i = it->sideBranch.begin();
+        for (int sideNodeNumber = 0; i != it->sideBranch.end(); ++i, ++sideNodeNumber) {
 
             // 2b. Create an action for each image
-            masterNodeMenu->addAction(new QAction("test shit", masterNodeMenu));
+            QAction* action = new QAction(i->changes, masterNodeMenu);
+            masterNodeMenu->addAction(action);
+            connect(action, &QAction::triggered, this, [=](){ checkoutCommit(masterNodeNumber, sideNodeNumber); });
         }
 
         // 3. Add the menu to our menuHistory
         ui->menuHistory->addMenu(masterNodeMenu);
         imageHistoryMenu.append(masterNodeMenu);
     }
+}
+
+void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber)
+{
+    // Traverse the imageHistory (Version Control)
+    QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
+    // 1. Traverse nodes in master branch
+    for (int i = 0; i < masterNodeNumber; ++i, ++it) {
+    }
+    // 2. Traverse images in the side branch
+    QLinkedList<VersionControl::SideNode>::iterator it2 = it->sideBranch.begin();
+    for (int j = 0; j < sideNodeNumber; ++j, ++it2) {
+    }
+    rerenderWorkspaceArea(it2->currentImage, it2->currentImage.width(), it2->currentImage.height());
 }
 
 // Create additional menus for certain actions, i.e. clearScreen action
@@ -357,7 +377,7 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            imageHistory.commitImage(workspaceArea->getImage());
+            imageHistory.commitImage(workspaceArea->getImage(), "Save Image");
             fileSaved = true;
         }
         else
@@ -428,7 +448,7 @@ void MainWindow::on_actionSave_triggered()
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            imageHistory.commitImage(workspaceArea->getImage());
+            imageHistory.commitImage(workspaceArea->getImage(), "Save Image");
             fileSaved = true;
         }
         else
@@ -699,14 +719,13 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
     // Commit all brush strokes before applying transform
     workspaceArea->commitImageAndSet();
 
-    // BUGSSS TODO
-    // Add before-filter-applied image to our image history version control, generate our history menu
-//    imageHistory.commitImage(workspaceArea->getImage());
-//    generateHistoryMenu();
-
     // Get filtered image and rerender the workspaceArea with the new image.
     QImage&& result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
     rerenderWorkspaceArea(result, result.width(), result.height());
+
+    // Add after-filter-applied image to our image history version control, generate our history menu
+    imageHistory.commitImage(workspaceArea->getImage(), filterTransform->getName());
+    generateHistoryMenu();
 
     delete filterTransform;
 }
@@ -723,3 +742,88 @@ void MainWindow::onUpdateImagePreview() {
      QImage&& previewImage = workspaceArea->commitImageForPreview();
      colors->setImagePreview(previewImage);
 }
+
+void MainWindow::onCreateRoom(QString name) {
+    username = name;
+    if (name.isEmpty()) {
+        QMessageBox::information(this, QString("Empty Name"), QString("Name cannot be empty"));
+        return;
+    }
+
+    server = new Server(this);
+    ip = server->getIP();
+    port = server->getPort();
+    isHost = true;
+    qDebug() << ip << port;
+    joinRoom();
+
+}
+
+void MainWindow::onJoinRoom(QString name, QString address, quint16 port) {
+    ip = address;
+    if (ip.isEmpty()) {
+        QMessageBox::information(this, QString("Empty Server Name"), QString("Server name cannot be empty"));
+        return;
+    }
+
+    this->port = port;
+    if (!port) {
+        QMessageBox::information(this, QString("Invalid Port"), QString("Invalid Port"));
+        return;
+    }
+
+    username = name;
+    if (username.isEmpty()) {
+        QMessageBox::information(this, QString("Empty Name"), QString("Name cannot be empty"));
+        return;
+    }
+
+    isHost = false;
+    joinRoom();
+}
+
+void MainWindow::joinRoom() {
+    client = new Client();
+    client->connectToServer(QHostAddress(ip), port);
+    room->setServerRoom();
+    connect(client, &Client::receiveJson, this, &MainWindow::clientJsonReceived);
+    connect(client, &Client::connected, this, &MainWindow::sendPlayerName);
+    //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
+}
+
+void MainWindow::on_actionCreate_Room_triggered()
+{
+    room = new ServerRoom();
+    room->setCreateRoom();
+    connect(room, &ServerRoom::createRoom, this, &MainWindow::onCreateRoom);
+    room->setModal(true);
+    room->exec();
+
+}
+
+void MainWindow::on_actionJoin_Room_triggered()
+{
+    room = new ServerRoom();
+    room->setJoinRoom();
+    connect(room, &ServerRoom::joinRoom, this, &MainWindow::onJoinRoom);
+    room->setModal(true);
+    room->exec();
+}
+
+void MainWindow::clientJsonReceived(const QJsonObject &json) {
+    qDebug() << json;
+    const QString type = json.value(QString("type")).toString();
+    if (type == "newPlayer") {
+        //addPlayer(json.value(QString("playerName")).toString());
+        room->addPlayer(username);
+    }
+}
+
+void MainWindow::sendPlayerName() {
+    QJsonObject playerNameMsg;
+    playerNameMsg["type"] = "playerName";
+    playerNameMsg["playerName"] = username;
+    client->sendJson(playerNameMsg);
+}
+
+

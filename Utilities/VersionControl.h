@@ -8,19 +8,29 @@ class VersionControl
 {
     friend class MainWindow;
 private:
+    struct SideNode {
+        SideNode(QImage image, QString changes) : currentImage(image), changes(changes) {}
+        QImage currentImage;
+        QString changes;
+    };
+
     class MasterNode {
         friend class MainWindow;
+
     private:
-        QLinkedList<QImage>         sideBranch;
+        QLinkedList<SideNode>       sideBranch;
         QImage                      nodeImage;
+        QString                     changes;
         int                         sideBranchLength;
 
     public:
-        MasterNode(QImage);
+        MasterNode(QImage, QString);
+        MasterNode(SideNode);
 
     public:
         int                         getBranchLength() const { return sideBranchLength; }
-        void                        commitImage(QImage);
+        QString                     getName() const { return changes; }
+        void                        commitImage(QImage, QString);
         void                        reverseCommit();
         const QImage&               getImageAtIndex(int index);
         bool                        canCommitImage() const { return sideBranchLength <= maxSideBranchLength - 1; }
@@ -30,14 +40,13 @@ private:
 
 public:
     VersionControl();
-    VersionControl(QImage);
+    VersionControl(QImage, QString);
 
     int                         getBranchLength() const { return masterBranchLength; }
-    void                        commitImage(QImage);
+    void                        commitImage(QImage, QString);
     void                        reverseCommit();
     const QImage&               getImageAtIndex(int index);
     bool                        canReverseCommit() const { return masterBranchLength >= 2; }
-
 
 private:
     QLinkedList<MasterNode>     masterBranch;
