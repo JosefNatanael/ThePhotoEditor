@@ -19,8 +19,9 @@ public:
 
     void setCreateRoom();
     void setJoinRoom();
-    void setServerRoom();
+    void setServerRoom(QString, quint16);
     void addPlayer(QString);
+    void emptyPlayers();
 
 signals:
     void createRoom(QString);
@@ -30,6 +31,10 @@ private slots:
     void on_joinRoomButtonBox_accepted();
 
     void on_createRoomButtonBox_accepted();
+
+    void on_joinRoomButtonBox_rejected();
+
+    void on_createRoomButtonBox_rejected();
 
 private:
     Ui::ServerRoom *ui;

@@ -813,15 +813,36 @@ void MainWindow::onJoinRoom(QString name, QString address, quint16 port) {
 void MainWindow::joinRoom() {
     client = new Client();
     client->connectToServer(QHostAddress(ip), port);
-    room->setServerRoom();
+    connect(client, &Client::connectionFailedBad, this, &MainWindow::onConnectionFailed);
+    connect(client, &Client::connected, this, &MainWindow::goToServerRoom);
     connect(client, &Client::receiveJson, this, &MainWindow::clientJsonReceived);
     connect(client, &Client::connected, this, &MainWindow::sendPlayerName);
     //connect(client, &Client::connected, this, &MainWindow::sendInitialImage);
     //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
+
+}
+
+void MainWindow::onConnectionFailed() {
+    QMessageBox::information(this, QString("Connection failed"), QString("Invalid IP address or port."));
+    if (room) {
+        room->setModal(false);
+        room->close();
+    }
+}
+
+void MainWindow::goToServerRoom() {
+    room->setServerRoom(ip, port);
+    room->setModal(true);
+    room->exec();
+    isConnected = true;
 }
 
 void MainWindow::on_actionCreate_Room_triggered()
 {
+    if(isConnected) {
+        QMessageBox::information(this, QString("Unable to create"), QString("You have an active connection."));
+        return;
+    }
     room = new ServerRoom();
     room->setCreateRoom();
     connect(room, &ServerRoom::createRoom, this, &MainWindow::onCreateRoom);
@@ -831,6 +852,10 @@ void MainWindow::on_actionCreate_Room_triggered()
 
 void MainWindow::on_actionJoin_Room_triggered()
 {
+    if(isConnected) {
+        QMessageBox::information(this, QString("Unable to create"), QString("You have an active connection."));
+        return;
+    }
     room = new ServerRoom();
     room->setJoinRoom();
     connect(room, &ServerRoom::joinRoom, this, &MainWindow::onJoinRoom);
@@ -841,9 +866,13 @@ void MainWindow::on_actionJoin_Room_triggered()
 void MainWindow::clientJsonReceived(const QJsonObject &json) {
     qDebug() << json;
     const QString type = json.value(QString("type")).toString();
-    if (type == "newPlayer" || type == "playerList") {
-        //addPlayer(json.value(QString("playerName")).toString());
+    if (type == "newPlayer") {
+        qDebug() << "New Player has entered";
         room->addPlayer(json.value(QString("playerName")).toString());
+    } else if (type == "playerList") {
+        room->emptyPlayers();
+        for(QJsonValue playerName : json.value(QString("playerNames")).toArray())
+            room->addPlayer(playerName.toString());
     } else if (type == "initialImage") {
         QByteArray ba = QByteArray::fromBase64(json.value(QString("data")).toString().toLatin1());
         QImage img = QImage::fromData(ba, "PNG");
@@ -867,15 +896,12 @@ void MainWindow::sendInitialImage() {
     if (isHost) {
         qDebug() << "I am server";
         QImage image = workspaceArea->getImage();
-        //        QByteArray ba;
-        //        QBuffer buffer(&ba);
         QBuffer buffer;
         buffer.open(QIODevice::WriteOnly);
         image.save(&buffer, "PNG");
         QJsonObject json;
         json["type"] = "initialImage";
         json["data"] = QJsonValue(QLatin1String(buffer.data().toBase64()));
-        //qDebug() << QString(QLatin1String(buffer.data().toBase64()));
         server->sendInitialImage(json);
         qDebug() << "image sent";
     }
@@ -898,4 +924,13 @@ void MainWindow::onCommitChanges(QString changes)
         imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->commitChanges(workspaceArea->getImage(), changes);
     }
     generateHistoryMenu();
+}
+
+void MainWindow::on_actionView_Room_triggered()
+{
+    if (!isConnected) {
+        QMessageBox::information(this, QString("Room Unavailable"), QString("Please create or join room first."));
+        return;
+    }
+    goToServerRoom();
 }

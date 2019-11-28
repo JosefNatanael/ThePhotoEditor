@@ -135,18 +135,18 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
  *  @return: N/A
  */
 void Server::startGameBroadcast() {
-    if (clients.size()>5){
-        QMessageBox::information(nullptr, QString("Too Many Players"), QString("There are too many players."));
-        return;
-    }
-    if (clients.size()==1){
-        QMessageBox::information(nullptr, QString("Not Enough Players"), QString("You need 2-5 players to play."));
-        return;
-    }
-    qDebug("Server Start Game Broadcast");
-    QJsonObject startGameMsg;
-    startGameMsg["type"] = "startGame";
-    broadcast(startGameMsg);
+//    if (clients.size()>2){
+//        QMessageBox::information(nullptr, QString("Too Many Players"), QString("There are too many players."));
+//        return;
+//    }
+//    if (clients.size()==1){
+//        QMessageBox::information(nullptr, QString("Not Enough Players"), QString("You need 2-5 players to play."));
+//        return;
+//    }
+//    qDebug("Server Start Game Broadcast");
+//    QJsonObject startGameMsg;
+//    startGameMsg["type"] = "startGame";
+//    broadcast(startGameMsg);
 }
 
 /*

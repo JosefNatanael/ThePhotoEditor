@@ -17,6 +17,7 @@ Client::Client(QObject *parent):
     connect(clientSocket, &QTcpSocket::connected, this, &Client::connected);
     connect(clientSocket, &QTcpSocket::disconnected, this, &Client::disconnected);
     connect(clientSocket, &QTcpSocket::readyRead, this, &Client::onReadyRead);
+    connect(clientSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), this, &Client::onError);
 }
 
 /*
@@ -90,5 +91,13 @@ void Client::onReadyRead() {
         } else {
             break;
         }
+    }
+}
+
+void Client::onError(QAbstractSocket::SocketError error) {
+
+    if (!(clientSocket->state() == QTcpSocket::ConnectedState)) {
+        emit connectionFailedBad();
+        qDebug() << "NOT CONNECTED";
     }
 }

@@ -7,6 +7,10 @@ ServerRoom::ServerRoom(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->playerList->hide();
+    ui->roomIpLabel->hide();
+    ui->roomPortLabel->hide();
+    ui->disconnectButton->hide();
+    ui->collaboratorsLabel->hide();
 }
 
 ServerRoom::~ServerRoom()
@@ -20,13 +24,15 @@ void ServerRoom::setCreateRoom() {
     ui->portLine->hide();
     ui->portLabel->hide();
     ui->joinRoomButtonBox->hide();
+    ui->titleLabel->setText("Create Room");
 }
 
 void ServerRoom::setJoinRoom() {
     ui->createRoomButtonBox->hide();
+    ui->titleLabel->setText("Join Room");
 }
 
-void ServerRoom::setServerRoom() {
+void ServerRoom::setServerRoom(QString ip, quint16 port) {
     ui->nameLine->hide();
     ui->nameLabel->hide();
     ui->addressLine->hide();
@@ -36,6 +42,13 @@ void ServerRoom::setServerRoom() {
     ui->joinRoomButtonBox->hide();
     ui->createRoomButtonBox->hide();
     ui->playerList->show();
+    ui->roomIpLabel->show();
+    ui->roomPortLabel->show();
+    ui->ipContent->setText(ip);
+    ui->portContent->setNum(port);
+    ui->disconnectButton->show();
+    ui->collaboratorsLabel->show();
+    ui->titleLabel->setText("The Room");
 }
 
 void ServerRoom::on_joinRoomButtonBox_accepted()
@@ -54,4 +67,18 @@ void ServerRoom::on_createRoomButtonBox_accepted()
 
 void ServerRoom::addPlayer(QString name) {
     ui->playerList->addItem(name);
+}
+
+void ServerRoom::emptyPlayers() {
+    ui->playerList->clear();
+}
+
+void ServerRoom::on_joinRoomButtonBox_rejected()
+{
+    close();
+}
+
+void ServerRoom::on_createRoomButtonBox_rejected()
+{
+    close();
 }

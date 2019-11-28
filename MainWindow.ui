@@ -74,7 +74,7 @@
      <x>0</x>
      <y>0</y>
      <width>1366</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -127,6 +127,7 @@
     </property>
     <addaction name="actionCreate_Room"/>
     <addaction name="actionJoin_Room"/>
+    <addaction name="actionView_Room"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -253,6 +254,11 @@
   <action name="actionRedo">
    <property name="text">
     <string>Redo</string>
+   </property>
+  </action>
+  <action name="actionView_Room">
+   <property name="text">
+    <string>View Room</string>
    </property>
   </action>
  </widget>

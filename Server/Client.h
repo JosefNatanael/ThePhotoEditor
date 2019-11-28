@@ -12,15 +12,20 @@ class Client : public QObject
 public:
     explicit Client(QObject *parent = nullptr);
     void sendJson(const QJsonObject &json);
+    void onError(QAbstractSocket::SocketError);
 public slots:
     void connectToServer(const QHostAddress &address, quint16 port);
     void disconnectFromHost();
+
 private slots:
     void onReadyRead();
+
 signals:
     void connected();
     void disconnected();
     void receiveJson(const QJsonObject &json);
+    void connectionFailedBad();
+
 private:
     QTcpSocket *clientSocket;
     void jsonReceived(const QJsonObject &doc);

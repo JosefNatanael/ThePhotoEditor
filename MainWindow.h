@@ -71,9 +71,13 @@ private slots:
     void                        onJoinRoom(QString, QString, quint16);
     void                        sendPlayerName();
     void                        clientJsonReceived(const QJsonObject&);
+    void                        goToServerRoom();
+    void                        onConnectionFailed();
 
     void                        on_actionCommit_Changes_triggered();
     void                        onCommitChanges(QString changes);
+
+    void on_actionView_Room_triggered();
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
@@ -97,7 +101,7 @@ private:
     void                        fitImageToScreen(int, int);
 
     void                        joinRoom();
-    void                        sendInitialImage();
+    void                        sendInitialImage();                         
 
 private:
     Ui::MainWindow*             ui;
@@ -142,6 +146,7 @@ private:
     QString                     ip;
     quint16                     port;
     bool                        isHost = false;
+    bool                        isConnected = false;
 
 };
 
