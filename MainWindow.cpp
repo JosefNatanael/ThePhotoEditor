@@ -911,7 +911,19 @@ void MainWindow::on_actionCommit_Changes_triggered()
 {
     CommitDialog commitDialog;
     commitDialog.setModal(true);
-    commitDialog.exec();
+    if (commitDialog.exec()) {
+        // Save the image
+        QImage toMerge = workspaceArea->getImage();
+        // Remove the node
+        imageHistory.masterBranch.erase(imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber));
+        // Set master and side to 0, 0
+        masterNodeNumber = 0;
+        sideNodeNumber = 0;
+        // Commit image with saved image
+        commitChanges(toMerge, "Merged");
+        // Generate history
+        generateHistoryMenu();
+    }
     
 }
 
