@@ -53,7 +53,7 @@ void Effects::on_inpaintingPushButton_clicked()
 {
     //TODO
     //dummy:
-    ImageInpainting* imageInpainting = new ImageInpainting();
+    ImageInpainting* imageInpainting = new ImageInpainting(5);
     imageInpainting->mask = mask;
     emit applyEffectClicked(imageInpainting, 5 , 1);
 }
