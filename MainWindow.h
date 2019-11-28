@@ -127,8 +127,8 @@ private:
     bool                        fileSaved = false;      // the state that saves whether our current project been saved
     double                      currentZoom = 1.0;      // Saves our current zoom level
     QComboBox*                  comboBox;
-    int                         resizedImageHeight = WorkspaceArea::SCENE_HEIGHT;
-    int                         resizedImageWidth = WorkspaceArea::SCENE_WIDTH;
+    double                      resizedImageHeight = WorkspaceArea::SCENE_HEIGHT;
+    double                      resizedImageWidth = WorkspaceArea::SCENE_WIDTH;
 
     ServerRoom*                 room = nullptr;
     QString                     username;

@@ -271,7 +271,7 @@ void MainWindow::createActions()
 void MainWindow::generateHistoryMenu()
 {
     // Clean image history menu
-    for (QMenu* i : imageHistoryMenu) {
+    for (QMenu* _ : imageHistoryMenu) {
         delete imageHistoryMenu[0];
         imageHistoryMenu.pop_front();
     }
@@ -425,10 +425,10 @@ void MainWindow::on_actionOpen_triggered()
             resetGraphicsViewScale();
             reconstructWorkspaceArea(imageWidth, imageHeight);
 
+            // House keeping, updating data members that keeps image width and height
             resizedImageWidth = imageWidth;
             resizedImageHeight = imageHeight;
-
-            basics->setImageDimensions(resizedImageWidth, resizedImageHeight);
+            basics->setImageDimensions(imageWidth, imageHeight);
 
             workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
             resizeGraphicsViewBoundaries(imageWidth, imageHeight);
@@ -531,8 +531,6 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     const QRect screenSize = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
     const int upperBound = qMin(screenSize.width(), screenSize.height());
     const int lowerBound = 100;
-    int originalResizedImageWidth = resizedImageWidth;
-    int originalResizedImageHeight = resizedImageHeight;
 
     /*
      * Register a scroll if the scroll is vertical, within 7 (or -7) degree
@@ -544,21 +542,19 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
         if (event->delta() > 7 && resizedImageWidth < upperBound  && resizedImageHeight < upperBound)
         {
             // Update resizedImage dimensions
-            resizedImageWidth = static_cast<int>(resizedImageWidth * scaleFactor);
-            resizedImageHeight = static_cast<int>(resizedImageHeight * scaleFactor);
-//            graphicsView->scale(scaleFactor, scaleFactor);
-            graphicsView->scale((double)resizedImageWidth / (double) originalResizedImageWidth, (double)resizedImageHeight / (double)originalResizedImageHeight);
-            resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
+            graphicsView->scale(scaleFactor, scaleFactor);
+            resizeGraphicsViewBoundaries(static_cast<int>(resizedImageWidth * scaleFactor), static_cast<int>(resizedImageHeight * scaleFactor));
+            resizedImageWidth = resizedImageWidth * scaleFactor;
+            resizedImageHeight = resizedImageHeight * scaleFactor;
             currentZoom *= scaleFactor;
         }
         else if (event->delta() < -7 && resizedImageWidth > lowerBound && resizedImageHeight > lowerBound)
         {
-            resizedImageWidth = static_cast<int>(resizedImageWidth * (1.0 / scaleFactor));
-            resizedImageHeight = static_cast<int>(resizedImageHeight * (1.0 / scaleFactor));
-//            graphicsView->scale(1.0/ scaleFactor, 1.0/ scaleFactor);
-            graphicsView->scale((double) resizedImageWidth/ (double)originalResizedImageWidth, (double) resizedImageHeight / (double)originalResizedImageHeight);
-            resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
+            graphicsView->scale(1.0/ scaleFactor, 1.0/ scaleFactor);
+            resizeGraphicsViewBoundaries(static_cast<int>(resizedImageWidth / scaleFactor), static_cast<int>(resizedImageHeight / scaleFactor));
             currentZoom /= scaleFactor;
+            resizedImageWidth = resizedImageWidth * (1.0 / scaleFactor);
+            resizedImageHeight = resizedImageHeight * (1.0 / scaleFactor);
         }
     }
 
@@ -571,7 +567,7 @@ void MainWindow::onZoom(const QString &level)
 {
     if (level == "Fit to screen")
     {
-        fitImageToScreen(resizedImageWidth, resizedImageHeight);
+        fitImageToScreen(static_cast<int>(resizedImageWidth), static_cast<int>(resizedImageHeight));
         return;
     }
 
@@ -579,7 +575,7 @@ void MainWindow::onZoom(const QString &level)
     double a = resizedImageWidth * originalFactor;
     double b = resizedImageHeight * originalFactor;
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-    resizeGraphicsViewBoundaries(resizedImageWidth * originalFactor, resizedImageHeight * originalFactor);
+    resizeGraphicsViewBoundaries(static_cast<int>(resizedImageWidth * originalFactor), static_cast<int>(resizedImageHeight * originalFactor));
     resizedImageWidth *= originalFactor;
     resizedImageHeight *= originalFactor;
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -605,7 +601,7 @@ void MainWindow::onZoom(const QString &level)
     a = resizedImageWidth * scaleFactor;
     b = resizedImageHeight * scaleFactor;
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
-    resizeGraphicsViewBoundaries(resizedImageWidth * scaleFactor, resizedImageHeight * scaleFactor);
+    resizeGraphicsViewBoundaries(static_cast<int>(resizedImageWidth * scaleFactor), static_cast<int>(resizedImageHeight * scaleFactor));
     resizedImageWidth *= scaleFactor;
     resizedImageHeight *= scaleFactor;
 
@@ -649,11 +645,11 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
      */
     if (currentImageWidth > screenWidth || currentImageHeight > screenHeight)
     {
-        ratio = qMax((double)screenWidth / currentImageWidth, (double)screenHeight / currentImageHeight) * 0.5;
+        ratio = qMax(static_cast<double>(screenWidth) / currentImageWidth, static_cast<double>(screenHeight) / currentImageHeight) * 0.5;
     }
     else if (currentImageWidth < screenWidth || currentImageHeight < screenHeight)
     {
-        ratio = qMin((double)screenWidth / currentImageWidth, (double)screenHeight / currentImageHeight) * 0.5;
+        ratio = qMin(static_cast<double>(screenWidth) / currentImageWidth, static_cast<double>(screenHeight) / currentImageHeight) * 0.5;
     }
     else
     {
@@ -722,7 +718,7 @@ void MainWindow::resetGraphicsViewScale()
     // Reset graphics view scaling factor
     graphicsView->resetMatrix();
 
-    resizeGraphicsViewBoundaries(resizedImageWidth, resizedImageHeight);
+    resizeGraphicsViewBoundaries(static_cast<int>(resizedImageWidth), static_cast<int>(resizedImageHeight));
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
     //    currentZoom = 1 / totalScaleX;        // is this needed?????
