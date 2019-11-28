@@ -501,6 +501,25 @@ void MainWindow::on_actionRedo_triggered()
     }
 }
 
+void MainWindow::on_actionRevert_to_Last_Commit_triggered()
+{
+    // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
+    if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1) {
+        // Node starts at 0, +2 because we want to compare length and if the image is undoable
+        if (sideNodeNumber + 2 <= imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength())
+        checkoutCommit(masterNodeNumber, sideNodeNumber + 1);
+        imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->reverseCommit();
+    }
+    else if (masterNodeNumber + 2 <= imageHistory.getBranchLength()) {
+        checkoutCommit(masterNodeNumber + 1, 0);
+        imageHistory.reverseCommit();
+    }
+    else {
+        return;
+    }
+    generateHistoryMenu();
+}
+
 // Print the workspaceArea
 void MainWindow::on_actionPrint_triggered()
 {
