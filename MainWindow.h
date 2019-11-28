@@ -52,10 +52,11 @@ private slots:
     void                        on_actionAbout_Us_triggered();
     void                        on_actionExit_triggered();
     void                        on_actionUndo_triggered();
+    void                        on_actionRedo_triggered();
     void                        on_actionSave_triggered();
 
     void                        saveAs();
-    void                        on_edit(QGraphicsPathItem*);
+    void                        onImageDrawn();
     void                        clearImage();
     void                        onZoom(const QString&);
     void                        onCrossCursorChanged(WorkspaceArea::CursorMode, int data);
@@ -101,12 +102,12 @@ private:
 	WorkspaceArea*				temporaryArea = nullptr;
     QGraphicsView*              graphicsView;
 
-    QVector<QGraphicsPathItem*> strokeHistory;          // Saves the strokes created when drawing on the workspaceArea
     VersionControl              imageHistory;           // In progress ...
     QVector<QMenu*>             imageHistoryMenu;       // Stores our QMenus used for displaying our imageHistory
+    int                         masterNodeNumber = 0;   // Saves current checkout node number
 
     QMenu*                      optionMenu;             // optionMenu is generated during runtime
-    QList<QAction *>            saveAsActs;             // all possible image format that can be used to save the image
+    QList<QAction*>             saveAsActs;             // all possible image format that can be used to save the image
     QAction*                    clearScreenAct;         // an action to clear the workspaceArea
 
     QTreeWidgetItem*            histogram;              // The parent wrapper of our histogram widget
@@ -144,12 +145,5 @@ inline void MainWindow::on_actionExit_triggered()
 {
     MainWindow::close();
 }
-
-// Saves the stroke history to the history
-inline void MainWindow::on_edit(QGraphicsPathItem* item)
-{
-    strokeHistory.push_back(item);
-}
-
 
 #endif // MAINWINDOW_H

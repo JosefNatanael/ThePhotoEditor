@@ -158,7 +158,6 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			pathItem->setPen(pen);   // set sticker pen to default pen
 			pathItem->setPath(path); // set sticker path to the new path
 			this->addItem(pathItem);
-			emit edited(pathItem);
 		}
 
 		path = pathItem->path();		// get path from sticker
@@ -198,6 +197,7 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	{
 	case CursorMode::SCRIBBLE:
         emit updateImagePreview();
+        emit imageDrawn();
 		pathItem = nullptr;
 		break;
 	case CursorMode::RECTANGLECROP:

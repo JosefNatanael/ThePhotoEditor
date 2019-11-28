@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui->actionOpen->setShortcuts(QKeySequence::Open);
     ui->actionSave->setShortcuts(QKeySequence::Save);
     ui->actionUndo->setShortcuts(QKeySequence::Undo);
+    ui->actionRedo->setShortcuts(QKeySequence::Redo);
     ui->actionPrint->setShortcuts(QKeySequence::Print);
     ui->actionExit->setShortcuts(QKeySequence::Quit);
 
@@ -146,7 +147,7 @@ MainWindow::~MainWindow()
 // This is needed in order to reestablish connection after workspaceArea is recreated
 void MainWindow::reconnectConnection()
 {
-    connect(workspaceArea, &WorkspaceArea::edited, this, &MainWindow::on_edit);
+    connect(workspaceArea, &WorkspaceArea::imageDrawn, this, &MainWindow::onImageDrawn);
     connect(workspaceArea, &WorkspaceArea::imageLoaded, histo, &Histogram::onImageLoaded);
     connect(brush, &Brush::penColorChanged, workspaceArea, &WorkspaceArea::setPenColor);
     connect(brush, &Brush::penWidthChanged, workspaceArea, &WorkspaceArea::setPenWidth);
@@ -163,11 +164,6 @@ void MainWindow::reconnectConnection()
  */
 void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight)
 {
-    // Before reconstructing new workspaceArea, we need to clean stroke history
-    while (!strokeHistory.isEmpty()) {
-        on_actionUndo_triggered();
-    }
-
     delete workspaceArea;
     workspaceArea = nullptr;
 
@@ -470,16 +466,20 @@ void MainWindow::on_actionSave_triggered()
     }
 }
 
-// Undo brush stroke
 void MainWindow::on_actionUndo_triggered()
 {
-    if (strokeHistory.isEmpty())
-    {
-        return;
+    // Master node starts at 0, +2 because we want to compare length and if the image is undoable
+    if (masterNodeNumber + 2 <= imageHistory.getBranchLength()) {
+        checkoutCommit(++masterNodeNumber, 0);
     }
-    QGraphicsPathItem *toBeDeleted = strokeHistory.back();
-    strokeHistory.pop_back();
-    workspaceArea->removeItem(toBeDeleted);
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+    // Check if redo is available
+    if (masterNodeNumber > 0) {
+        checkoutCommit(--masterNodeNumber, 0);
+    }
 }
 
 // Print the workspaceArea
@@ -495,6 +495,13 @@ void MainWindow::on_actionAbout_Us_triggered()
     AboutUs aboutUs;
     aboutUs.setModal(true);
     aboutUs.exec();
+}
+
+void MainWindow::onImageDrawn()
+{
+    QImage image = workspaceArea->commitImage();
+    imageHistory.commitChanges(image, "Brush");
+    generateHistoryMenu();
 }
 
 // Filter mouse scroll event to not propagate to the whole mainwindow, instead only to the workspaceArea
@@ -670,11 +677,6 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
  */
 void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int imageHeight)
 {
-    // Before rerenderingWorkspaceArea, we make sure our stroke history is clean
-    while (!strokeHistory.isEmpty()) {
-        on_actionUndo_triggered();
-    }
-
     resetGraphicsViewScale();
     // Removes previous temporaryArea. If temporaryArea is not nullptr,
     // this means temporaryArea holds the previous workspaceArea.

@@ -47,11 +47,9 @@ public:
     void                    setImageLoaded(bool isImageLoaded) { this->isImageLoaded = isImageLoaded ; }
     void                    setCursorMode(CursorMode cursorMode) { this->cursorMode = cursorMode; }
     void                    setMagicWandThreshold(int threshold) { this->magicWandThreshold = threshold; }
+    QImage                  commitImage();
     void                    commitImageAndSet() { image = commitImage(); }
     QImage                  commitImageForPreview();
-
-private:
-    QImage                  commitImage();
 
 public slots:
     void                    print();
@@ -63,7 +61,7 @@ public:
 
 signals:
     void                    imageLoaded(const QImage& image);     // Signals the mainwindow to update the histogram on image load
-    void                    edited(QGraphicsPathItem*);               // Signals the on_edit slot that a stroke has been drawn
+    void                    imageDrawn();
     void                    imageCropped(const QImage&, int width, int height);
     void                    imageResized(const QImage&, int width, int height);
     void                    commitChanges(QString changes);

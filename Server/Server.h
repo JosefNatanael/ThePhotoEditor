@@ -23,6 +23,7 @@ protected:
     void incomingConnection(qintptr socketDescriptor) override;
 signals:
     void receiveJson(ServerWorker *sender, const QJsonObject &json);
+    void newPlayerConnected();
 public slots:
     void stopServer();
     void startGameBroadcast();
