@@ -155,7 +155,7 @@ void MainWindow::reconnectConnection()
     connect(basics, &BasicControls::resizeButtonClicked, workspaceArea, &WorkspaceArea::resizeImage);
     connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
     connect(workspaceArea, &WorkspaceArea::updateImagePreview, this, &MainWindow::onUpdateImagePreview);
-    connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::commitChanges);
+    connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::onCommitChanges);
 }
 
 /*
@@ -302,6 +302,8 @@ void MainWindow::generateHistoryMenu()
 
 void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber)
 {
+    this->masterNodeNumber = masterNodeNumber;
+    this->sideNodeNumber = sideNodeNumber;
     // Traverse the imageHistory (Version Control)
     QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
     // 1. Traverse nodes in master branch
@@ -312,6 +314,18 @@ void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber)
     for (int j = 0; j < sideNodeNumber; ++j, ++it2) {
     }
     rerenderWorkspaceArea(it2->currentImage, it2->currentImage.width(), it2->currentImage.height());
+}
+
+void MainWindow::commitChanges(QImage changedImage, QString changes)
+{
+    if (masterNodeNumber == 0) {
+        imageHistory.commitChanges(changedImage, changes);
+    }
+    else {
+        imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->commitChanges(changedImage, changes);
+    }
+
+    generateHistoryMenu();
 }
 
 // Create additional menus for certain actions, i.e. clearScreen action
@@ -377,8 +391,7 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            imageHistory.commitChanges(workspaceArea->getImage(), "Save Image");
-            generateHistoryMenu();
+            commitChanges(workspaceArea->getImage(), "Save Image");
             fileSaved = true;
         }
         else
@@ -437,8 +450,7 @@ void MainWindow::on_actionOpen_triggered()
 
             colors->setImagePreview(workspaceArea->commitImageForPreview());
             colors->resetSliders();
-            imageHistory.commitChanges(loadedImage, "Original Image");
-            generateHistoryMenu();
+            commitChanges(loadedImage, "Original Image");
         }
     }
 }
@@ -451,8 +463,7 @@ void MainWindow::on_actionSave_triggered()
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            imageHistory.commitChanges(workspaceArea->getImage(), "Save Image");
-            generateHistoryMenu();
+            commitChanges(workspaceArea->getImage(), "Save Image");
             fileSaved = true;
         }
         else
@@ -468,16 +479,24 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionUndo_triggered()
 {
-    // Master node starts at 0, +2 because we want to compare length and if the image is undoable
-    if (masterNodeNumber + 2 <= imageHistory.getBranchLength()) {
+    // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
+    if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1) {
+        // Node starts at 0, +2 because we want to compare length and if the image is undoable
+        if (sideNodeNumber + 2 <= imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength())
+        checkoutCommit(masterNodeNumber, ++sideNodeNumber);
+    }
+    else if (masterNodeNumber + 2 <= imageHistory.getBranchLength()) {
         checkoutCommit(++masterNodeNumber, 0);
     }
 }
 
 void MainWindow::on_actionRedo_triggered()
 {
-    // Check if redo is available
-    if (masterNodeNumber > 0) {
+    // Check if redo is available on current branch
+    if (sideNodeNumber > 0) {
+        checkoutCommit(masterNodeNumber, --sideNodeNumber);
+    }
+    else if (masterNodeNumber > 0) {
         checkoutCommit(--masterNodeNumber, 0);
     }
 }
@@ -500,8 +519,7 @@ void MainWindow::on_actionAbout_Us_triggered()
 void MainWindow::onImageDrawn()
 {
     QImage image = workspaceArea->commitImage();
-    imageHistory.commitChanges(image, "Brush");
-    generateHistoryMenu();
+    commitChanges(image, "Brush");
 }
 
 // Filter mouse scroll event to not propagate to the whole mainwindow, instead only to the workspaceArea
@@ -734,8 +752,7 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
     rerenderWorkspaceArea(result, result.width(), result.height());
 
     // Add after-filter-applied image to our image history version control, generate our history menu
-    imageHistory.commitChanges(workspaceArea->getImage(), filterTransform->getName());
-    generateHistoryMenu();
+    commitChanges(workspaceArea->getImage(), filterTransform->getName());
 
     delete filterTransform;
 }
@@ -872,8 +889,13 @@ void MainWindow::on_actionCommit_Changes_triggered()
     
 }
 
-void MainWindow::commitChanges(QString changes)
+void MainWindow::onCommitChanges(QString changes)
 {
-    imageHistory.commitChanges(workspaceArea->getImage(), changes);
+    if (masterNodeNumber == 0) {
+        imageHistory.commitChanges(workspaceArea->getImage(), changes);
+    }
+    else {
+        imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->commitChanges(workspaceArea->getImage(), changes);
+    }
     generateHistoryMenu();
 }

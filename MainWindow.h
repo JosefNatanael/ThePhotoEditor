@@ -73,7 +73,7 @@ private slots:
     void                        clientJsonReceived(const QJsonObject&);
 
     void                        on_actionCommit_Changes_triggered();
-    void                        commitChanges(QString changes);
+    void                        onCommitChanges(QString changes);
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
@@ -86,12 +86,16 @@ private:
     void                        customAddChild(QTreeWidgetItem* parent, QWidget* widget);
 
     void                        createActions();
+    void                        createMenus();
+
     void                        generateHistoryMenu();
     void                        checkoutCommit(int masterNodeNumber, int sideNodeNumber);
-    void                        createMenus();
+    void                        commitChanges(QImage changedImage, QString changes);
+
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
     void                        fitImageToScreen(int, int);
+
     void                        joinRoom();
     void                        sendInitialImage();
 
@@ -104,7 +108,8 @@ private:
 
     VersionControl              imageHistory;           // In progress ...
     QVector<QMenu*>             imageHistoryMenu;       // Stores our QMenus used for displaying our imageHistory
-    int                         masterNodeNumber = 0;   // Saves current checkout node number
+    int                         masterNodeNumber = 0;   // Saves current checkout master node number (0: latest, 1: previous, etc)
+    int                         sideNodeNumber = 0;     // Saves current checkout node number in a master node
 
     QMenu*                      optionMenu;             // optionMenu is generated during runtime
     QList<QAction*>             saveAsActs;             // all possible image format that can be used to save the image
