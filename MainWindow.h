@@ -53,6 +53,7 @@ private slots:
     void                        on_actionExit_triggered();
     void                        on_actionUndo_triggered();
     void                        on_actionRedo_triggered();
+    void                        on_actionRevert_to_Last_Commit_triggered();
     void                        on_actionSave_triggered();
 
     void                        saveAs();
@@ -67,6 +68,7 @@ private slots:
 
     void                        on_actionCreate_Room_triggered();
     void                        on_actionJoin_Room_triggered();
+    void                        on_actionView_Room_triggered();
     void                        onCreateRoom(QString);
     void                        onJoinRoom(QString, QString, quint16);
     void                        sendPlayerName();
@@ -76,12 +78,11 @@ private slots:
 
     void                        on_actionCommit_Changes_triggered();
     void                        onCommitChanges(QString changes);
-
-    void on_actionView_Room_triggered();
-
-    void onSendPathItem(QGraphicsPathItem*);
-    void onConnectionStopped();
-    void onDisconnect();
+    void                        on_actionView_Room_triggered();
+    
+    void                        onSendPathItem(QGraphicsPathItem*);
+    void                        onConnectionStopped();
+    void                        onDisconnect();
 
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);

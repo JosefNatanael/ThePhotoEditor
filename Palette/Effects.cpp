@@ -5,6 +5,7 @@
 #include "FilterTransform/KernelBased/EmbossFilter.h"
 #include "FilterTransform/KernelBased/EdgeDetectionFilter.h"
 #include "FilterTransform/KernelBased/ImageInpainting.h"
+#include "FilterTransform/KernelBased/ImageScissors.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -49,18 +50,8 @@ void Effects::on_edgePushButton_clicked()
     emit applyEffectClicked(edgeDetectionFilter, ui->edgeSizeSlider->value(), 1);
 }
 
-void Effects::on_inpaintingPushButton_clicked()
-{
-    //TODO
-    //dummy:
-    ImageInpainting* imageInpainting = new ImageInpainting();
-    imageInpainting->mask = mask;
-    emit applyEffectClicked(imageInpainting, 5 , 1);
-}
-
 void Effects::on_inpaintingAddMaskPushButton_clicked()
 {
-    //TODO
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
     QImage imageLoaded;
     if (!fileName.isEmpty())
@@ -70,6 +61,33 @@ void Effects::on_inpaintingAddMaskPushButton_clicked()
             return;
         }
         mask = imageLoaded.copy();
-        //mask.save("mask.jpg");//works well here
     }
+}
+
+void Effects::on_inpaintingPushButton_clicked()
+{
+    ImageInpainting* imageInpainting = new ImageInpainting(5);
+    imageInpainting->mask = mask;
+    emit applyEffectClicked(imageInpainting, 5 , 1);
+}
+
+void Effects::on_imageScissorsAddMaskPushButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
+    QImage imageLoaded;
+    if (!fileName.isEmpty())
+    {
+        if (!imageLoaded.load(fileName))
+        {
+            return;
+        }
+        mask = imageLoaded.copy();
+    }
+}
+
+void Effects::on_imageScissorsPushButton_clicked()
+{
+    ImageScissors* imageScissors = new ImageScissors(2);
+    imageScissors->mask = mask;
+    emit applyEffectClicked(imageScissors, 2 , 1);
 }

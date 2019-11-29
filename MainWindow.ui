@@ -74,7 +74,7 @@
      <x>0</x>
      <y>0</y>
      <width>1366</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -107,6 +107,7 @@
     </widget>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
+    <addaction name="actionRevert_to_Last_Commit"/>
     <addaction name="menuHistory"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
@@ -259,6 +260,11 @@
   <action name="actionView_Room">
    <property name="text">
     <string>View Room</string>
+   </property>
+  </action>
+  <action name="actionRevert_to_Last_Commit">
+   <property name="text">
+    <string>Revert to Last Commit</string>
    </property>
   </action>
  </widget>
