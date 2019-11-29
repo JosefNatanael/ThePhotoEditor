@@ -23,6 +23,8 @@ private slots:
     void on_edgePushButton_clicked();
     void on_inpaintingAddMaskPushButton_clicked();
     void on_inpaintingPushButton_clicked();
+    void on_imageScissorsAddMaskPushButton_clicked();
+    void on_imageScissorsPushButton_clicked();
 
 private:
     Ui::Effects *ui;
