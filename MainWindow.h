@@ -79,6 +79,10 @@ private slots:
 
     void on_actionView_Room_triggered();
 
+    void onSendPathItem(QGraphicsPathItem*);
+    void onConnectionStopped();
+    void onDisconnect();
+
 private:
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
     void                        reconnectConnection();
@@ -141,12 +145,13 @@ private:
 
     ServerRoom*                 room = nullptr;
     QString                     username;
-    Server*                     server;
-    Client*                     client;
+    Server*                     server = nullptr;
+    Client*                     client = nullptr;
     QString                     ip;
     quint16                     port;
     bool                        isHost = false;
     bool                        isConnected = false;
+    void                        destroyConnection();
 
 };
 

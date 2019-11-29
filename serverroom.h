@@ -26,6 +26,7 @@ public:
 signals:
     void createRoom(QString);
     void joinRoom(QString, QString, quint16);
+    void disconnect();
 
 private slots:
     void on_joinRoomButtonBox_accepted();
@@ -35,6 +36,8 @@ private slots:
     void on_joinRoomButtonBox_rejected();
 
     void on_createRoomButtonBox_rejected();
+
+    void on_disconnectButton_clicked();
 
 private:
     Ui::ServerRoom *ui;

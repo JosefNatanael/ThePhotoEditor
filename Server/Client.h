@@ -25,6 +25,7 @@ signals:
     void disconnected();
     void receiveJson(const QJsonObject &json);
     void connectionFailedBad();
+    void connectionStopped();
 
 private:
     QTcpSocket *clientSocket;

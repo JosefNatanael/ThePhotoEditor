@@ -72,22 +72,23 @@ void Server::incomingConnection(qintptr socketDesriptor) {
     }
 
     // Send the players list to the new player
-    if (!clients.isEmpty()) {
+//    if (!clients.isEmpty()) {
         qDebug("Send player list");
-        QJsonObject playerNamesMsg;
-        QJsonArray playerNames;
-        for (ServerWorker *worker : clients)
-            playerNames.append(worker->getPlayerName());
-        playerNamesMsg["type"] = "playerList";
-        playerNamesMsg["playerNames"] = playerNames;
-        sendJson(worker, playerNamesMsg);
-    }
+        clients.append(worker);
+        connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
+        connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
 
-    connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
-    connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
-    clients.append(worker);
-    qDebug() << "new player connected";
-    emit newPlayerConnected();
+        qDebug() << "new player connected";
+        emit newPlayerConnected();
+
+//    }
+
+//    connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
+//    connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
+//    clients.append(worker);
+//    broadcast(playerNamesMsg);
+//    qDebug() << "new player connected";
+//    emit newPlayerConnected();
 }
 
 /*
@@ -119,10 +120,19 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
         }
 
         sender->setPlayerName(playerName);
-        QJsonObject newPlayerMsg;
-        newPlayerMsg["type"] = "newPlayer";
-        newPlayerMsg["playerName"] = playerName;
-        broadcast(newPlayerMsg);
+        QJsonObject playerNamesMsg;
+        QJsonArray playerNames;
+        for (ServerWorker *worker : clients)
+            playerNames.append(worker->getPlayerName());
+        playerNamesMsg["type"] = "playerList";
+        playerNamesMsg["playerNames"] = playerNames;
+        broadcast(playerNamesMsg);
+
+        //sendJson(worker, playerNamesMsg);
+//        QJsonObject newPlayerMsg;
+//        newPlayerMsg["type"] = "newPlayer";
+//        newPlayerMsg["playerName"] = playerName;
+//        broadcast(newPlayerMsg);
     }
 
     emit receiveJson(sender, json);
@@ -156,20 +166,28 @@ void Server::startGameBroadcast() {
  *  @return: N/A
  */
 void Server::userDisconnected(ServerWorker *sender) {
-//    qDebug("user disconnect");
+    qDebug("user disconnect");
 //    if (std::find(clients.begin(), clients.end(), sender) == clients.end()) {
 //        fullList.removeAll(sender);
 //        return;
 //    }
-//    clients.removeAll(sender);
-//    const QString player = sender->getPlayerName();
-//    if (!player.isEmpty()) {
+    clients.removeAll(sender);
+    const QString player = sender->getPlayerName();
+    if (!player.isEmpty()) {
 //        QJsonObject disconnectedMessage;
 //        disconnectedMessage["type"] = QString("playerDisconnected");
 //        disconnectedMessage["playerName"] = player;
 //        broadcast(disconnectedMessage, nullptr);
-//    }
-//    sender->deleteLater();
+
+        QJsonObject playerNamesMsg;
+        QJsonArray playerNames;
+        for (ServerWorker *worker : clients)
+            playerNames.append(worker->getPlayerName());
+        playerNamesMsg["type"] = "playerList";
+        playerNamesMsg["playerNames"] = playerNames;
+        broadcast(playerNamesMsg);
+    }
+    sender->deleteLater();
 }
 
 /*
@@ -206,6 +224,9 @@ void Server::broadcast(const QJsonObject &json, ServerWorker *exclude) {
  *  @return: N/A
  */
 void Server::stopServer() {
+    QJsonObject hostDisconnected;
+    hostDisconnected["type"] = "hostDisconnected";
+    broadcast(hostDisconnected);
     for (ServerWorker *worker : clients)
         worker->disconnectFromClient();
     close();

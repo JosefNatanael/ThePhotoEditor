@@ -3,6 +3,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDataStream>
+#include <QNetworkConfiguration>
+#include <QTime>
 
 /*
  *  Client::Client(QObject *parent)
@@ -27,7 +29,18 @@ Client::Client(QObject *parent):
  *  @return: N/A
  */
 void Client::connectToServer(const QHostAddress &address, quint16 port) {
+    QTime timer;
+    timer.start();
     clientSocket->connectToHost(address, port);
+
+    if (clientSocket->waitForConnected(5000)) {
+        qDebug() << "connected in" << timer.elapsed();
+        //emit connected();
+    } else {
+
+        qDebug() << "not connected in" << timer.elapsed();
+        emit connectionFailedBad();
+    }
 }
 
 /*
@@ -37,7 +50,7 @@ void Client::connectToServer(const QHostAddress &address, quint16 port) {
  *  @return: N/A
  */
 void Client::disconnectFromHost() {
-    qDebug("client Disconnect");
+    qDebug() << "Client disconnected GG";
     clientSocket->disconnectFromHost();
 }
 
@@ -97,7 +110,7 @@ void Client::onReadyRead() {
 void Client::onError(QAbstractSocket::SocketError error) {
 
     if (!(clientSocket->state() == QTcpSocket::ConnectedState)) {
-        emit connectionFailedBad();
+        emit connectionStopped();
         qDebug() << "NOT CONNECTED";
     }
 }

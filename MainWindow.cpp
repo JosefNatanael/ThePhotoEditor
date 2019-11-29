@@ -812,11 +812,12 @@ void MainWindow::onJoinRoom(QString name, QString address, quint16 port) {
 
 void MainWindow::joinRoom() {
     client = new Client();
-    client->connectToServer(QHostAddress(ip), port);
     connect(client, &Client::connectionFailedBad, this, &MainWindow::onConnectionFailed);
     connect(client, &Client::connected, this, &MainWindow::goToServerRoom);
     connect(client, &Client::receiveJson, this, &MainWindow::clientJsonReceived);
     connect(client, &Client::connected, this, &MainWindow::sendPlayerName);
+    connect(client, &Client::connectionStopped, this, &MainWindow::onConnectionStopped);
+    client->connectToServer(QHostAddress(ip), port);
     //connect(client, &Client::connected, this, &MainWindow::sendInitialImage);
     //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
 
@@ -846,6 +847,7 @@ void MainWindow::on_actionCreate_Room_triggered()
     room = new ServerRoom();
     room->setCreateRoom();
     connect(room, &ServerRoom::createRoom, this, &MainWindow::onCreateRoom);
+    connect(room, &ServerRoom::disconnect, this, &MainWindow::onDisconnect);
     room->setModal(true);
     room->exec();
 }
@@ -859,6 +861,7 @@ void MainWindow::on_actionJoin_Room_triggered()
     room = new ServerRoom();
     room->setJoinRoom();
     connect(room, &ServerRoom::joinRoom, this, &MainWindow::onJoinRoom);
+    connect(room, &ServerRoom::disconnect, this, &MainWindow::onDisconnect);
     room->setModal(true);
     room->exec();
 }
@@ -868,7 +871,7 @@ void MainWindow::clientJsonReceived(const QJsonObject &json) {
     const QString type = json.value(QString("type")).toString();
     if (type == "newPlayer") {
         qDebug() << "New Player has entered";
-        room->addPlayer(json.value(QString("playerName")).toString());
+        //room->addPlayer(json.value(QString("playerName")).toString());
     } else if (type == "playerList") {
         room->emptyPlayers();
         for(QJsonValue playerName : json.value(QString("playerNames")).toArray())
@@ -882,6 +885,14 @@ void MainWindow::clientJsonReceived(const QJsonObject &json) {
             qDebug() << "image success";
         }
         rerenderWorkspaceArea(img, img.width(), img.height());
+    } else if (type == "nameRepeat") {
+        QMessageBox::information(this, QString("Unable to use name"), QString("Please choose a different name."));
+        isConnected = false;
+        client->disconnectFromHost();
+        client->deleteLater();
+        room->setJoinRoom();
+    } else if (type == "hostDisconnected") {
+        destroyConnection();
     }
 }
 
@@ -889,6 +900,8 @@ void MainWindow::sendPlayerName() {
     QJsonObject playerNameMsg;
     playerNameMsg["type"] = "playerName";
     playerNameMsg["playerName"] = username;
+
+
     client->sendJson(playerNameMsg);
 }
 
@@ -896,14 +909,16 @@ void MainWindow::sendInitialImage() {
     if (isHost) {
         qDebug() << "I am server";
         QImage image = workspaceArea->getImage();
-        QBuffer buffer;
-        buffer.open(QIODevice::WriteOnly);
-        image.save(&buffer, "PNG");
-        QJsonObject json;
-        json["type"] = "initialImage";
-        json["data"] = QJsonValue(QLatin1String(buffer.data().toBase64()));
-        server->sendInitialImage(json);
-        qDebug() << "image sent";
+        if (!image.isNull()) {
+            QBuffer buffer;
+            buffer.open(QIODevice::WriteOnly);
+            image.save(&buffer, "PNG");
+            QJsonObject json;
+            json["type"] = "initialImage";
+            json["data"] = QJsonValue(QLatin1String(buffer.data().toBase64()));
+            server->sendInitialImage(json);
+            qDebug() << "image sent";
+        }
     }
 }
 
@@ -933,4 +948,38 @@ void MainWindow::on_actionView_Room_triggered()
         return;
     }
     goToServerRoom();
+}
+
+void MainWindow::onSendPathItem(QGraphicsPathItem *) {
+
+}
+
+void MainWindow::onConnectionStopped() {
+    QMessageBox::information(this, QString("Connection Stopped"), QString("There was an error in the connection"));
+}
+
+void MainWindow::onDisconnect() {
+    QMessageBox::StandardButton reply = QMessageBox::question(this, QString("Leave Room"), QString("Are you sure to leave the room?"));
+    if (reply == QMessageBox::Yes) {
+          destroyConnection();
+    }
+}
+
+void MainWindow::destroyConnection() {
+    isConnected = false;
+    if (server != nullptr) {
+        server->stopServer();
+        server->deleteLater();
+        server = nullptr;
+    }
+    if (client != nullptr) {
+        client->disconnectFromHost();
+        client->deleteLater();
+        client = nullptr;
+    }
+    room->setModal(false);
+    room->close();
+    if (room) {
+        delete room;
+    }
 }
