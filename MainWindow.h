@@ -56,6 +56,7 @@ private slots:
     void                        on_actionRevert_to_Last_Commit_triggered();
     void                        on_actionSave_triggered();
 
+    // Saving, workspace related slots.
     void                        saveAs();
     void                        onImageDrawn();
     void                        clearImage();
@@ -66,6 +67,7 @@ private slots:
     void                        applyFilterTransformOnPreview(AbstractImageFilterTransform* filterTransform, int size, double strength);
     void                        onUpdateImagePreview();
 
+    // Server related slots.
     void                        on_actionCreate_Room_triggered();
     void                        on_actionJoin_Room_triggered();
     void                        on_actionView_Room_triggered();
@@ -76,86 +78,96 @@ private slots:
     void                        goToServerRoom();
     void                        onConnectionFailed();
 
+    // Version control related slots.
     void                        on_actionCommit_Changes_triggered();
     void                        onCommitChanges(QString changes);
     
+    // Server related slots.
     void                        onSendPathItem(QGraphicsPathItem*);
     void                        onConnectionStopped();
     void                        onDisconnect();
 
 private:
+    // Workspace transformation related member functions. 
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);
     void                        reconnectConnection();
     void                        reconstructWorkspaceArea(int imageWidth, int imageHeight);
     void                        handleWheelEvent(QGraphicsSceneWheelEvent* event);
-    void                        resetGraphicsViewScale();      // Revert changes caused by wheelEvent zoom
+    void                        resetGraphicsViewScale();
 
+    // Menu bar related member functions.
     void                        addRoot(QTreeWidgetItem* parent, QString name);
     void                        customAddChild(QTreeWidgetItem* parent, QWidget* widget);
-
     void                        createActions();
     void                        createMenus();
 
+    // Version control related member functions.
     void                        generateHistoryMenu();
     void                        checkoutCommit(int masterNodeNumber, int sideNodeNumber);
     void                        commitChanges(QImage changedImage, QString changes);
 
+    // Saving related member functions.
     bool                        maybeSave();
     bool                        saveAsFile(const QByteArray &fileFormat);
     void                        fitImageToScreen(int, int);
 
+    // Server related member functions.
     void                        joinRoom();
-    void                        sendInitialImage();                         
+    void                        sendInitialImage();  
+    void                        destroyConnection();                    
 
 private:
     Ui::MainWindow*             ui;
 
-    WorkspaceArea*              workspaceArea;
-	WorkspaceArea*				temporaryArea = nullptr;
-    QGraphicsView*              graphicsView;
+    WorkspaceArea*              workspaceArea;              //!< Main workspace, where the image lives.
+	WorkspaceArea*				temporaryArea = nullptr;    //!< Temporary workspaceArea, used in case a second workspaceArea is needed.
+    QGraphicsView*              graphicsView;               //!< Store the workspaceArea(graphicsScene) on a graphicsView.
 
-    VersionControl              imageHistory;           // In progress ...
-    QVector<QMenu*>             imageHistoryMenu;       // Stores our QMenus used for displaying our imageHistory
-    int                         masterNodeNumber = 0;   // Saves current checkout master node number (0: latest, 1: previous, etc)
-    int                         sideNodeNumber = 0;     // Saves current checkout node number in a master node
+    VersionControl              imageHistory;               //!< Version Control data structure, commits and merges, image history.
+    QVector<QMenu*>             imageHistoryMenu;           //!< Stores the QMenus used for displaying the imageHistory.
+    int                         masterNodeNumber = 0;       //!< Saves current checkout master node number (0: latest, 1: previous, etc).
+    int                         sideNodeNumber = 0;         //!< Saves current checkout node number in a master node.
 
-    QMenu*                      optionMenu;             // optionMenu is generated during runtime
-    QList<QAction*>             saveAsActs;             // all possible image format that can be used to save the image
-    QAction*                    clearScreenAct;         // an action to clear the workspaceArea
+    QMenu*                      optionMenu;                 //!< optionMenu is generated during runtime.
+    QList<QAction*>             saveAsActs;                 //!< all possible image format that can be used to save the image.
+    QAction*                    clearScreenAct;             //!< an action to clear the workspaceArea.
 
-    QTreeWidgetItem*            histogram;              // The parent wrapper of our histogram widget
-    QTreeWidgetItem*            basicControls;          // The parent wrapper of our basicControls widget
-    QTreeWidgetItem*            colorControls;          // The parent wrapper of our colorControls widget
-    QTreeWidgetItem*            brushControls;          // The parent wrapper of our brushControls widget
-    QTreeWidgetItem*            effects;                // The parent wrapper of our effects widget
+    QTreeWidgetItem*            histogram;                  //!< The parent wrapper of the histogram widget.
+    QTreeWidgetItem*            basicControls;              //!< The parent wrapper of the basicControls widget.
+    QTreeWidgetItem*            colorControls;              //!< The parent wrapper of the colorControls widget.
+    QTreeWidgetItem*            brushControls;              //!< The parent wrapper of the brushControls widget.
+    QTreeWidgetItem*            effects;                    //!< The parent wrapper of the effects widget.
 
-    Histogram*                  histo;                  // Our Histogram widget
-    Brush*                      brush;                  // Our Brush widget
-    ColorControls*              colors;                 // Our ColorControls widget
-    BasicControls*              basics;                 // Our BasicControls widget
-    Effects*                    effect;                 // Our Effects widget
+    Histogram*                  histo;                      //!< Histogram widget.
+    Brush*                      brush;                      //!< Brush widget.
+    ColorControls*              colors;                     //!< ColorControls widget.
+    BasicControls*              basics;                     //!< BasicControls widget.
+    Effects*                    effect;                     //!< Effects widget.
 
-    QString                     fileName = "";          // filename of the loaded image
-    QByteArray                  fileFormat;             // the file format of our loaded image
-    bool                        fileSaved = false;      // the state that saves whether our current project been saved
-    double                      currentZoom = 1.0;      // Saves our current zoom level
-    QComboBox*                  comboBox;
+    QString                     fileName = "";              //!< filename of the loaded image.
+    QByteArray                  fileFormat;                 //!< the file format of our loaded image.
+    bool                        fileSaved = false;          //!< the state that saves whether our current project been saved.
+    double                      currentZoom = 1.0;          //!< Saves the current zoom level.
+    QComboBox*                  comboBox;                   //!< comboBox to store zoom level options.
     double                      resizedImageHeight = WorkspaceArea::SCENE_HEIGHT;
     double                      resizedImageWidth = WorkspaceArea::SCENE_WIDTH;
 
-    ServerRoom*                 room = nullptr;
-    QString                     username;
-    Server*                     server = nullptr;
-    Client*                     client = nullptr;
-    QString                     ip;
-    quint16                     port;
-    bool                        isHost = false;
-    bool                        isConnected = false;
-    void                        destroyConnection();
+    ServerRoom*                 room = nullptr;             //!< ServerRoom instance.
+    QString                     username;                   //!< Username name.
+    Server*                     server = nullptr;           //!< TODO COMMENT.
+    Client*                     client = nullptr;           //!< TODO COMMENT.
+    QString                     ip;                         //!< TODO COMMENT.
+    quint16                     port;                       //!< TODO COMMENT.
+    bool                        isHost = false;             //!< TODO COMMENT.
+    bool                        isConnected = false;        //!< TODO COMMENT.
+    
 
 };
 
-// Close the application
+/**
+ * @brief Close Application slot.
+ * @details Closes the application when actionExit is triggered.
+ */
 inline void MainWindow::on_actionExit_triggered()
 {
     MainWindow::close();

@@ -1,3 +1,20 @@
+/*!
+ *  @author         Ferris Prima Nugraha
+ *  @author         Josef Natanael
+ *  @author         Alvin Harjanto
+ *  @version        1.0.0
+ *  @date           2019
+ *  @copyright      GNU Public License.
+ *  @mainpage       The Photo Editor
+ *  @section        intro_sec Introduction
+ *  This code is developed to implement version control and multiplayer support to a standard photo editing software.
+ *  @section        compile_sec Compilation
+ *  Here I will describe how to compile this code with Qt
+ *  1. Load .pro project file to QtCreator
+ *  2. Select kits (Tested with MinGW 5.10.0 and above)
+ *  3. Build and run
+ */
+
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
@@ -15,6 +32,11 @@
 
 #include "serverroom.h"
 
+/**
+ * @brief Construct a new Main Window::MainWindow object.
+ * 
+ * @param parent to be passed to QMainWindow(parent) constructor.
+ */
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
                                           ui(new Ui::MainWindow)
 {
@@ -133,18 +155,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     connect(colors, &ColorControls::applyColorFilterOnPreview, this, &MainWindow::applyFilterTransformOnPreview);
 }
 
+/**
+ * @brief Destroy the Main Window::MainWindow object.
+ * 
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
-    if (temporaryArea != nullptr)
-    {
-        delete temporaryArea;
-        temporaryArea = nullptr;
-    }
+    delete temporaryArea;
 }
 
-// Setup all connections related to the workspaceArea
-// This is needed in order to reestablish connection after workspaceArea is recreated
+/**
+ * @brief Setup all connections related to the workspaceArea.
+ * @details This is need in order to reestablish connection of signal and slots to the a new workspaceArea, i.e. workspaceArea is recreated.
+ */
 void MainWindow::reconnectConnection()
 {
     connect(workspaceArea, &WorkspaceArea::imageDrawn, this, &MainWindow::onImageDrawn);
@@ -158,9 +182,14 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::onCommitChanges);
 }
 
-/*
- * Delete the current workspaceArea and recreate it with the new image dimensions
- * Then resetup our graphicsView
+/**
+ * @brief Reconstruct workspaceArea when changes are made to the image.
+ * 
+ * @details Delete the current workspaceArea and recreates it with the new image dimensions,
+ * Then resetup our graphicsView.
+ * 
+ * @param imageWidth reconstruct the workspaceArea with width imageWidth.
+ * @param imageHeight reconstruct the workspaceArea with height imageHeight.
  */
 void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight)
 {
@@ -170,15 +199,21 @@ void MainWindow::reconstructWorkspaceArea(int imageWidth, int imageHeight)
     workspaceArea = new WorkspaceArea(imageWidth, imageHeight);
     reconnectConnection();
 
+    // Re-Setup graphicsView.
     graphicsView->setScene(workspaceArea);
     ui->workspaceView->addWidget(graphicsView);
     workspaceArea->setParent(graphicsView);
     graphicsView->scene()->installEventFilter(this);
 }
 
-/*
- * Resize our graphicsView dimensions to a specified width and height.
- * This is done usually after we reconstruct our workspaceArea
+/**
+ * @brief Resize graphics view dimensions and boundaries, to fit the workspaceArea.
+ * 
+ * @details Resize our graphicsView dimensions to a specified width and height.
+ * This is done usually after we reconstruct our workspaceArea.
+ * 
+ * @param newWidth
+ * @param newHeight
  */
 void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
 {
@@ -187,19 +222,28 @@ void MainWindow::resizeGraphicsViewBoundaries(int newWidth, int newHeight)
     graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     graphicsView->setFocusPolicy(Qt::NoFocus);
-    graphicsView->setSceneRect(0, 0, newWidth - 2, newHeight - 2); // Allow for extra 2px boundaries, 1px on the left/top and 1px on the right/bottom
+    graphicsView->setSceneRect(0, 0, newWidth - 2, newHeight - 2);          // Allow for extra 2px boundaries, 1px on the left/top and 1px on the right/bottom.
 }
 
-// Adds a root into a parent widget, in the palette treeWidget
+/**
+ * @brief Adds a root into a parent QTreeWidgetItem, located in the palette QTreeWidget.
+ * 
+ * @param parent QTreeWidgetItem to insert to.
+ * @param name Name of the root.
+ */
 void MainWindow::addRoot(QTreeWidgetItem *parent, QString name)
 {
     parent->setText(0, name);
     ui->palette->addTopLevelItem(parent);
 }
 
-/*
- * Adds a child to a parent, this is a custom implementation of the addChild function
- * This child is a QWidget
+/**
+ * @brief Custom implementation of the addChild function of a QTreeWidgetItem
+ * 
+ * @details Adds a child to a parent, the child is a QWidget.
+ * 
+ * @param parent The parent QTreeWidgetItem to insert child to.
+ * @param widget The QWidget/child.
  */
 void MainWindow::customAddChild(QTreeWidgetItem *parent, QWidget *widget)
 {
@@ -208,7 +252,11 @@ void MainWindow::customAddChild(QTreeWidgetItem *parent, QWidget *widget)
     ui->palette->setItemWidget(item, 0, widget);
 }
 
-// When user is closing the app, spawn a "do you want to save" widget
+/**
+ * @brief Spawns a "do you want to save" widget when closing the app.
+ * 
+ * @param event "Save" or "Discard" event.
+ */
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (maybeSave())
@@ -221,24 +269,30 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-/*
- * Called when the user clicks Save As in the menu,
- * then this function will call the saveAsFile function to actually save the image with the right format
+/**
+ * @brief Called when the user clicks Save As in the menu.
+ * 
+ * @details This function will call the saveAsfile function to save the image with the right format.
+ * Default format is "jpg".
  */
 void MainWindow::saveAs()
 {
-    QAction *action = qobject_cast<QAction *>(sender()); // Represents the action of the user clicking
-    QByteArray defaultFormat("jpg", 3);                  // Sets default
-    fileFormat = action->data().toByteArray();           // Stores the array of bytes of the users data
+    QAction *action = qobject_cast<QAction *>(sender());        // Represents the action of the user clicking.
+    QByteArray defaultFormat("jpg", 3);                         // Sets default format.
+    fileFormat = action->data().toByteArray();                  // Stores the array of bytes of the users data.
     if (fileFormat.isEmpty())
     {
         fileFormat = defaultFormat;
     }
 
-    saveAsFile(fileFormat);
+    saveAsFile(fileFormat);                                     // Pass fileFormat to be saved.
 }
 
-// clears the workspaceArea
+/**
+ * @brief Clears the workspaceArea.
+ * 
+ * @details this will not invoke maybeSave(), nor commit changes to version control. 
+ */
 void MainWindow::clearImage()
 {
     reconstructWorkspaceArea(workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
@@ -247,7 +301,9 @@ void MainWindow::clearImage()
     workspaceArea->setImageLoaded(false);
 }
 
-// Define menu actions for SaveAs and clearScreen
+/**
+ * @brief Create menu actions for SaveAs and clearScreen.
+ */
 void MainWindow::createActions()
 {
     // Get a list of the supported file formats
@@ -262,16 +318,20 @@ void MainWindow::createActions()
         connect(action, SIGNAL(triggered()), this, SLOT(saveAs()));
     }
 
-    // Create clear screen action and tie to ScribbleWindow::clearImage()
+    // Create clear screen action and tie to MainWindow::clearImage()
     clearScreenAct = new QAction(tr("&Clear Screen"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
     connect(clearScreenAct, SIGNAL(triggered()), this, SLOT(clearImage()));
 }
 
+/**
+ * @brief Generate image history/version control in the menu bar.
+ */
 void MainWindow::generateHistoryMenu()
 {
     // Clean image history menu
-    for (QMenu* _ : imageHistoryMenu) {
+    for (QMenu *_ : imageHistoryMenu)
+    {
         delete imageHistoryMenu[0];
         imageHistoryMenu.pop_front();
     }
@@ -279,19 +339,21 @@ void MainWindow::generateHistoryMenu()
     // Traverse the imageHistory (Version Control)
     QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
     // 1a. Traverse nodes in master branch
-    for (int masterNodeNumber = 0; it != imageHistory.masterBranch.end(); ++it, ++masterNodeNumber) {
+    for (int masterNodeNumber = 0; it != imageHistory.masterBranch.end(); ++it, ++masterNodeNumber)
+    {
 
         // 1b. Create a menu for each master node
-        QMenu* masterNodeMenu = new QMenu(it->changes, this);
+        QMenu *masterNodeMenu = new QMenu(it->changes, this);
 
         // 2a. Traverse images in side branches
         QLinkedList<VersionControl::SideNode>::iterator i = it->sideBranch.begin();
-        for (int sideNodeNumber = 0; i != it->sideBranch.end(); ++i, ++sideNodeNumber) {
+        for (int sideNodeNumber = 0; i != it->sideBranch.end(); ++i, ++sideNodeNumber)
+        {
 
             // 2b. Create an action for each image
-            QAction* action = new QAction(i->changes, masterNodeMenu);
+            QAction *action = new QAction(i->changes, masterNodeMenu);
             masterNodeMenu->addAction(action);
-            connect(action, &QAction::triggered, this, [=](){ checkoutCommit(masterNodeNumber, sideNodeNumber); });
+            connect(action, &QAction::triggered, this, [=]() { checkoutCommit(masterNodeNumber, sideNodeNumber); });
         }
 
         // 3. Add the menu to our menuHistory
@@ -300,6 +362,12 @@ void MainWindow::generateHistoryMenu()
     }
 }
 
+/**
+ * @brief Checkout a commit. A commit is differentiated by their masterNodeNumber and sideNodeNumber.
+ * 
+ * @param masterNodeNumber Which branch in the master branch.
+ * @param sideNodeNumber Which commit in the branch. 
+ */
 void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber)
 {
     this->masterNodeNumber = masterNodeNumber;
@@ -307,28 +375,39 @@ void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber)
     // Traverse the imageHistory (Version Control)
     QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
     // 1. Traverse nodes in master branch
-    for (int i = 0; i < masterNodeNumber; ++i, ++it) {
+    for (int i = 0; i < masterNodeNumber; ++i, ++it)
+    {
     }
     // 2. Traverse images in the side branch
     QLinkedList<VersionControl::SideNode>::iterator it2 = it->sideBranch.begin();
-    for (int j = 0; j < sideNodeNumber; ++j, ++it2) {
+    for (int j = 0; j < sideNodeNumber; ++j, ++it2)
+    {
     }
     rerenderWorkspaceArea(it2->currentImage, it2->currentImage.width(), it2->currentImage.height());
 }
 
+/**
+ * @brief Commit changes to the version control/image history.
+ * 
+ * @param changedImage Changed image.
+ * @param changes Description of the commit.
+ */
 void MainWindow::commitChanges(QImage changedImage, QString changes)
 {
-    if (masterNodeNumber == 0) {
+    if (masterNodeNumber == 0)      // Commit changes to master branch.
+    {
         imageHistory.commitChanges(changedImage, changes);
     }
-    else {
+    else        // Commit changes to current branch (i.e. not master branch).
+    {
         imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->commitChanges(changedImage, changes);
     }
-
-    generateHistoryMenu();
+    generateHistoryMenu();      // update history menu. 
 }
 
-// Create additional menus for certain actions, i.e. clearScreen action
+/**
+ * @brief Create additional menus for certain actions, i.e. clearScreen action.
+ */
 void MainWindow::createMenus()
 {
     // Create Save As option and the list of file types
@@ -342,9 +421,11 @@ void MainWindow::createMenus()
     menuBar()->addMenu(optionMenu);
 }
 
-/*
- * maybeSave will prompt users to save the file when user tried to quit/change image
- * maybeSave return true if there has been no changes
+/**
+ * @brief Prompt user to save the file when user tried to change image/quit application.
+ * 
+ * @return true There has been changes/modifications.
+ * @return false There was no changes/modifications made.
  */
 bool MainWindow::maybeSave()
 {
@@ -370,7 +451,13 @@ bool MainWindow::maybeSave()
     return true;
 }
 
-// Saves the current image with the specified fileFormat, return true if image saved, otherwise false.
+/**
+ * @brief Saves the current image with the specified fileFormat.
+ * 
+ * @param fileFormat 
+ * @return true Image successfully saved.
+ * @return false Image not saved.
+ */
 bool MainWindow::saveAsFile(const QByteArray &fileFormat)
 {
     QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
@@ -391,7 +478,7 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            commitChanges(workspaceArea->getImage(), "Save Image");
+            commitChanges(workspaceArea->getImage(), "Save Image");     // Saving commits changes to version control.
             fileSaved = true;
         }
         else
@@ -402,7 +489,12 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
     }
 }
 
-// Clears the workspaceArea
+/**
+ * @brief Clears image from the workspaceArea;
+ * 
+ * @details Note the difference between this function to clearImage();
+ * This function will prompt the user to save changes made to image, if there has been unsaved changes.
+ */
 void MainWindow::on_actionNew_triggered()
 {
     if (maybeSave())
@@ -413,6 +505,12 @@ void MainWindow::on_actionNew_triggered()
 }
 
 // Check if the current image has been changed and then open a dialog to open a file
+/**
+ * @brief Opens a new image.
+ * 
+ * @details Checks whether the current image has been modified, and prompt "do you want to save".
+ * Otherwise open an open file dialog to open the image.
+ */
 void MainWindow::on_actionOpen_triggered()
 {
     if (maybeSave())
@@ -429,6 +527,7 @@ void MainWindow::on_actionOpen_triggered()
             this->fileName = fileName;
             fileSaved = false;
 
+            // Reads image dimensions
             QImageReader reader(fileName);
             QSize sizeOfImage = reader.size();
             int imageHeight = sizeOfImage.height();
@@ -438,32 +537,39 @@ void MainWindow::on_actionOpen_triggered()
             resetGraphicsViewScale();
             reconstructWorkspaceArea(imageWidth, imageHeight);
 
-            // House keeping, updating data members that keeps image width and height
+            // Updating data members that keeps image width and height
             resizedImageWidth = imageWidth;
             resizedImageHeight = imageHeight;
             basics->setImageDimensions(imageWidth, imageHeight);
 
+            // Setup our workspace
             workspaceArea->openImage(loadedImage, imageWidth, imageHeight);
             resizeGraphicsViewBoundaries(imageWidth, imageHeight);
-
             fitImageToScreen(imageWidth, imageHeight);
 
+            // Setup image preview, which is situated in color controls
             colors->setImagePreview(workspaceArea->commitImageForPreview());
             colors->resetSliders();
+
+            // Commit changes to version control.
             commitChanges(loadedImage, "Original Image");
         }
     }
 }
 
-// Tries to save the file instead of saveAs the file, if it was once saved.
+/**
+ * @brief Handle file saves.
+ * 
+ * @details This slot will try to save the file, instead of saveAs the file, if it was once saved. 
+ */
 void MainWindow::on_actionSave_triggered()
 {
     if (fileSaved)
     {
-        bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
+        bool saved = workspaceArea->saveImage(fileName, fileFormat.constData());    // Call for the file to be saved
         if (saved)
         {
-            commitChanges(workspaceArea->getImage(), "Save Image");
+            commitChanges(workspaceArea->getImage(), "Save Image");                 // commit changes
             fileSaved = true;
         }
         else
@@ -477,15 +583,22 @@ void MainWindow::on_actionSave_triggered()
     }
 }
 
+/**
+ * @brief Handle undo actions.
+ * 
+ * @details Checkout a commit based on current checkout position (i.e. sideNodenumber and masterNodeNumber)
+ */
 void MainWindow::on_actionUndo_triggered()
 {
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
-    if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1) {
+    if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1)
+    {
         // Node starts at 0, +2 because we want to compare length and if the image is undoable
         if (sideNodeNumber + 2 <= imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength())
-        checkoutCommit(masterNodeNumber, ++sideNodeNumber);
+            checkoutCommit(masterNodeNumber, ++sideNodeNumber);
     }
-    else if (masterNodeNumber + 2 <= imageHistory.getBranchLength()) {
+    else if (masterNodeNumber + 2 <= imageHistory.getBranchLength())
+    {
         checkoutCommit(++masterNodeNumber, 0);
     }
 }
@@ -493,10 +606,12 @@ void MainWindow::on_actionUndo_triggered()
 void MainWindow::on_actionRedo_triggered()
 {
     // Check if redo is available on current branch
-    if (sideNodeNumber > 0) {
+    if (sideNodeNumber > 0)
+    {
         checkoutCommit(masterNodeNumber, --sideNodeNumber);
     }
-    else if (masterNodeNumber > 0) {
+    else if (masterNodeNumber > 0)
+    {
         checkoutCommit(--masterNodeNumber, 0);
     }
 }
@@ -504,17 +619,20 @@ void MainWindow::on_actionRedo_triggered()
 void MainWindow::on_actionRevert_to_Last_Commit_triggered()
 {
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
-    if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1) {
+    if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1)
+    {
         // Node starts at 0, +2 because we want to compare length and if the image is undoable
         if (sideNodeNumber + 2 <= imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength())
-        checkoutCommit(masterNodeNumber, sideNodeNumber + 1);
+            checkoutCommit(masterNodeNumber, sideNodeNumber + 1);
         imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->reverseCommit();
     }
-    else if (masterNodeNumber + 2 <= imageHistory.getBranchLength()) {
+    else if (masterNodeNumber + 2 <= imageHistory.getBranchLength())
+    {
         checkoutCommit(masterNodeNumber + 1, 0);
         imageHistory.reverseCommit();
     }
-    else {
+    else
+    {
         return;
     }
     generateHistoryMenu();
@@ -576,7 +694,7 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
      */
     if (event->orientation() == Qt::Vertical)
     {
-        if (event->delta() > 7 && resizedImageWidth < upperBound  && resizedImageHeight < upperBound)
+        if (event->delta() > 7 && resizedImageWidth < upperBound && resizedImageHeight < upperBound)
         {
             // Update resizedImage dimensions
             graphicsView->scale(scaleFactor, scaleFactor);
@@ -587,7 +705,7 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
         }
         else if (event->delta() < -7 && resizedImageWidth > lowerBound && resizedImageHeight > lowerBound)
         {
-            graphicsView->scale(1.0/ scaleFactor, 1.0/ scaleFactor);
+            graphicsView->scale(1.0 / scaleFactor, 1.0 / scaleFactor);
             resizeGraphicsViewBoundaries(static_cast<int>(resizedImageWidth / scaleFactor), static_cast<int>(resizedImageHeight / scaleFactor));
             currentZoom /= scaleFactor;
             resizedImageWidth = resizedImageWidth * (1.0 / scaleFactor);
@@ -650,7 +768,8 @@ void MainWindow::onZoom(const QString &level)
 void MainWindow::onCrossCursorChanged(WorkspaceArea::CursorMode cursor, int data)
 {
     graphicsView->setCursor(Qt::CrossCursor);
-    switch(cursor) {
+    switch (cursor)
+    {
     case WorkspaceArea::CursorMode::RECTANGLECROP:
         workspaceArea->setCursorMode(WorkspaceArea::CursorMode::RECTANGLECROP);
         break;
@@ -708,7 +827,7 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
  3. the temporaryArea will then be destroyed when a) destroyed by the destructor, or b) there is a new signal to crop the image.
  * We cannot destroy/reconstruct the workspaceArea in this slot, as this slot is connected (by signal) to the caller workspaceArea.
  */
-void MainWindow::rerenderWorkspaceArea(const QImage& image, int imageWidth, int imageHeight)
+void MainWindow::rerenderWorkspaceArea(const QImage &image, int imageWidth, int imageHeight)
 {
     resetGraphicsViewScale();
     // Removes previous temporaryArea. If temporaryArea is not nullptr,
@@ -757,17 +876,15 @@ void MainWindow::resetGraphicsViewScale()
 
     resizeGraphicsViewBoundaries(static_cast<int>(resizedImageWidth), static_cast<int>(resizedImageHeight));
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-
-    //    currentZoom = 1 / totalScaleX;        // is this needed?????
 }
 
 void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransform, int size, double strength)
-{    
+{
     // Commit all brush strokes before applying transform
     workspaceArea->commitImageAndSet();
 
     // Get filtered image and rerender the workspaceArea with the new image.
-    QImage&& result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
+    QImage &&result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
     rerenderWorkspaceArea(result, result.width(), result.height());
 
     // Add after-filter-applied image to our image history version control, generate our history menu
@@ -778,20 +895,69 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
 
 void MainWindow::applyFilterTransformOnPreview(AbstractImageFilterTransform *filterTransform, int size, double strength)
 {
-    QImage&& previewImageNoFilter = workspaceArea->commitImageForPreview();
-    QImage&& result = filterTransform->applyFilter(previewImageNoFilter, size, strength);
+    QImage &&previewImageNoFilter = workspaceArea->commitImageForPreview();
+    QImage &&result = filterTransform->applyFilter(previewImageNoFilter, size, strength);
     colors->setImagePreview(result);
     delete filterTransform;
 }
 
-void MainWindow::onUpdateImagePreview() {
-     QImage&& previewImage = workspaceArea->commitImageForPreview();
-     colors->setImagePreview(previewImage);
+/**
+ * @brief Updates the image in our color controls' image previewer.
+ */
+void MainWindow::onUpdateImagePreview()
+{
+    QImage &&previewImage = workspaceArea->commitImageForPreview();
+    colors->setImagePreview(previewImage);
 }
 
-void MainWindow::onCreateRoom(QString name) {
+/**
+ * @brief Handles commit changes action/merging to master branch.
+ * 
+ * @details This action is triggered manually by the user. This means user will try to commit changes/merge to master branch.
+ */
+void MainWindow::on_actionCommit_Changes_triggered()
+{
+    CommitDialog commitDialog;
+    commitDialog.setModal(true);
+    if (commitDialog.exec())
+    {
+        // Save the image
+        QImage toMerge = workspaceArea->getImage();
+        // Remove the node
+        imageHistory.masterBranch.erase(imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber));
+        // Set master and side to 0, 0
+        masterNodeNumber = 0;
+        sideNodeNumber = 0;
+        // Commit image with saved image
+        commitChanges(toMerge, "Merged");
+        // Generate history
+        generateHistoryMenu();
+    }
+}
+
+/**
+ * @brief Commit changes to version control.
+ * 
+ * @param changes Description/commit message.
+ */
+void MainWindow::onCommitChanges(QString changes)
+{
+    if (masterNodeNumber == 0)      // commit at the master branch
+    {
+        imageHistory.commitChanges(workspaceArea->getImage(), changes);
+    }
+    else        // commit at a side branch
+    {
+        imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->commitChanges(workspaceArea->getImage(), changes);
+    }
+    generateHistoryMenu();
+}
+
+void MainWindow::onCreateRoom(QString name)
+{
     username = name;
-    if (name.isEmpty()) {
+    if (name.isEmpty())
+    {
         QMessageBox::information(this, QString("Empty Name"), QString("Name cannot be empty"));
         return;
     }
@@ -803,24 +969,27 @@ void MainWindow::onCreateRoom(QString name) {
     isHost = true;
     qDebug() << ip << port;
     joinRoom();
-
 }
 
-void MainWindow::onJoinRoom(QString name, QString address, quint16 port) {
+void MainWindow::onJoinRoom(QString name, QString address, quint16 port)
+{
     ip = address;
-    if (ip.isEmpty()) {
+    if (ip.isEmpty())
+    {
         QMessageBox::information(this, QString("Empty Server Name"), QString("Server name cannot be empty"));
         return;
     }
 
     this->port = port;
-    if (!port) {
+    if (!port)
+    {
         QMessageBox::information(this, QString("Invalid Port"), QString("Invalid Port"));
         return;
     }
 
     username = name;
-    if (username.isEmpty()) {
+    if (username.isEmpty())
+    {
         QMessageBox::information(this, QString("Empty Name"), QString("Name cannot be empty"));
         return;
     }
@@ -829,7 +998,8 @@ void MainWindow::onJoinRoom(QString name, QString address, quint16 port) {
     joinRoom();
 }
 
-void MainWindow::joinRoom() {
+void MainWindow::joinRoom()
+{
     client = new Client();
     connect(client, &Client::connectionFailedBad, this, &MainWindow::onConnectionFailed);
     connect(client, &Client::connected, this, &MainWindow::goToServerRoom);
@@ -839,18 +1009,20 @@ void MainWindow::joinRoom() {
     client->connectToServer(QHostAddress(ip), port);
     //connect(client, &Client::connected, this, &MainWindow::sendInitialImage);
     //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
-
 }
 
-void MainWindow::onConnectionFailed() {
+void MainWindow::onConnectionFailed()
+{
     QMessageBox::information(this, QString("Connection failed"), QString("Invalid IP address or port."));
-    if (room) {
+    if (room)
+    {
         room->setModal(false);
         room->close();
     }
 }
 
-void MainWindow::goToServerRoom() {
+void MainWindow::goToServerRoom()
+{
     room->setServerRoom(ip, port);
     room->setModal(true);
     room->exec();
@@ -859,7 +1031,8 @@ void MainWindow::goToServerRoom() {
 
 void MainWindow::on_actionCreate_Room_triggered()
 {
-    if(isConnected) {
+    if (isConnected)
+    {
         QMessageBox::information(this, QString("Unable to create"), QString("You have an active connection."));
         return;
     }
@@ -873,7 +1046,8 @@ void MainWindow::on_actionCreate_Room_triggered()
 
 void MainWindow::on_actionJoin_Room_triggered()
 {
-    if(isConnected) {
+    if (isConnected)
+    {
         QMessageBox::information(this, QString("Unable to create"), QString("You have an active connection."));
         return;
     }
@@ -885,50 +1059,66 @@ void MainWindow::on_actionJoin_Room_triggered()
     room->exec();
 }
 
-void MainWindow::clientJsonReceived(const QJsonObject &json) {
+void MainWindow::clientJsonReceived(const QJsonObject &json)
+{
     qDebug() << json;
     const QString type = json.value(QString("type")).toString();
-    if (type == "newPlayer") {
+    if (type == "newPlayer")
+    {
         qDebug() << "New Player has entered";
         //room->addPlayer(json.value(QString("playerName")).toString());
-    } else if (type == "playerList") {
+    }
+    else if (type == "playerList")
+    {
         room->emptyPlayers();
-        for(QJsonValue playerName : json.value(QString("playerNames")).toArray())
+        for (QJsonValue playerName : json.value(QString("playerNames")).toArray())
             room->addPlayer(playerName.toString());
-    } else if (type == "initialImage") {
+    }
+    else if (type == "initialImage")
+    {
         QByteArray ba = QByteArray::fromBase64(json.value(QString("data")).toString().toLatin1());
         QImage img = QImage::fromData(ba, "PNG");
-        if (img.isNull()) {
+        if (img.isNull())
+        {
             qDebug() << "image error";
-        } else {
+        }
+        else
+        {
             qDebug() << "image success";
         }
         rerenderWorkspaceArea(img, img.width(), img.height());
-    } else if (type == "nameRepeat") {
+    }
+    else if (type == "nameRepeat")
+    {
         QMessageBox::information(this, QString("Unable to use name"), QString("Please choose a different name."));
         isConnected = false;
         client->disconnectFromHost();
         client->deleteLater();
         room->setJoinRoom();
-    } else if (type == "hostDisconnected") {
+    }
+    else if (type == "hostDisconnected")
+    {
         destroyConnection();
     }
 }
 
-void MainWindow::sendPlayerName() {
+void MainWindow::sendPlayerName()
+{
     QJsonObject playerNameMsg;
     playerNameMsg["type"] = "playerName";
     playerNameMsg["playerName"] = username;
 
-
     client->sendJson(playerNameMsg);
 }
 
-void MainWindow::sendInitialImage() {
-    if (isHost) {
+void MainWindow::sendInitialImage()
+{
+    if (isHost)
+    {
         qDebug() << "I am server";
         QImage image = workspaceArea->getImage();
-        if (!image.isNull()) {
+        if (!image.isNull())
+        {
             QBuffer buffer;
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "PNG");
@@ -941,76 +1131,53 @@ void MainWindow::sendInitialImage() {
     }
 }
 
-void MainWindow::on_actionCommit_Changes_triggered()
-{
-    CommitDialog commitDialog;
-    commitDialog.setModal(true);
-    if (commitDialog.exec()) {
-        // Save the image
-        QImage toMerge = workspaceArea->getImage();
-        // Remove the node
-        imageHistory.masterBranch.erase(imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber));
-        // Set master and side to 0, 0
-        masterNodeNumber = 0;
-        sideNodeNumber = 0;
-        // Commit image with saved image
-        commitChanges(toMerge, "Merged");
-        // Generate history
-        generateHistoryMenu();
-    }
-    
-}
-
-void MainWindow::onCommitChanges(QString changes)
-{
-    if (masterNodeNumber == 0) {
-        imageHistory.commitChanges(workspaceArea->getImage(), changes);
-    }
-    else {
-        imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->commitChanges(workspaceArea->getImage(), changes);
-    }
-    generateHistoryMenu();
-}
-
 void MainWindow::on_actionView_Room_triggered()
 {
-    if (!isConnected) {
+    if (!isConnected)
+    {
         QMessageBox::information(this, QString("Room Unavailable"), QString("Please create or join room first."));
         return;
     }
     goToServerRoom();
 }
 
-void MainWindow::onSendPathItem(QGraphicsPathItem *) {
-
+void MainWindow::onSendPathItem(QGraphicsPathItem *)
+{
 }
 
-void MainWindow::onConnectionStopped() {
+void MainWindow::onConnectionStopped()
+{
     QMessageBox::information(this, QString("Connection Stopped"), QString("There was an error in the connection"));
 }
 
-void MainWindow::onDisconnect() {
+void MainWindow::onDisconnect()
+{
     QMessageBox::StandardButton reply = QMessageBox::question(this, QString("Leave Room"), QString("Are you sure to leave the room?"));
-    if (reply == QMessageBox::Yes) {
-          destroyConnection();
+    if (reply == QMessageBox::Yes)
+    {
+        destroyConnection();
     }
 }
 
-void MainWindow::destroyConnection() {
+void MainWindow::destroyConnection()
+{
     isConnected = false;
-    if (server != nullptr) {
+    if (server != nullptr)
+    {
         server->stopServer();
         server->deleteLater();
         server = nullptr;
     }
-    if (client != nullptr) {
+    if (client != nullptr)
+    {
         client->disconnectFromHost();
         client->deleteLater();
         client = nullptr;
     }
     room->setModal(false);
     room->close();
-    if (room) {
+    if (room)
+    {
         delete room;
     }
 }
