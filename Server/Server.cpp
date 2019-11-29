@@ -62,11 +62,12 @@ void Server::incomingConnection(qintptr socketDesriptor) {
     }
 
     // If the room has already full, no new player is accepted
-    if (clients.size() >= 2) {
+    if (clients.size() >= 3) {
         QJsonObject playerFullMsg;
         playerFullMsg["type"] = "playerFull";
         sendJson(worker, playerFullMsg);
         connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
+        worker->deleteLater();
         qDebug() << fullList;
         return;
     }
@@ -115,6 +116,7 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
                 sendJson(sender, playerRepeatNameMsg);
                 fullList.append(sender);
                 clients.removeAll(sender);
+                worker->deleteLater();
                 return;
             }
         }
@@ -133,6 +135,8 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
 //        newPlayerMsg["type"] = "newPlayer";
 //        newPlayerMsg["playerName"] = playerName;
 //        broadcast(newPlayerMsg);
+    } else if (type == "applyFilter") {
+        broadcast(json, sender);
     }
 
     emit receiveJson(sender, json);

@@ -30,6 +30,25 @@
 #include "Palette/ColorControls.h"
 #include "Palette/Effects.h"
 
+#include "FilterTransform/NonKernelBased/GrayscaleFilter.h"
+#include "FilterTransform/NonKernelBased/InvertFilter.h"
+
+#include "FilterTransform/NonKernelBased/HueFilter.h"
+#include "FilterTransform/NonKernelBased/SaturationFilter.h"
+#include "FilterTransform/NonKernelBased/TemperatureFilter.h"
+#include "FilterTransform/NonKernelBased/TintFilter.h"
+
+#include "FilterTransform/NonKernelBased/BrightnessFilter.h"
+#include "FilterTransform/NonKernelBased/ContrastFilter.h"
+#include "FilterTransform/NonKernelBased/ExposureFilter.h"
+
+#include "FilterTransform/KernelBased/GaussianBlurFilter.h"
+#include "FilterTransform/KernelBased/MeanBlurFilter.h"
+#include "FilterTransform/KernelBased/EmbossFilter.h"
+#include "FilterTransform/KernelBased/EdgeDetectionFilter.h"
+#include "FilterTransform/KernelBased/ImageInpainting.h"
+#include "FilterTransform/KernelBased/ImageScissors.h"
+
 #include "serverroom.h"
 
 /**
@@ -878,13 +897,16 @@ void MainWindow::resetGraphicsViewScale()
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
-void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransform, int size, double strength)
+void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransform, int size, double strength, bool fromServer)
 {
     // Commit all brush strokes before applying transform
     workspaceArea->commitImageAndSet();
 
     // Get filtered image and rerender the workspaceArea with the new image.
     QImage &&result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
+    if (!fromServer) {
+        sendFilter(filterTransform->getName(), size, strength);
+    }
     rerenderWorkspaceArea(result, result.width(), result.height());
 
     // Add after-filter-applied image to our image history version control, generate our history menu
@@ -1066,13 +1088,20 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
     if (type == "newPlayer")
     {
         qDebug() << "New Player has entered";
-        //room->addPlayer(json.value(QString("playerName")).toString());
     }
     else if (type == "playerList")
     {
         room->emptyPlayers();
         for (QJsonValue playerName : json.value(QString("playerNames")).toArray())
             room->addPlayer(playerName.toString());
+    }
+    else if (type == "playerFull")
+    {
+        QMessageBox::information(this, QString("Room Full"), QString("Room is full. Please try again or find a different room."));
+        isConnected = false;
+        client->disconnectFromHost();
+        client->deleteLater();
+        room->setJoinRoom();
     }
     else if (type == "initialImage")
     {
@@ -1099,6 +1128,15 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
     else if (type == "hostDisconnected")
     {
         destroyConnection();
+    }
+    else if (type == "applyFilter") {
+        QJsonValue data = json.value(QString("data"));
+        QString name = data["name"].toString();
+        int size = data["size"].toInt();
+        double strength = data["strength"].toDouble();
+        if (!name.isEmpty()) {
+            handleFilterBroadcast(name, size, strength);
+        }
     }
 }
 
@@ -1162,22 +1200,81 @@ void MainWindow::onDisconnect()
 void MainWindow::destroyConnection()
 {
     isConnected = false;
-    if (server != nullptr)
-    {
-        server->stopServer();
-        server->deleteLater();
-        server = nullptr;
-    }
     if (client != nullptr)
     {
         client->disconnectFromHost();
         client->deleteLater();
         client = nullptr;
     }
-    room->setModal(false);
-    room->close();
-    if (room)
+    if (server != nullptr)
+
     {
-        delete room;
+        server->stopServer();
+        server->deleteLater();
+        server = nullptr;
+    }
+    room->close();
+//    if (room)
+//    {
+//        delete room;
+//    }
+}
+
+void MainWindow::sendFilter(QString filterName, int size, double strength) {
+    if (!isConnected || client == nullptr) {
+        return;
+    }
+    QJsonObject json;
+    QJsonObject data;
+    data["name"] = filterName;
+    data["size"] = size;
+    data["strength"] = strength;
+    json["type"] = "applyFilter";
+    json["data"] = data;
+    client->sendJson(json);
+}
+
+void MainWindow::handleFilterBroadcast(QString name, int size, double strength) {
+    if (name == "Hue Filter") {
+        HueFilter *hueFilter = new HueFilter();
+        applyFilterTransform(hueFilter, size, strength, true);
+    } else if (name == "Saturation Filter") {
+        SaturationFilter *saturationFilter = new SaturationFilter();
+        applyFilterTransform(saturationFilter, size, strength, true);
+    } else if (name == "Tint Filter") {
+        TintFilter *tintFilter = new TintFilter();
+        applyFilterTransform(tintFilter, size, strength, true);
+    } else if (name == "Temperature Filter") {
+        TemperatureFilter *temperatureFilter = new TemperatureFilter();
+        applyFilterTransform(temperatureFilter, size, strength, true);
+    } else if (name == "Brightness Filter") {
+        BrightnessFilter *brightnessFilter = new BrightnessFilter();
+        applyFilterTransform(brightnessFilter, size, strength, true);
+    } else if (name == "Contrast Filter") {
+        ContrastFilter *contrastFilter = new ContrastFilter();
+        applyFilterTransform(contrastFilter, size, strength, true);
+    } else if (name == "Exposure Filter") {
+        ExposureFilter *exposureFilter = new ExposureFilter();
+        applyFilterTransform(exposureFilter, size, strength, true);
+    } else if (name == "Invert Filter") {
+        InvertFilter *invertFilter = new InvertFilter();
+        applyFilterTransform(invertFilter, size, strength, true);
+    } else if (name == "Exposure Filter") {
+        GrayscaleFilter *grayscaleFilter = new GrayscaleFilter();
+        applyFilterTransform(grayscaleFilter, size, strength, true);
+    } else if (name == "Edge Detection Filter") {
+        EdgeDetectionFilter *edgeDetectionFilter = new EdgeDetectionFilter();
+        applyFilterTransform(edgeDetectionFilter, size, strength, true);
+    } else if (name == "Emboss Filter") {
+        EmbossFilter *embossFilter = new EmbossFilter();
+        applyFilterTransform(embossFilter, size, strength, true);
+    } else if (name == "Gaussian Blur Filter") {
+        GaussianBlurFilter *gaussianBlurFilter = new GaussianBlurFilter();
+        applyFilterTransform(gaussianBlurFilter, size, strength, true);
+    } else if (name == "Mean Blur Filter") {
+        MeanBlurFilter *meanBlurFilter = new MeanBlurFilter();
+        applyFilterTransform(meanBlurFilter, size, strength, true);
     }
 }
+
+

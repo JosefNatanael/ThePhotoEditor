@@ -63,7 +63,7 @@ private slots:
     void                        onZoom(const QString&);
     void                        onCrossCursorChanged(WorkspaceArea::CursorMode, int data);
     void                        rerenderWorkspaceArea(const QImage&, int width, int height);
-    void                        applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength);
+    void                        applyFilterTransform(AbstractImageFilterTransform* filterTransform, int size, double strength, bool fromServer = false);
     void                        applyFilterTransformOnPreview(AbstractImageFilterTransform* filterTransform, int size, double strength);
     void                        onUpdateImagePreview();
 
@@ -114,7 +114,9 @@ private:
     // Server related member functions.
     void                        joinRoom();
     void                        sendInitialImage();  
-    void                        destroyConnection();                    
+    void                        destroyConnection();
+    void                        sendFilter(QString, int, double);
+    void                        handleFilterBroadcast(QString, int, double);
 
 private:
     Ui::MainWindow*             ui;

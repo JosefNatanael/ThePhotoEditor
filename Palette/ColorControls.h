@@ -33,7 +33,7 @@ public:
     void resetSliders();
 
 signals:
-    void applyColorFilterClicked(AbstractImageFilterTransform* transform, int size, double strength);
+    void applyColorFilterClicked(AbstractImageFilterTransform* transform, int size, double strength, bool fromServer = false);
     void applyColorFilterOnPreview(AbstractImageFilterTransform* transform, int size, double strength);
 
 };

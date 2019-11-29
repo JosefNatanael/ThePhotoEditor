@@ -32,7 +32,7 @@ private:
     QImage mask;
 
 signals:
-    void applyEffectClicked(AbstractImageFilterTransform* transform, int size, double strength);
+    void applyEffectClicked(AbstractImageFilterTransform* transform, int size, double strength, bool fromServer = false);
 };
 
 #endif // EFFECTS_H

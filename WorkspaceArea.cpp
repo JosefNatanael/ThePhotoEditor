@@ -150,7 +150,8 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	{
 		QPainterPath path;
 		if (pathItem == nullptr)
-		{
+
+        {
 			path.moveTo(event->scenePos()); // move path to event scene position
 			pathItem = new QGraphicsPathItem();
 			pen.setColor(myPenColor);
