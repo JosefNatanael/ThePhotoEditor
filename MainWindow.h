@@ -78,7 +78,6 @@ private slots:
 
     void                        on_actionCommit_Changes_triggered();
     void                        onCommitChanges(QString changes);
-    void                        on_actionView_Room_triggered();
     
     void                        onSendPathItem(QGraphicsPathItem*);
     void                        onConnectionStopped();
