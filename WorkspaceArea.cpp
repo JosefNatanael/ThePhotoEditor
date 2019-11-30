@@ -278,12 +278,7 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		break;
 	}
 	case CursorMode::MAGICWAND:
-		thisColor = PixelHelper::getPixel(image, cropOrigin.x(), cropOrigin.y());
-		MagicWand m;
-		commitImageAndSet();
-		QImage &&newImage = m.crop(image, cropOrigin.x(), cropOrigin.y(), magicWandThreshold);
-		emit imageCropped(newImage, newImage.width(), newImage.height());
-		emit commitChanges("Magic Removal");
+        cropImageWithMagicWand(cropOrigin.x(), cropOrigin.y());
 		break;
 	}
 	QGraphicsScene::mouseReleaseEvent(event);
@@ -328,6 +323,18 @@ void WorkspaceArea::resizeImage(int width, int height, bool fromServer)
     emit commitChanges("Image Resized");
     
     emit imageResized(resizedImage, width, height);
+}
+
+void WorkspaceArea::cropImageWithMagicWand(int x, int y, bool fromServer) {
+    thisColor = PixelHelper::getPixel(image, x, y);
+    MagicWand m;
+    commitImageAndSet();
+    QImage &&newImage = m.crop(image, x, y, magicWandThreshold);
+    emit imageCropped(newImage, newImage.width(), newImage.height());
+    emit commitChanges("Magic Removal");
+    if (!fromServer) {
+        emit sendCropWithMagicWand(x, y);
+    }
 }
 
 /**

@@ -1,4 +1,4 @@
-#include "serverroom.h"
+#include "ServerRoom.h"
 #include "ui_serverroom.h"
 
 ServerRoom::ServerRoom(QWidget *parent) :

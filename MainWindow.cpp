@@ -56,7 +56,7 @@
 #include "FilterTransform/KernelBased/ImageInpainting.h"
 #include "FilterTransform/KernelBased/ImageScissors.h"
 
-#include "serverroom.h"
+#include "ServerRoom.h"
 
 /**
  * @brief Construct a new Main Window::MainWindow object.
@@ -206,6 +206,7 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
     connect(workspaceArea, &WorkspaceArea::sendResize, this, &MainWindow::onSendResize);
     connect(workspaceArea, &WorkspaceArea::sendCrop, this, &MainWindow::onSendCrop);
+    connect(workspaceArea, &WorkspaceArea::sendCropWithMagicWand, this, &MainWindow::onSendCropWithMagicWand);
     connect(workspaceArea, &WorkspaceArea::updateImagePreview, this, &MainWindow::onUpdateImagePreview);
     connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::onCommitChanges);
 }
@@ -525,6 +526,10 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
  */
 void MainWindow::on_actionNew_triggered()
 {
+    if (isConnected && !isHost) {
+        QMessageBox::information(this, QString("Not host"), QString("You are not host. Please disconnect to create new image."));
+        return;
+    }
     if (maybeSave())
     {
         clearImage();
@@ -540,6 +545,10 @@ void MainWindow::on_actionNew_triggered()
  */
 void MainWindow::on_actionOpen_triggered()
 {
+    if (isConnected && !isHost) {
+        QMessageBox::information(this, QString("Not host"), QString("You are not host. Please disconnect to open your own image."));
+        return;
+    }
     if (maybeSave())
     { // Check if changes have been made since last save
         // Get the file to open from a dialog
@@ -580,6 +589,8 @@ void MainWindow::on_actionOpen_triggered()
 
             // Commit changes to version control.
             commitChanges(loadedImage, "Original Image");
+
+            sendInitialImage();
         }
     }
 }
@@ -1282,6 +1293,13 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         int height = data["height"].toInt();
         workspaceArea->cropImage(x, y, width, height, true);
     }
+    else if (type == "applyCropWithMagicWand")
+    {
+        QJsonValue data = json.value(QString("data"));
+        int x = data["x"].toInt();
+        int y = data["y"].toInt();
+        workspaceArea->cropImageWithMagicWand(x, y, true);
+    }
 }
 
 void MainWindow::sendPlayerName()
@@ -1428,6 +1446,17 @@ void MainWindow::onSendCrop(int x, int y, int width, int height) {
     }
 }
 
+void MainWindow::onSendCropWithMagicWand(int x, int y) {
+    if (isConnected) {
+        QJsonObject json;
+        QJsonObject data;
+        data["x"] = x;
+        data["y"] = y;
+        json["type"] = "applyCropWithMagicWand";
+        json["data"] = data;
+        client->sendJson(json);
+    }
+}
 
 void MainWindow::handleFilterBroadcast(QString name, int size, double strength) {
     if (name == "Hue Filter") {

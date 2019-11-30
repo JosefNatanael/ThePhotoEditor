@@ -57,6 +57,7 @@ SOURCES += \
         Server/Client.cpp \
         Server/Server.cpp \
         Server/ServerWorker.cpp \
+        ServerRoom.cpp \
         Utilities/CommitDialog.cpp \
         Utilities/PixelHelper.cpp \
         Utilities/VersionControl.cpp \
@@ -64,8 +65,7 @@ SOURCES += \
         WorkspaceArea.cpp \
         main.cpp \
         MainWindow.cpp \
-        qcustomplot.cpp \
-        serverroom.cpp
+        qcustomplot.cpp
 
 HEADERS += \
         AboutUs.h \
@@ -98,6 +98,7 @@ HEADERS += \
         Palette/ColorControls.h \
         Palette/Effects.h \
         Palette/Histogram.h \
+        ServerRoom.h \
         Utilities/CommitDialog.h \
         Utilities/PixelHelper.h \
         Utilities/VersionControl.h \
@@ -106,8 +107,7 @@ HEADERS += \
         Server/ServerWorker.h \
         Utilities/WindowHelper.h \
         WorkspaceArea.h \
-        qcustomplot.h \
-        serverroom.h
+        qcustomplot.h
 
 FORMS += \
         AboutUs.ui \

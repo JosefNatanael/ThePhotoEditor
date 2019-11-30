@@ -9,6 +9,7 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QMessageBox>
 
 Effects::Effects(QWidget *parent) : QWidget(parent),
                                     ui(new Ui::Effects)
@@ -66,6 +67,10 @@ void Effects::on_inpaintingAddMaskPushButton_clicked()
 
 void Effects::on_inpaintingPushButton_clicked()
 {
+    if (mask.isNull()) {
+        QMessageBox::information(this, QString("No Mask"), QString("Please add mask first."));
+        return;
+    }
     ImageInpainting* imageInpainting = new ImageInpainting(5);
     imageInpainting->mask = mask;
     emit applyEffectClicked(imageInpainting, 5 , 1);
@@ -87,6 +92,10 @@ void Effects::on_imageScissorsAddMaskPushButton_clicked()
 
 void Effects::on_imageScissorsPushButton_clicked()
 {
+    if (mask.isNull()) {
+        QMessageBox::information(this, QString("No Mask"), QString("Please add mask first."));
+        return;
+    }
     ImageScissors* imageScissors = new ImageScissors(2);
     imageScissors->mask = mask;
     emit applyEffectClicked(imageScissors, 2 , 1);

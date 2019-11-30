@@ -25,7 +25,7 @@
 #include "Palette/BasicControls.h"
 #include "Palette/Effects.h"
 #include "AboutUs.h"
-#include "serverroom.h"
+#include "ServerRoom.h"
 #include "Server/Server.h"
 #include "Server/Client.h"
 
@@ -88,6 +88,7 @@ private slots:
     void                        onDisconnect();
     void                        onSendResize(int, int);
     void                        onSendCrop(int, int, int, int);
+    void                        onSendCropWithMagicWand(int, int);
 
 private:
     // Workspace transformation related member functions. 
