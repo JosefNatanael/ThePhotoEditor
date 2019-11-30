@@ -8,6 +8,9 @@ class VersionControl
 {
     friend class MainWindow;
 private:
+    /**
+     * @brief SideNode is the node of a side branch.
+     */
     struct SideNode {
         /**
          * @brief Construct a new Side Node object.
@@ -20,6 +23,9 @@ private:
         QString changes;        //!< Commit message.
     };
 
+    /**
+     * @brief MasterNode is the node of a main branch.
+     */
     class MasterNode {
         friend class MainWindow;
     private:

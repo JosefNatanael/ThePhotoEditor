@@ -1,6 +1,6 @@
 /**
  * @class CommitDialog
- * @brief Merge to HEAD dialog.
+ * @brief Merge to latest node in the master branch dialog.
  */
 
 #include "CommitDialog.h"
