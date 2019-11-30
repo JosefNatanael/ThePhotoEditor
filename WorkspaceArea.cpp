@@ -1,3 +1,4 @@
+
 #include "WorkspaceArea.h"
 #include "Utilities/PixelHelper.h"
 #include "FilterTransform/NonKernelBased/MagicWand.h"
@@ -238,13 +239,21 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	QGraphicsScene::mouseReleaseEvent(event);
 }
 
-void WorkspaceArea::resizeImage(int width, int height)
+void WorkspaceArea::resizeImage(int width, int height, bool fromServer)
 {
     QImage&& unresizedImage = commitImage();
     QImage&& resizedImage = unresizedImage.scaled(width, height, Qt::AspectRatioMode::KeepAspectRatio);
 
-    emit imageResized(resizedImage, width, height);
+    if (!fromServer) {
+        emit sendResize(width, height);
+    }
+
     emit commitChanges("Image Resized");
+
+    emit imageResized(resizedImage, width, height);
+
+
+
 }
 
 QImage WorkspaceArea::commitImageForPreview() {

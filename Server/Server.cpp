@@ -61,35 +61,13 @@ void Server::incomingConnection(qintptr socketDesriptor) {
         return;
     }
 
-    // If the room has already full, no new player is accepted
-    if (clients.size() >= 3) {
-        QJsonObject playerFullMsg;
-        playerFullMsg["type"] = "playerFull";
-        sendJson(worker, playerFullMsg);
-        connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
-        worker->deleteLater();
-        qDebug() << fullList;
-        return;
-    }
+    qDebug("Send player list");
+    clients.append(worker);
+    connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
+    connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
 
-    // Send the players list to the new player
-//    if (!clients.isEmpty()) {
-        qDebug("Send player list");
-        clients.append(worker);
-        connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
-        connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
-
-        qDebug() << "new player connected";
-        emit newPlayerConnected();
-
-//    }
-
-//    connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
-//    connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
-//    clients.append(worker);
-//    broadcast(playerNamesMsg);
-//    qDebug() << "new player connected";
-//    emit newPlayerConnected();
+    qDebug() << "new player connected";
+    emit newPlayerConnected();
 }
 
 /*
@@ -106,6 +84,19 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
     if (type == "playerName") {
         const QString playerName = json.value("playerName").toString();
 
+        qDebug() << clients.size();
+
+        if (clients.size() > 2) {
+            QJsonObject playerFullMsg;
+            playerFullMsg["type"] = "playerFull";
+            sendJson(sender, playerFullMsg);
+            fullList.append(sender);
+            clients.removeAll(sender);
+            //sender->deleteLater();
+            return;
+        }
+
+
         // If the player has the same name with existing player, server won't allow the player to enter the room
         for (ServerWorker *worker : clients) {
             if (worker == sender)
@@ -116,7 +107,7 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
                 sendJson(sender, playerRepeatNameMsg);
                 fullList.append(sender);
                 clients.removeAll(sender);
-                worker->deleteLater();
+                //worker->deleteLater();
                 return;
             }
         }
@@ -135,7 +126,7 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
 //        newPlayerMsg["type"] = "newPlayer";
 //        newPlayerMsg["playerName"] = playerName;
 //        broadcast(newPlayerMsg);
-    } else if (type == "applyFilter") {
+    } else if (type == "applyFilter" || type == "applyResize") {
         broadcast(json, sender);
     }
 

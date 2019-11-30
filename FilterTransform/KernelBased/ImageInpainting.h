@@ -17,6 +17,9 @@ public:
     virtual void setKernel(int size, double strength = 1.0) override;
     virtual QImage convolution(const QImage& image) const override;
 
+    virtual QImage getMask();
+    virtual void setMask(const QImage& mask);
+
 private:
     QImage mask;
     int size;

@@ -82,3 +82,11 @@ QImage ImageInpainting::convolution(const QImage &img) const
     }
     return newImage;
 }
+
+QImage ImageInpainting::getMask() {
+    return mask;
+}
+
+void ImageInpainting::setMask(const QImage &mask) {
+    this->mask = mask;
+}

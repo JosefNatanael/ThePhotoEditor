@@ -42,6 +42,11 @@
 #include "FilterTransform/NonKernelBased/ContrastFilter.h"
 #include "FilterTransform/NonKernelBased/ExposureFilter.h"
 
+#include "FilterTransform/NonKernelBased/ClockwiseRotationTransform.h"
+#include "FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.h"
+#include "FilterTransform/NonKernelBased/FlipHorizontalTransform.h"
+#include "FilterTransform/NonKernelBased/FlipVerticalTransform.h"
+
 #include "FilterTransform/KernelBased/GaussianBlurFilter.h"
 #include "FilterTransform/KernelBased/MeanBlurFilter.h"
 #include "FilterTransform/KernelBased/EmbossFilter.h"
@@ -197,6 +202,7 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::imageCropped, this, &MainWindow::rerenderWorkspaceArea);
     connect(basics, &BasicControls::resizeButtonClicked, workspaceArea, &WorkspaceArea::resizeImage);
     connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
+    connect(workspaceArea, &WorkspaceArea::sendResize, this, &MainWindow::onSendResize);
     connect(workspaceArea, &WorkspaceArea::updateImagePreview, this, &MainWindow::onUpdateImagePreview);
     connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::onCommitChanges);
 }
@@ -904,8 +910,17 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
 
     // Get filtered image and rerender the workspaceArea with the new image.
     QImage &&result = filterTransform->applyFilter(workspaceArea->getImage(), size, strength);
+
     if (!fromServer) {
-        sendFilter(filterTransform->getName(), size, strength);
+        if (filterTransform->getName() == "Image Scissors") {
+            ImageScissors* temp = reinterpret_cast<ImageScissors*>(filterTransform);
+            sendFilterWithMask(filterTransform->getName(), size, strength, temp->getMask());
+        } else if (filterTransform->getName() == "Image Inpainting") {
+            ImageInpainting* temp = reinterpret_cast<ImageInpainting*>(filterTransform);
+            sendFilterWithMask(filterTransform->getName(), size, strength, temp->getMask());
+        } else {
+            sendFilter(filterTransform->getName(), size, strength);
+        }
     }
     rerenderWorkspaceArea(result, result.width(), result.height());
 
@@ -1097,10 +1112,12 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
     }
     else if (type == "playerFull")
     {
+        qDebug() << "CANNOT ENTER BRO";
         QMessageBox::information(this, QString("Room Full"), QString("Room is full. Please try again or find a different room."));
         isConnected = false;
         client->disconnectFromHost();
         client->deleteLater();
+
         room->setJoinRoom();
     }
     else if (type == "initialImage")
@@ -1114,8 +1131,32 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         else
         {
             qDebug() << "image success";
+            int imageWidth = img.width();
+            int imageHeight = img.height();
+            resetGraphicsViewScale();
+            reconstructWorkspaceArea(imageWidth, imageHeight);
+
+            // Updating data members that keeps image width and height
+            resizedImageWidth = imageWidth;
+            resizedImageHeight = imageHeight;
+            basics->setImageDimensions(imageWidth, imageHeight);
+
+            // Setup our workspace
+            workspaceArea->openImage(img, imageWidth, imageHeight);
+            resizeGraphicsViewBoundaries(imageWidth, imageHeight);
+            fitImageToScreen(imageWidth, imageHeight);
+
+
+
+
+            // Setup image preview, which is situated in color controls
+            colors->setImagePreview(workspaceArea->commitImageForPreview());
+            colors->resetSliders();
+
+            // Commit changes to version control.
+            commitChanges(img, "Original Image");
+
         }
-        rerenderWorkspaceArea(img, img.width(), img.height());
     }
     else if (type == "nameRepeat")
     {
@@ -1126,10 +1167,13 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         room->setJoinRoom();
     }
     else if (type == "hostDisconnected")
+
+
     {
         destroyConnection();
     }
-    else if (type == "applyFilter") {
+    else if (type == "applyFilter")
+    {
         QJsonValue data = json.value(QString("data"));
         QString name = data["name"].toString();
         int size = data["size"].toInt();
@@ -1137,6 +1181,25 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         if (!name.isEmpty()) {
             handleFilterBroadcast(name, size, strength);
         }
+    }
+    else if (type == "applyFilterWithMask")
+    {
+        QJsonValue data = json.value(QString("data"));
+        QString name = data["name"].toString();
+        int size = data["size"].toInt();
+        double strength = data["strength"].toDouble();
+        QByteArray ba = QByteArray::fromBase64(json.value(QString("data")).toString().toLatin1());
+        QImage mask = QImage::fromData(ba, "PNG");
+        if (!mask.isNull() && !name.isEmpty()) {
+            handleFilterBroadcast(name, size, strength, mask);
+        }
+    }
+    else if (type == "applyResize")
+    {
+        QJsonValue data = json.value(QString("data"));
+        int width = data["width"].toInt();
+        int height = data["height"].toInt();
+        workspaceArea->resizeImage(width, height, true);
     }
 }
 
@@ -1234,6 +1297,42 @@ void MainWindow::sendFilter(QString filterName, int size, double strength) {
     client->sendJson(json);
 }
 
+void MainWindow::sendFilterWithMask(QString filterName, int size, double strength, const QImage& mask) {
+    if (!isConnected || client == nullptr) {
+        return;
+    }
+
+    QJsonValue maskBytes;
+    if (!mask.isNull())
+    {
+        QBuffer buffer;
+        buffer.open(QIODevice::WriteOnly);
+        mask.save(&buffer, "PNG");
+        maskBytes = QJsonValue(QLatin1String(buffer.data().toBase64()));
+    }
+    QJsonObject json;
+    QJsonObject data;
+    data["name"] = filterName;
+    data["size"] = size;
+    data["strength"] = strength;
+    data["mask"] = maskBytes;
+    json["type"] = "applyFilterWithMask";
+    json["data"] = data;
+    client->sendJson(json);
+}
+
+void MainWindow::onSendResize(int width, int height) {
+    if (isConnected) {
+        QJsonObject json;
+        QJsonObject data;
+        data["width"] = width;
+        data["height"] = height;
+        json["type"] = "applyResize";
+        json["data"] = data;
+        client->sendJson(json);
+    }
+}
+
 void MainWindow::handleFilterBroadcast(QString name, int size, double strength) {
     if (name == "Hue Filter") {
         HueFilter *hueFilter = new HueFilter();
@@ -1274,6 +1373,30 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength) 
     } else if (name == "Mean Blur Filter") {
         MeanBlurFilter *meanBlurFilter = new MeanBlurFilter();
         applyFilterTransform(meanBlurFilter, size, strength, true);
+    } else if (name == "Clockwise Rotation") {
+        ClockwiseRotationTransform *cwRotation = new ClockwiseRotationTransform();
+        applyFilterTransform(cwRotation, size, strength, true);
+    } else if (name == "Counter Clockwise Rotation") {
+        CounterClockwiseRotationTransform *ccwRotation = new CounterClockwiseRotationTransform();
+        applyFilterTransform(ccwRotation, size, strength, true);
+    } else if (name == "Flip Horizontal Transform") {
+        FlipHorizontalTransform *flipHorizontal = new FlipHorizontalTransform();
+        applyFilterTransform(flipHorizontal, size, strength, true);
+    } else if (name == "Flip Vertical Transform") {
+        FlipVerticalTransform *flipVertical = new FlipVerticalTransform();
+        applyFilterTransform(flipVertical, size, strength, true);
+    }
+}
+
+void MainWindow::handleFilterBroadcast(QString name, int size, double strength, const QImage& mask) {
+    if (name == "Image Scissors") {
+        ImageScissors *imageScissors = new ImageScissors();
+        imageScissors->setMask(mask);
+        applyFilterTransform(imageScissors, size, strength, true);
+    } else if (name == "Image Inpainting") {
+        ImageInpainting *imageInpainting = new ImageInpainting();
+        imageInpainting->setMask(mask);
+        applyFilterTransform(imageInpainting, size, strength, true);
     }
 }
 

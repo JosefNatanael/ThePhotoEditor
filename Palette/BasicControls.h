@@ -34,7 +34,7 @@ private:
 signals:
     void crossCursorChanged(WorkspaceArea::CursorMode, int data = 0);
     void applyTransformClicked(AbstractImageFilterTransform* transform, int size, double strength, bool fromServer = false);
-    void resizeButtonClicked(int, int);
+    void resizeButtonClicked(int, int, bool fromServer = false);
 
 private:
     int imageWidth = 0;

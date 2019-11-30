@@ -53,7 +53,7 @@ public:
 
 public slots:
     void                    print();
-    void                    resizeImage(int, int);
+    void                    resizeImage(int, int, bool = false);
 
 public:
     static const int SCENE_WIDTH = 720;    // The default width of the workspace
@@ -66,6 +66,7 @@ signals:
     void                    imageResized(const QImage&, int width, int height);
     void                    commitChanges(QString changes);
     void                    updateImagePreview();
+    void                    sendResize(int, int);
 
 protected:
     virtual void            mousePressEvent(QGraphicsSceneMouseEvent *event) override;

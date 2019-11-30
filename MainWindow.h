@@ -86,6 +86,7 @@ private slots:
     void                        onSendPathItem(QGraphicsPathItem*);
     void                        onConnectionStopped();
     void                        onDisconnect();
+    void                        onSendResize(int, int);
 
 private:
     // Workspace transformation related member functions. 
@@ -116,7 +117,9 @@ private:
     void                        sendInitialImage();  
     void                        destroyConnection();
     void                        sendFilter(QString, int, double);
+    void                        sendFilterWithMask(QString, int, double, const QImage&);
     void                        handleFilterBroadcast(QString, int, double);
+    void                        handleFilterBroadcast(QString, int, double, const QImage&);
 
 private:
     Ui::MainWindow*             ui;

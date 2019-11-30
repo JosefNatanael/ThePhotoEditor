@@ -48,3 +48,11 @@ QImage ImageScissors::convolution(const QImage &img) const
     }
     return newImage;
 }
+
+QImage ImageScissors::getMask() {
+    return mask;
+}
+
+void ImageScissors::setMask(const QImage &mask) {
+    this->mask = mask;
+}
