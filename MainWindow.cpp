@@ -13,6 +13,8 @@
  *  1. Load .pro project file to QtCreator
  *  2. Select kits (Tested with MinGW 5.10.0 and above)
  *  3. Build and run
+ *  @class MainWindow
+ *  @brief Central hub for all functions and classes in this application.
  */
 
 #include "MainWindow.h"
@@ -529,7 +531,6 @@ void MainWindow::on_actionNew_triggered()
     workspaceArea->setModified(false);
 }
 
-// Check if the current image has been changed and then open a dialog to open a file
 /**
  * @brief Opens a new image.
  * 
@@ -628,6 +629,11 @@ void MainWindow::on_actionUndo_triggered()
     }
 }
 
+/**
+ * @brief Handle redo actions.
+ * 
+ * @details Checkout a commit based on current checkout position (i.e. sideNodenumber and masterNodeNumber)
+ */
 void MainWindow::on_actionRedo_triggered()
 {
     // Check if redo is available on current branch
@@ -641,6 +647,9 @@ void MainWindow::on_actionRedo_triggered()
     }
 }
 
+/**
+ * @brief Revert commit to last commit.
+ */
 void MainWindow::on_actionRevert_to_Last_Commit_triggered()
 {
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
@@ -663,14 +672,20 @@ void MainWindow::on_actionRevert_to_Last_Commit_triggered()
     generateHistoryMenu();
 }
 
-// Print the workspaceArea
+/**
+ * @brief Prints the workspace area.
+ * 
+ * @details calls workspaceArea's print function.
+ */
 void MainWindow::on_actionPrint_triggered()
 {
     on_actionSave_triggered();
     workspaceArea->print();
 }
 
-// Shows About us widget when slot triggered
+/**
+ * @brief Shows About us dialog when slot is triggered.
+ */
 void MainWindow::on_actionAbout_Us_triggered()
 {
     AboutUs aboutUs;
@@ -678,14 +693,26 @@ void MainWindow::on_actionAbout_Us_triggered()
     aboutUs.exec();
 }
 
+/**
+ * @brief Updates image on image drawn/scribbled.
+ * 
+ * @details commits changes to version control.
+ */
 void MainWindow::onImageDrawn()
 {
     QImage image = workspaceArea->commitImage();
     commitChanges(image, "Brush");
 }
 
-// Filter mouse scroll event to not propagate to the whole mainwindow, instead only to the workspaceArea
-// Mouse scroll/wheel event will be handled by MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent*)
+/**
+ * @brief Filter mouse scroll event to not propagate to the whole mainwindow, instead only to the workspaceArea.
+ * 
+ * @details Mouse scroll/wheel event will be handled by MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent*).
+ * 
+ * @param event 
+ * @return true event is a GraphicsSceneWheel.
+ * @return false event is not a GraphicsSceneWheel.
+ */
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
     if (event->type() == QEvent::GraphicsSceneWheel)
@@ -699,7 +726,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     return false;
 }
 
-// Zooms in/out the workspaceArea/graphicsView on mouse scroll/wheel event
+/**
+ * @brief Zooms in/out the workspaceArea/graphicsView on mouse scroll/wheel event
+ * 
+ * @param event Scene wheel event.
+ */
 void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
 {
     // Sets how the view should position during scene transformations
@@ -743,6 +774,11 @@ void MainWindow::handleWheelEvent(QGraphicsSceneWheelEvent *event)
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
+/**
+ * @brief Changes workspaceArea zoom level based on level.
+ * 
+ * @param level The level of zoom desired.
+ */
 void MainWindow::onZoom(const QString &level)
 {
     if (level == "Fit to screen")
@@ -751,6 +787,7 @@ void MainWindow::onZoom(const QString &level)
         return;
     }
 
+    // Neutralizes any zoom changes made before.
     double originalFactor = 1.0 / currentZoom;
     double a = resizedImageWidth * originalFactor;
     double b = resizedImageHeight * originalFactor;
@@ -778,6 +815,7 @@ void MainWindow::onZoom(const QString &level)
         currentZoom = 1.2;
     }
 
+    // Setup scaling settings to graphicsView settings.
     a = resizedImageWidth * scaleFactor;
     b = resizedImageHeight * scaleFactor;
     graphicsView->scale(a / resizedImageWidth, b / resizedImageHeight);
@@ -788,8 +826,15 @@ void MainWindow::onZoom(const QString &level)
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
-// This slot will receive basic controls' cursor change signals.
-// Drawing/Cropping/cutting an image will be signaled by the change of cursor state
+/**
+ * @brief Updates workspaceArea's cursor.
+ * 
+ * @details This slot receives basic controls' cursor change signals.
+ * Drawing/cropping/cutting an image will be signaled by the change of cursor state.
+ * 
+ * @param cursor a WorkspaceArea::CursorMode cursor.
+ * @param data Any integer data that is needed for certain cursor, e.g. Magic Wand threshold.
+ */
 void MainWindow::onCrossCursorChanged(WorkspaceArea::CursorMode cursor, int data)
 {
     graphicsView->setCursor(Qt::CrossCursor);
@@ -812,6 +857,16 @@ void MainWindow::onCrossCursorChanged(WorkspaceArea::CursorMode cursor, int data
     }
 }
 
+/**
+ * @brief Fits the image to screen.
+ * 
+ * @details If any of the currentImage dimensions is larger than the screen dimensions, we would like to scale down.
+ * Else if any of the currentImage dimensions is smaller than the screen dimensions, we would like to scale up.
+ * Otherwise, both dimensions are equal, we can leave the function.
+ * 
+ * @param currentImageWidth 
+ * @param currentImageHeight 
+ */
 void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
 {
     const QRect screenRect = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
@@ -819,11 +874,7 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
     int screenHeight = screenRect.height();
 
     double ratio;
-    /*
-     * If any of the currentImage dimensions is larger than the screen dimensions, we would like to scale down
-     * Else if any of the currentImage dimensions is smaller than the screen dimensions, we would like to scale up
-     * Otherwise, both dimensions are equal, we can leave the function.
-     */
+
     if (currentImageWidth > screenWidth || currentImageHeight > screenHeight)
     {
         ratio = qMax(static_cast<double>(screenWidth) / currentImageWidth, static_cast<double>(screenHeight) / currentImageHeight) * 0.5;
@@ -845,12 +896,17 @@ void MainWindow::fitImageToScreen(int currentImageWidth, int currentImageHeight)
     comboBox->setCurrentText("Fit to screen");
 }
 
-/*
- * Mechanism to view the cropped/filtered/transformed image:
- 1. store current workspaceArea to a temporaryArea
- 2. create a new workspaceArea to hold the new cropped image, and set the graphicsView to contain this new workspaceArea
- 3. the temporaryArea will then be destroyed when a) destroyed by the destructor, or b) there is a new signal to crop the image.
- * We cannot destroy/reconstruct the workspaceArea in this slot, as this slot is connected (by signal) to the caller workspaceArea.
+/**
+ * @brief Rerenders the workspace area.
+ * 
+ * @details Mechanism to view the cropped/filtered/transformed image:
+ * 1. store current workspaceArea to a temporaryArea
+ * 2. create a new workspaceArea to hold the new cropped image, and set the graphicsView to contain this new workspaceArea
+ * 3. the temporaryArea will then be destroyed when a) destroyed by the destructor, or b) there is a new signal to crop the image.
+ * We cannot destroy/reconstruct the workspaceArea in this slot, as this slot is connected (signal-slot connection) to the caller signal in the workspaceArea.
+ * @param image Image to be rendered.
+ * @param imageWidth Width of the image.
+ * @param imageHeight Height of the image.
  */
 void MainWindow::rerenderWorkspaceArea(const QImage &image, int imageWidth, int imageHeight)
 {
@@ -890,6 +946,11 @@ void MainWindow::rerenderWorkspaceArea(const QImage &image, int imageWidth, int 
     onUpdateImagePreview();
 }
 
+/**
+ * @brief Resets graphics view scale.
+ * 
+ * @details Updates resizedImageWidth and resizedImageHeight, the graphicsView scale matrix, and resizes the graphics view boundaries. 
+ */
 void MainWindow::resetGraphicsViewScale()
 {
     // Resize image dimensions properties by reverting horizontal/vertical scaling factor changes
@@ -903,6 +964,14 @@ void MainWindow::resetGraphicsViewScale()
     graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
+/**
+ * @brief Applies filter/transformation to current workspaceArea.
+ * 
+ * @param filterTransform Filter/transform to be applied.
+ * @param size Filter kernel size (if any).
+ * @param strength Filter strength (if any).
+ * @param fromServer If the filter/transformation is sent from the server.
+ */
 void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransform, int size, double strength, bool fromServer)
 {
     // Commit all brush strokes before applying transform
@@ -930,6 +999,13 @@ void MainWindow::applyFilterTransform(AbstractImageFilterTransform *filterTransf
     delete filterTransform;
 }
 
+/**
+ * @brief Updates our image previewer in color controls with this filter/transform.
+ * 
+ * @param filterTransform Filter/Transform to be applied.
+ * @param size Filter kernel size (if any).
+ * @param strength Filter strength (if any).
+ */
 void MainWindow::applyFilterTransformOnPreview(AbstractImageFilterTransform *filterTransform, int size, double strength)
 {
     QImage &&previewImageNoFilter = workspaceArea->commitImageForPreview();

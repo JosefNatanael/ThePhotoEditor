@@ -1,3 +1,9 @@
+/**
+ * @class WorkspaceArea
+ * @brief Stores and handles image related functions, viewing.
+ * This class inherits the QGraphicsScene parent class.
+ * Thus, the instance of this class will be handled by a QGraphicsView.
+ */
 
 #include "WorkspaceArea.h"
 #include "Utilities/PixelHelper.h"
@@ -12,6 +18,11 @@
 #endif
 #endif
 
+/**
+ * @brief Construct a new Workspace Area:: Workspace Area object.
+ * 
+ * @param parent To be passed to QGraphicScene constructor.
+ */
 WorkspaceArea::WorkspaceArea(QObject *parent)
 	: QGraphicsScene(0, 0, SCENE_WIDTH, SCENE_HEIGHT, parent)
 {
@@ -26,6 +37,15 @@ WorkspaceArea::WorkspaceArea(QObject *parent)
 	pen.setJoinStyle(Qt::RoundJoin);
 }
 
+/**
+ * @brief Construct a new Workspace Area:: Workspace Area object.
+ * 
+ * @details Workspace area will have dimensions width and height.
+ * 
+ * @param width Workspace area width.
+ * @param height Workspace area height.
+ * @param parent To be passed to QGraphicScene constructor.
+ */
 WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
 	: QGraphicsScene(0, 0, width, height, parent)
 {
@@ -40,8 +60,14 @@ WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
 	pen.setJoinStyle(Qt::RoundJoin);
 }
 
-// Used to load the image and place it in the widget
-bool WorkspaceArea::openImage(const QImage &loadedImage, int imageWidth, int imageHeight)
+/**
+ * @brief Place image in the workspace area.
+ * 
+ * @param loadedImage Image to load.
+ * @param imageWidth Width of thhe image
+ * @param imageHeight height of the image
+ */
+void WorkspaceArea::openImage(const QImage &loadedImage, int imageWidth, int imageHeight)
 {
 	image = loadedImage.copy();
 	isImageLoaded = true;
@@ -50,6 +76,7 @@ bool WorkspaceArea::openImage(const QImage &loadedImage, int imageWidth, int ima
 
 	QImage &&scaledImage = image.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
+	// Loads the image to the workspace area.
 	if (pixmapGraphics)
 	{
 		removeItem(pixmapGraphics);
@@ -64,9 +91,13 @@ bool WorkspaceArea::openImage(const QImage &loadedImage, int imageWidth, int ima
 
 	modified = false;
 	update();
-	return true;
 }
 
+/**
+ * @brief Makes the brush strokes/drawing permanent, i.e. fused into the image.
+ * 
+ * @return QImage Fused image (fused with brush strokes).
+ */
 QImage WorkspaceArea::commitImage()
 {
 	if (isImageLoaded)
@@ -96,7 +127,14 @@ QImage WorkspaceArea::commitImage()
 	}
 }
 
-// Save the current image
+/**
+ * @brief Saves the current image.
+ * 
+ * @param fileName 
+ * @param fileFormat 
+ * @return true image saved
+ * @return false image not saved
+ */
 bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 {
 	QImage &&snap = commitImage();
@@ -116,6 +154,13 @@ bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 	}
 }
 
+/**
+ * @brief Mouse press event override.
+ * 
+ * @details Press event will be based on which cursor is selected.
+ * 
+ * @param event Mouse event.
+ */
 void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	if (cursorMode == CursorMode::RECTANGLECROP)
@@ -137,6 +182,13 @@ void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
 	QGraphicsScene::mousePressEvent(event);
 }
 
+/**
+ * @brief Mouse move event override.
+ * 
+ * @details Move event will be based on which cursor is selected.
+ * 
+ * @param event Mouse event.
+ */
 void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
 	if ((event->buttons() & Qt::LeftButton) == 0)
@@ -152,7 +204,7 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 		QPainterPath path;
 		if (pathItem == nullptr)
 
-        {
+		{
 			path.moveTo(event->scenePos()); // move path to event scene position
 			pathItem = new QGraphicsPathItem();
 			pen.setColor(myPenColor);
@@ -188,18 +240,24 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 		break;
 	}
 	}
-
 	QGraphicsScene::mouseMoveEvent(event);
 	modified = true;
 }
 
+/**
+ * @brief Mouse release event override.
+ * 
+ * @details Release event will be based on which cursor is selected.
+ * 
+ * @param event Mouse event.
+ */
 void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	switch (cursorMode)
 	{
 	case CursorMode::SCRIBBLE:
-        emit updateImagePreview();
-        emit imageDrawn();
+		emit updateImagePreview();
+		emit imageDrawn();
 		pathItem = nullptr;
 		break;
 	case CursorMode::RECTANGLECROP:
@@ -218,70 +276,89 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 		QRect cropRect = QRect(cropOrigin.x(), cropOrigin.y(), cropX, cropY);
 
-        QImage&& uncroppedImage = commitImage();
-        QImage&& croppedImage = uncroppedImage.copy(cropRect);
+		QImage &&uncroppedImage = commitImage();
+		QImage &&croppedImage = uncroppedImage.copy(cropRect);
 
 		delete rubberBand;
 		rubberBand = nullptr;
 		emit imageCropped(croppedImage, cropX, cropY);
-        emit commitChanges("Rectangle Crop");
+		emit commitChanges("Rectangle Crop");
 		break;
 	}
 	case CursorMode::MAGICWAND:
-        thisColor = PixelHelper::getPixel(image, cropOrigin.x(), cropOrigin.y());
+		thisColor = PixelHelper::getPixel(image, cropOrigin.x(), cropOrigin.y());
 		MagicWand m;
-        commitImageAndSet();
-        QImage&& newImage = m.crop(image, cropOrigin.x(), cropOrigin.y(), magicWandThreshold);
-        emit imageCropped(newImage, newImage.width(), newImage.height());
-        emit commitChanges("Magic Removal");
+		commitImageAndSet();
+		QImage &&newImage = m.crop(image, cropOrigin.x(), cropOrigin.y(), magicWandThreshold);
+		emit imageCropped(newImage, newImage.width(), newImage.height());
+		emit commitChanges("Magic Removal");
 		break;
-    }
+	}
 	QGraphicsScene::mouseReleaseEvent(event);
 }
 
+/**
+ * @brief Resizes image to width and height.
+ * 
+ * @param width resized image width.
+ * @param height resized image height.
+ */
 void WorkspaceArea::resizeImage(int width, int height, bool fromServer)
 {
-    QImage&& unresizedImage = commitImage();
-    QImage&& resizedImage = unresizedImage.scaled(width, height, Qt::AspectRatioMode::KeepAspectRatio);
+	QImage &&unresizedImage = commitImage();
+	QImage &&resizedImage = unresizedImage.scaled(width, height, Qt::AspectRatioMode::KeepAspectRatio);
 
     if (!fromServer) {
         emit sendResize(width, height);
     }
-
+    
     emit commitChanges("Image Resized");
-
+    
     emit imageResized(resizedImage, width, height);
-
-
-
 }
 
-QImage WorkspaceArea::commitImageForPreview() {
-    if (isImageLoaded)
-    {
-        int width = 200;
-        int height = 200;
-        int x = imageWidth/2;
-        int y = imageHeight/2;
-        if (imageWidth < 400 || imageHeight < 400) {
-            width = height = qMin(imageWidth, imageHeight);
-            x = y = 0;
-        }
-        QRect previewRect = QRect(x, y, width, height);
-        QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
-        QPainter painter;
-        painter.begin(&commitImage);
-        render(&painter); // Renders the Workspace area to the image
-        painter.end();
-        return commitImage.copy(previewRect).scaled(200, 200, Qt::KeepAspectRatio);
-    } else {
-        QImage commitImage(200, 200, QImage::Format_ARGB32_Premultiplied);
-        commitImage.fill(Qt::white);
-        return commitImage;
-    }
+/**
+ * @brief Commits the image. Passed to color controls' image previewer.
+ * @details check commitImage() for how this works.
+ * 
+ * @return QImage Comitted image.
+ */
+QImage WorkspaceArea::commitImageForPreview()
+{
+	if (isImageLoaded)
+	{
+		// The image previewer will have dimensions 200x200
+		// We sample a small portion of current image for previewing.
+		int width = 200;
+		int height = 200;
+		int x = imageWidth / 2;
+		int y = imageHeight / 2;
+		if (imageWidth < 400 || imageHeight < 400)
+		{
+			width = height = qMin(imageWidth, imageHeight);
+			x = y = 0;
+		}
+		QRect previewRect = QRect(x, y, width, height);
+		// We get a committed image ready.
+		QImage commitImage(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+		QPainter painter;
+		painter.begin(&commitImage);
+		render(&painter); // Renders the Workspace area to the image
+		painter.end();
+		return commitImage.copy(previewRect).scaled(200, 200, Qt::KeepAspectRatio);
+	}
+	else
+	{
+		// Return a 200x200 white image if there is no image loaded in the workspace area.
+		QImage commitImage(200, 200, QImage::Format_ARGB32_Premultiplied);
+		commitImage.fill(Qt::white);
+		return commitImage;
+	}
 }
 
-// Print the image
+/**
+ * @brief Prints the image. Opens a printer dialog.
+ */
 void WorkspaceArea::print()
 {
 	// Check for print dialog availability
