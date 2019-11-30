@@ -265,13 +265,13 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		if (cropX < 0)
 		{
 			cropOrigin.setX(cropOrigin.x() + cropX);
-			cropX = cropOrigin.x() - cropX;
+            cropX = -cropX;
 		}
 
 		if (cropY < 0)
 		{
 			cropOrigin.setY(cropOrigin.y() + cropY);
-			cropY = cropOrigin.y() - cropY;
+            cropY = -cropY;
 		}
 
 		QRect cropRect = QRect(cropOrigin.x(), cropOrigin.y(), cropX, cropY);
