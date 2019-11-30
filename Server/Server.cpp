@@ -126,7 +126,7 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
 //        newPlayerMsg["type"] = "newPlayer";
 //        newPlayerMsg["playerName"] = playerName;
 //        broadcast(newPlayerMsg);
-    } else if (type == "applyFilter" || type == "applyResize") {
+    } else if (type == "applyFilter" || type == "applyResize" || type == "applyCrop") {
         broadcast(json, sender);
     }
 

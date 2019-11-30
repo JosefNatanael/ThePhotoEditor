@@ -205,6 +205,7 @@ void MainWindow::reconnectConnection()
     connect(basics, &BasicControls::resizeButtonClicked, workspaceArea, &WorkspaceArea::resizeImage);
     connect(workspaceArea, &WorkspaceArea::imageResized, this, &MainWindow::rerenderWorkspaceArea);
     connect(workspaceArea, &WorkspaceArea::sendResize, this, &MainWindow::onSendResize);
+    connect(workspaceArea, &WorkspaceArea::sendCrop, this, &MainWindow::onSendCrop);
     connect(workspaceArea, &WorkspaceArea::updateImagePreview, this, &MainWindow::onUpdateImagePreview);
     connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::onCommitChanges);
 }
@@ -1222,9 +1223,6 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
             resizeGraphicsViewBoundaries(imageWidth, imageHeight);
             fitImageToScreen(imageWidth, imageHeight);
 
-
-
-
             // Setup image preview, which is situated in color controls
             colors->setImagePreview(workspaceArea->commitImageForPreview());
             colors->resetSliders();
@@ -1243,8 +1241,6 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         room->setJoinRoom();
     }
     else if (type == "hostDisconnected")
-
-
     {
         destroyConnection();
     }
@@ -1276,6 +1272,15 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         int width = data["width"].toInt();
         int height = data["height"].toInt();
         workspaceArea->resizeImage(width, height, true);
+    }
+    else if (type == "applyCrop")
+    {
+        QJsonValue data = json.value(QString("data"));
+        int x = data["x"].toInt();
+        int y = data["y"].toInt();
+        int width = data["width"].toInt();
+        int height = data["height"].toInt();
+        workspaceArea->cropImage(x, y, width, height, true);
     }
 }
 
@@ -1408,6 +1413,21 @@ void MainWindow::onSendResize(int width, int height) {
         client->sendJson(json);
     }
 }
+
+void MainWindow::onSendCrop(int x, int y, int width, int height) {
+    if (isConnected) {
+        QJsonObject json;
+        QJsonObject data;
+        data["x"] = x;
+        data["y"] = y;
+        data["width"] = width;
+        data["height"] = height;
+        json["type"] = "applyCrop";
+        json["data"] = data;
+        client->sendJson(json);
+    }
+}
+
 
 void MainWindow::handleFilterBroadcast(QString name, int size, double strength) {
     if (name == "Hue Filter") {

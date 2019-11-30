@@ -55,6 +55,7 @@ public:
     QImage                      commitImage();
     void                        commitImageAndSet() { image = commitImage(); }                  //!< Sets the workspaceImage to a committed version of it.
     QImage                      commitImageForPreview();
+    void                        cropImage(int, int, int, int, bool = false);
 
 public slots:
 
@@ -73,6 +74,7 @@ signals:
     void                        commitChanges(QString changes);                         //!< Signals the mainwindow, go to slot &Mainwindow::onCommitChanges
     void                        updateImagePreview();                                   //!< Signals the mainwindow, go to slot &Mainwindow::onUpdateImagePreview
     void                        sendResize(int, int);
+    void                        sendCrop(int, int, int, int);
 
 protected:
     virtual void                mousePressEvent(QGraphicsSceneMouseEvent *event) override;

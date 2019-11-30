@@ -69,12 +69,12 @@ WorkspaceArea::WorkspaceArea(int width, int height, QObject *parent)
  */
 void WorkspaceArea::openImage(const QImage &loadedImage, int imageWidth, int imageHeight)
 {
-	image = loadedImage.copy();
+    image = loadedImage.copy();
 	isImageLoaded = true;
 	this->imageWidth = imageWidth;
 	this->imageHeight = imageHeight;
 
-	QImage &&scaledImage = image.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QImage &&scaledImage = loadedImage.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
 	// Loads the image to the workspace area.
 	if (pixmapGraphics)
@@ -82,7 +82,7 @@ void WorkspaceArea::openImage(const QImage &loadedImage, int imageWidth, int ima
 		removeItem(pixmapGraphics);
 		delete pixmapGraphics;
 	}
-	pixmapGraphics = addPixmap(QPixmap::fromImage(scaledImage));
+    pixmapGraphics = addPixmap(QPixmap::fromImage(scaledImage));
 	pixmapGraphics->setTransformationMode(Qt::SmoothTransformation);
 	pixmapGraphics->setPos({imageWidth / 2.0 - scaledImage.width() / 2.0, imageHeight / 2.0 - scaledImage.height() / 2.0});
 	pixmapGraphics->setZValue(-2000);
@@ -274,15 +274,7 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             cropY = -cropY;
 		}
 
-		QRect cropRect = QRect(cropOrigin.x(), cropOrigin.y(), cropX, cropY);
-
-		QImage &&uncroppedImage = commitImage();
-		QImage &&croppedImage = uncroppedImage.copy(cropRect);
-
-		delete rubberBand;
-		rubberBand = nullptr;
-		emit imageCropped(croppedImage, cropX, cropY);
-		emit commitChanges("Rectangle Crop");
+        cropImage(cropOrigin.x(), cropOrigin.y(), cropX, cropY);
 		break;
 	}
 	case CursorMode::MAGICWAND:
@@ -295,6 +287,27 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		break;
 	}
 	QGraphicsScene::mouseReleaseEvent(event);
+}
+
+void WorkspaceArea::cropImage(int x, int y, int width, int height, bool fromServer) {
+    QRect cropRect = QRect(x, y, width, height);
+
+    QImage &&uncroppedImage = commitImage();
+    QImage &&croppedImage = uncroppedImage.copy(cropRect);
+
+    if (rubberBand != nullptr) {
+        delete rubberBand;
+        rubberBand = nullptr;
+    }
+
+    emit commitChanges("Rectangle Crop");
+
+    if (!fromServer) {
+
+        emit sendCrop(x, y, width, height);
+    }
+
+    emit imageCropped(croppedImage, width, height);
 }
 
 /**

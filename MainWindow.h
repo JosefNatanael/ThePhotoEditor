@@ -87,6 +87,7 @@ private slots:
     void                        onConnectionStopped();
     void                        onDisconnect();
     void                        onSendResize(int, int);
+    void                        onSendCrop(int, int, int, int);
 
 private:
     // Workspace transformation related member functions. 
