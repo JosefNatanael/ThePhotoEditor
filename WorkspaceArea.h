@@ -37,23 +37,23 @@ public:
 public:
     void                        openImage(const QImage&, int width, int height);
     bool                        saveImage(const QString& fileName, const char* fileFormat);
-    int                         getImageWidth() const { return imageWidth; }                    //!< A Getter function.
-    int                         getImageHeight() const { return imageHeight; }                  //!< A Getter function.
-    bool                        getImageLoaded() const{ return isImageLoaded; }                 //!< A Getter function.
-    const QImage&               getImage() const{ return image; }                               //!< A Getter function.
-    bool                        isModified() const { return modified; }                         //!< A Getter function.
+    int                         getImageWidth() const { return imageWidth; }                    //!< Get image width.
+    int                         getImageHeight() const { return imageHeight; }                  //!< Get image height.
+    bool                        getImageLoaded() const{ return isImageLoaded; }                 //!< Is image loaded.
+    const QImage&               getImage() const{ return image; }                               //!< Returns workspace area image.
+    bool                        isModified() const { return modified; }                         //!< Returns if workspace area is modified.
 
-    QColor                      penColor() const { return myPenColor; }                         //!< A Getter function.
-    int                         penWidth() const { return myPenWidth; }                         //!< A Getter function.
+    QColor                      penColor() const { return myPenColor; }                         //!< Get pen color.
+    int                         penWidth() const { return myPenWidth; }                         //!< Get pen width.
 
-    void                        setPenColor(const QColor& newColor) { myPenColor = newColor; }                      //!< A Setter function.
-    void                        setPenWidth(int newWidth) { myPenWidth = newWidth; }                                //!< A Setter function.
-    void                        setModified(bool modified) { this->modified = modified; }                           //!< A Setter function.
-    void                        setImageLoaded(bool isImageLoaded) { this->isImageLoaded = isImageLoaded ; }        //!< A Setter function.
-    void                        setCursorMode(CursorMode cursorMode) { this->cursorMode = cursorMode; }             //!< A Setter function.
-    void                        setMagicWandThreshold(int threshold) { this->magicWandThreshold = threshold; }      //!< A Setter function.
+    void                        setPenColor(const QColor& newColor) { myPenColor = newColor; }                      //!< Sets pen color to newColor.
+    void                        setPenWidth(int newWidth) { myPenWidth = newWidth; }                                //!< Sets pen width to newWidth.
+    void                        setModified(bool modified) { this->modified = modified; }                           //!< Sets if workspace area is modified.
+    void                        setImageLoaded(bool isImageLoaded) { this->isImageLoaded = isImageLoaded ; }        //!< Sets if workspace area is loaded with image.
+    void                        setCursorMode(CursorMode cursorMode) { this->cursorMode = cursorMode; }             //!< Sets cursor mode of workspace area.
+    void                        setMagicWandThreshold(int threshold) { this->magicWandThreshold = threshold; }      //!< Sets magic wand threshold.
     QImage                      commitImage();
-    void                        commitImageAndSet() { image = commitImage(); }                  //!< Set the workspaceImage to a committed version of it.
+    void                        commitImageAndSet() { image = commitImage(); }                  //!< Sets the workspaceImage to a committed version of it.
     QImage                      commitImageForPreview();
 
 public slots:
