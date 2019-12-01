@@ -1,34 +1,44 @@
+/**
+ * @class Histogram
+ * @brief Provides histogram to loaded image in the workspace area.
+ */
+
 #include "Histogram.h"
 #include "ui_Histogram.h"
 #include "qcustomplot.cpp"
 #include "WorkspaceArea.h"
 
+/**
+ * @brief Construct a new Histogram:: Histogram object
+ * 
+ * @param parent Passed to QWidget() constructor.
+ */
 Histogram::Histogram(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::Histogram)
 {
     ui->setupUi(this);
-    //grey
+    //Setup grey bar
     mpHistogramBarsGrey = new QCPBars(ui->plot->xAxis, ui->plot->yAxis);
     QColor gray70 = Qt::gray;
     gray70.setAlphaF(0.7);
     mpHistogramBarsGrey->setPen(QPen(gray70));
     mpHistogramBarsGrey->setBrush(QBrush(gray70));
 
-    //red
+    //Setup red bar
     mpHistogramBarsRed = new QCPBars(ui->plot->xAxis, ui->plot->yAxis);
     QColor red70 = Qt::red;
     red70.setAlphaF(0.5);
     mpHistogramBarsRed->setPen(QPen(red70));
     mpHistogramBarsRed->setBrush(QBrush(red70));
 
-    //green
+    //Setup green bar
     mpHistogramBarsGreen = new QCPBars(ui->plot->xAxis, ui->plot->yAxis);
     QColor green70 = Qt::green;
     green70.setAlphaF(0.3);
     mpHistogramBarsGreen->setPen(QPen(green70));
     mpHistogramBarsGreen->setBrush(QBrush(green70));
 
-    //blue
+    //Setup blue bar
     mpHistogramBarsBlue = new QCPBars(ui->plot->xAxis, ui->plot->yAxis);
     QColor blue70 = Qt::blue;
     blue70.setAlphaF(0.3);
@@ -36,12 +46,21 @@ Histogram::Histogram(QWidget *parent) : QWidget(parent),
     mpHistogramBarsBlue->setBrush(QBrush(blue70));
 }
 
+/**
+ * @brief Destroy the Histogram:: Histogram object
+ * 
+ */
 Histogram::~Histogram()
 {
     ui->plot->clearPlottables();
     delete ui;
 }
 
+/**
+ * @brief Creates the histogram based on image.
+ * 
+ * @param image Histogram to be created based on this image.
+ */
 void Histogram::drawHistogram(const QImage &image)
 {
     QVector<double> keys(256);
@@ -81,6 +100,11 @@ void Histogram::drawHistogram(const QImage &image)
     ui->plot->replot();
 }
 
+/**
+ * @brief Draws the histogram from loaded image.
+ * 
+ * @param image Histogram to be created based on this image.
+ */
 void Histogram::onImageLoaded(const QImage &image)
 {
     drawHistogram(image);

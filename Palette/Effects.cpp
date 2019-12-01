@@ -40,30 +40,49 @@ Effects::~Effects()
     delete ui;
 }
 
+/**
+ * @brief Emits gaussian blur filter signal to mainwindow.
+ */
 void Effects::on_gaussianPushButton_clicked()
 {
     GaussianBlurFilter* gaussianFilter = new GaussianBlurFilter();
     emit applyEffectClicked(gaussianFilter, ui->gaussianSizeSlider->value(), ui->gaussianStrengthSlider->value());
 }
 
+/**
+ * @brief Emits mean blur filter signal to mainwindow.
+ * 
+ */
 void Effects::on_meanPushButton_clicked()
 {
     MeanBlurFilter* meanFilter = new MeanBlurFilter();
     emit applyEffectClicked(meanFilter, ui->meanSizeSlider->value(), 1);
 }
 
+/**
+ * @brief Emits emboss filter signal to mainwindow.
+ * 
+ */
 void Effects::on_embossPushButton_clicked()
 {
     EmbossFilter* embossFilter = new EmbossFilter();
     emit applyEffectClicked(embossFilter, ui->embossSizeSlider->value(), 1);
 }
 
+/**
+ * @brief Emits edge detection filter signal to mainwindow.
+ * 
+ */
 void Effects::on_edgePushButton_clicked()
 {
     EdgeDetectionFilter* edgeDetectionFilter = new EdgeDetectionFilter();
     emit applyEffectClicked(edgeDetectionFilter, ui->edgeSizeSlider->value(), 1);
 }
 
+/**
+ * @brief Opens get file dialog, loads the mask.
+ * 
+ */
 void Effects::on_inpaintingAddMaskPushButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
@@ -78,6 +97,10 @@ void Effects::on_inpaintingAddMaskPushButton_clicked()
     }
 }
 
+/**
+ * @brief Emits inpainting signal to mainwindow.
+ * 
+ */
 void Effects::on_inpaintingPushButton_clicked()
 {
     if (mask.isNull()) {
@@ -89,6 +112,10 @@ void Effects::on_inpaintingPushButton_clicked()
     emit applyEffectClicked(imageInpainting, 5 , 1);
 }
 
+/**
+ * @brief Opens get file dialog, loads the mask.
+ * 
+ */
 void Effects::on_imageScissorsAddMaskPushButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
@@ -103,6 +130,10 @@ void Effects::on_imageScissorsAddMaskPushButton_clicked()
     }
 }
 
+/**
+ * @brief Emits image scissors signal to mainwindow.
+ * 
+ */
 void Effects::on_imageScissorsPushButton_clicked()
 {
     if (mask.isNull()) {

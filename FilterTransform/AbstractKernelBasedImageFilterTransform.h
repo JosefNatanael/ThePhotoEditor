@@ -25,8 +25,8 @@ protected:
     void redefineKernel(int size);
 
 private:
-    int size;
-    QVector<QVector<double>> kernel;
+    int size;                           //!< Size/radius of the kernel. E.g. size 3 means 3*2-1 = 5. A 5x5 matrix.
+    QVector<QVector<double>> kernel;    //!< Kernel/convolution matrix.
 
 };
 

@@ -16,10 +16,10 @@ public:
     explicit Histogram(QWidget *parent = nullptr);
     ~Histogram();
 
-    QCPBars* mpHistogramBarsGrey;
-    QCPBars* mpHistogramBarsRed;
-    QCPBars* mpHistogramBarsGreen;
-    QCPBars* mpHistogramBarsBlue;
+    QCPBars* mpHistogramBarsGrey;   //!< Bar for grey color
+    QCPBars* mpHistogramBarsRed;    //!< Bar for red color
+    QCPBars* mpHistogramBarsGreen;  //!< Bar for green color
+    QCPBars* mpHistogramBarsBlue;   //!< Bar for blue color
 
     void drawHistogram (const QImage& image);
 
