@@ -28,8 +28,8 @@ private slots:
 
 private:
     Ui::Effects *ui;
-    QString maskFileName;
-    QImage mask;
+    QString maskFileName;   //!< Mask file name. Masks are used for image inpainting and image scissors.
+    QImage mask;            //!< Mask image.
 
 signals:
     void applyEffectClicked(AbstractImageFilterTransform* transform, int size, double strength, bool fromServer = false);

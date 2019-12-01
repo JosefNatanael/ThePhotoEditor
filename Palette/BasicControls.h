@@ -27,18 +27,16 @@ private slots:
     void on_sliderChange(int);
     void on_resizePushButton_clicked();
 
-private:
-    Ui::BasicControls *ui;
-    bool beginButtonClicked = false;
-
 signals:
     void crossCursorChanged(WorkspaceArea::CursorMode, int data = 0);
     void applyTransformClicked(AbstractImageFilterTransform* transform, int size, double strength, bool fromServer = false);
     void resizeButtonClicked(int, int, bool fromServer = false);
 
 private:
-    int imageWidth = 0;
-    int imageHeight = 0;
+    Ui::BasicControls *ui;
+    bool beginButtonClicked = false;    //!< It signifies begin use of magic crop or rectangle crop.
+    int imageWidth = 0;                 //!< Saves image width, for aspect ratio calculation, image resize.
+    int imageHeight = 0;                //!< Saves image height, for aspect ratio calculation, image resize.
 
 public:
     void setImageDimensions(int, int);

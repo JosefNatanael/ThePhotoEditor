@@ -1,3 +1,8 @@
+/**
+ * @class Effects
+ * @brief Provides additional filters and image processing algorithms.
+ */
+
 #include "Effects.h"
 #include "ui_Effects.h"
 #include "FilterTransform/KernelBased/GaussianBlurFilter.h"
@@ -11,6 +16,11 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+/**
+ * @brief Construct a new Effects:: Effects object
+ * 
+ * @param parent Passed to QWidget() constructor.
+ */
 Effects::Effects(QWidget *parent) : QWidget(parent),
                                     ui(new Ui::Effects)
 {
@@ -22,6 +32,9 @@ Effects::Effects(QWidget *parent) : QWidget(parent),
     ui->effectLogo->setPixmap(logoEffect);
 }
 
+/**
+ * @brief Destroy the Effects:: Effects object
+ */
 Effects::~Effects()
 {
     delete ui;

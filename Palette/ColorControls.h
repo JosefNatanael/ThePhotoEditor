@@ -27,7 +27,7 @@ private:
     Ui::ColorControls *ui;
 
 public:
-    QPixmap imagePreview;
+    QPixmap imagePreview;       //!< Image for previewing color changes, before applying filter.
 
     void setImagePreview(const QImage&);
     void resetSliders();

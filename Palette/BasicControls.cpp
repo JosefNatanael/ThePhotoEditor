@@ -1,3 +1,8 @@
+/**
+ * @class BasicControls
+ * @brief Provides basic photo editing controls.
+ * @details Features include: iamge resizing, image cropping, image transformations.
+ */
 #include "BasicControls.h"
 #include "ui_BasicControls.h"
 #include <QPixmap>
@@ -8,11 +13,19 @@
 #include "../FilterTransform/NonKernelBased/FlipHorizontalTransform.h"
 #include "../FilterTransform/NonKernelBased/FlipVerticalTransform.h"
 
+/**
+ * @brief Construct a new Basic Controls:: Basic Controls object
+ * 
+ * @param parent Passed to QWidget() constructor.
+ * @param imageWidth Sets the image width.
+ * @param imageHeight Sets the image height.
+ */
 BasicControls::BasicControls(QWidget *parent, int imageWidth, int imageHeight) : QWidget(parent),
                                                 ui(new Ui::BasicControls), imageWidth(imageWidth), imageHeight(imageHeight)
 {
     ui->setupUi(this);
 
+    // Image resize setup
     ui->cropWidthSpinBox->setSuffix(" %");
     ui->cropWidthSpinBox->setRange(1, 100);
     ui->resizeSlider->setRange(1, 100);
@@ -25,6 +38,7 @@ BasicControls::BasicControls(QWidget *parent, int imageWidth, int imageHeight) :
     ui->modifiedSizeLabel->setText(
                 QString("Modified : %1 x %2").arg((int) (ui->cropWidthSpinBox->value() / 100.0 * imageWidth)).arg((int) (ui->cropWidthSpinBox->value() / 100.0 * imageHeight)));
 
+    // Image transformation setup
     QPixmap logoCcw;
     logoCcw.load(":/icons/resources/rotate-left.svg");
     logoCcw = logoCcw.scaled(ui->ccwLabel->size(), Qt::KeepAspectRatio);
@@ -45,6 +59,7 @@ BasicControls::BasicControls(QWidget *parent, int imageWidth, int imageHeight) :
     logoFlipVertical = logoFlipVertical.scaled(ui->verticalLabel->size(), Qt::KeepAspectRatio);
     ui->verticalLabel->setPixmap(logoFlipVertical);
 
+    // Image cropping setup
     QPixmap logoRectangle;
     logoRectangle.load(":/icons/resources/cutout-rectangle.svg");
     logoRectangle = logoRectangle.scaled(ui->rectangleLabel->size(), Qt::KeepAspectRatio);
@@ -61,11 +76,17 @@ BasicControls::BasicControls(QWidget *parent, int imageWidth, int imageHeight) :
     ui->lassoLabel->setPixmap(logoLasso);
 }
 
+/**
+ * @brief Destroy the Basic Controls:: Basic Controls object
+ */
 BasicControls::~BasicControls()
 {
     delete ui;
 }
 
+/**
+ * @brief Updates push buttons state, Emits cutout signal to main window.
+ */
 void BasicControls::on_beginCutoutPushButton_clicked()
 {
     beginButtonClicked = true;
@@ -87,6 +108,10 @@ void BasicControls::on_beginCutoutPushButton_clicked()
     }
 }
 
+/**
+ * @brief Updates push buttons state. Cursor back to default: scribble mode.
+ * 
+ */
 void BasicControls::on_cancelCutoutPushButton_clicked()
 {
     beginButtonClicked = false;
@@ -96,6 +121,9 @@ void BasicControls::on_cancelCutoutPushButton_clicked()
     emit crossCursorChanged(WorkspaceArea::CursorMode::SCRIBBLE);
 }
 
+/**
+ * @brief Emits apply transformation signal to main window.
+ */
 void BasicControls::on_applyPushButton_clicked()
 {
     if (ui->ccwRadioButton->isChecked())
@@ -120,6 +148,12 @@ void BasicControls::on_applyPushButton_clicked()
     }
 }
 
+/**
+ * @brief Sets image dimensions according to width and height.
+ * 
+ * @param width Image width.
+ * @param height Image height.
+ */
 void BasicControls::setImageDimensions(int width, int height)
 {
     imageWidth = width;
@@ -131,6 +165,11 @@ void BasicControls::setImageDimensions(int width, int height)
 
 }
 
+/**
+ * @brief Updates dimensions label on slider change.
+ * 
+ * @param value Updates based on this slider value.
+ */
 void BasicControls::on_sliderChange(int value)
 {
     ui->originalSizeLabel->setText(QString("Original : %1 x %2").arg(imageWidth).arg(imageHeight));
@@ -139,6 +178,9 @@ void BasicControls::on_sliderChange(int value)
 
 }
 
+/**
+ * @brief Emits resized image width and height to workspace area.
+ */
 void BasicControls::on_resizePushButton_clicked()
 {
     int newWidth = (ui->cropWidthSpinBox->value() / 100.0) * imageWidth;
