@@ -512,7 +512,6 @@ bool MainWindow::saveAsFile(const QByteArray &fileFormat)
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData()); // Call for the file to be saved
         if (saved)
         {
-            commitChanges(workspaceArea->getImage(), "Save Image");     // Saving commits changes to version control.
             fileSaved = true;
         }
         else
@@ -612,7 +611,6 @@ void MainWindow::on_actionSave_triggered()
         bool saved = workspaceArea->saveImage(fileName, fileFormat.constData());    // Call for the file to be saved
         if (saved)
         {
-            commitChanges(workspaceArea->getImage(), "Save Image");                 // commit changes
             fileSaved = true;
         }
         else
