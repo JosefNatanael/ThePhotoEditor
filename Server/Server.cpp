@@ -122,7 +122,8 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
         broadcast(playerNamesMsg);
 
     } else if (type == "applyFilter" || type == "applyFilterWithMask" || type == "applyResize" ||
-               type == "applyCrop" || type == "applyCropWithMagicWand" || type == "initialImage" || type == "versionControl") {
+               type == "applyCrop" || type == "applyCropWithMagicWand" || type == "initialImage" ||
+               type == "versionControl" || type == "applyMoveScribble" || type == "applyReleaseScribble") {
         broadcast(json, sender);
     }
 

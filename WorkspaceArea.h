@@ -57,6 +57,8 @@ public:
     QImage                      commitImageForPreview();
     void                        cropImage(int, int, int, int, bool = false);
     void                        cropImageWithMagicWand(int, int, bool = false);
+    void                        onMoveScribble(QPointF, QColor, int);
+    void                        onReleaseScribble();
 
 public slots:
 
@@ -77,6 +79,8 @@ signals:
     void                        sendResize(int, int);
     void                        sendCrop(int, int, int, int);
     void                        sendCropWithMagicWand(int, int);
+    void                        sendMoveScribble(double, double, QString, int);
+    void                        sendReleaseScribble();
 
 protected:
     virtual void                mousePressEvent(QGraphicsSceneMouseEvent *event) override;

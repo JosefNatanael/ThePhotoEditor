@@ -201,23 +201,8 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	{
 	case CursorMode::SCRIBBLE:
 	{
-		QPainterPath path;
-		if (pathItem == nullptr)
-
-		{
-			path.moveTo(event->scenePos()); // move path to event scene position
-			pathItem = new QGraphicsPathItem();
-			pen.setColor(myPenColor);
-			pen.setWidth(myPenWidth);
-			pathItem->setPen(pen);   // set sticker pen to default pen
-			pathItem->setPath(path); // set sticker path to the new path
-			this->addItem(pathItem);
-		}
-
-		path = pathItem->path();		// get path from sticker
-		path.lineTo(event->scenePos()); // draw line from last event pos to current pos
-		pathItem->setPath(path);
-		pathItem->update();
+        onMoveScribble(event->scenePos(), myPenColor, myPenWidth);
+        sendMoveScribble(event->scenePos().x(), event->scenePos().y(), myPenColor.name(), myPenWidth);
 		break;
 	}
 	case CursorMode::RECTANGLECROP:
@@ -244,6 +229,26 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	modified = true;
 }
 
+void WorkspaceArea::onMoveScribble(QPointF pos, QColor penColor, int penWidth) {
+    QPainterPath path;
+    if (pathItem == nullptr)
+
+    {
+        path.moveTo(pos); // move path to event scene position
+        pathItem = new QGraphicsPathItem();
+        pen.setColor(penColor);
+        pen.setWidth(penWidth);
+        pathItem->setPen(pen);   // set sticker pen to default pen
+        pathItem->setPath(path); // set sticker path to the new path
+        this->addItem(pathItem);
+    }
+
+    path = pathItem->path();		// get path from sticker
+    path.lineTo(pos); // draw line from last event pos to current pos
+    pathItem->setPath(path);
+    pathItem->update();
+}
+
 /**
  * @brief Mouse release event override.
  * 
@@ -256,9 +261,8 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	switch (cursorMode)
 	{
 	case CursorMode::SCRIBBLE:
-		emit updateImagePreview();
-		emit imageDrawn();
-		pathItem = nullptr;
+        onReleaseScribble();
+        emit sendReleaseScribble();
 		break;
 	case CursorMode::RECTANGLECROP:
 	{
@@ -282,6 +286,12 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		break;
 	}
 	QGraphicsScene::mouseReleaseEvent(event);
+}
+
+void WorkspaceArea::onReleaseScribble() {
+    emit updateImagePreview();
+    emit imageDrawn();
+    pathItem = nullptr;
 }
 
 void WorkspaceArea::cropImage(int x, int y, int width, int height, bool fromServer) {

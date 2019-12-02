@@ -85,6 +85,8 @@ private slots:
     void                        onSendResize(int, int);
     void                        onSendCrop(int, int, int, int);
     void                        onSendCropWithMagicWand(int, int);
+    void                        onSendMoveScribble(double, double, QString, int);
+    void                        onSendReleaseScribble();
 
     // Version control related slots.
     void                        on_actionCommit_Changes_triggered();

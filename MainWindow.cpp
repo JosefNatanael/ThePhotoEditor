@@ -207,6 +207,8 @@ void MainWindow::reconnectConnection()
     connect(workspaceArea, &WorkspaceArea::sendResize, this, &MainWindow::onSendResize);
     connect(workspaceArea, &WorkspaceArea::sendCrop, this, &MainWindow::onSendCrop);
     connect(workspaceArea, &WorkspaceArea::sendCropWithMagicWand, this, &MainWindow::onSendCropWithMagicWand);
+    connect(workspaceArea, &WorkspaceArea::sendMoveScribble, this, &MainWindow::onSendMoveScribble);
+    connect(workspaceArea, &WorkspaceArea::sendReleaseScribble, this, &MainWindow::onSendReleaseScribble);
     connect(workspaceArea, &WorkspaceArea::updateImagePreview, this, &MainWindow::onUpdateImagePreview);
     connect(workspaceArea, &WorkspaceArea::commitChanges, this, &MainWindow::onCommitChanges);
 }
@@ -1330,10 +1332,23 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         QString action = json.value(QString("action")).toString();
         if (action == "checkoutCommit") {
             handleVersionControlBroadcast(action, json.value(QString("masterNodeNumber")).toInt(), json.value(QString("sideNodeNumber")).toInt());
+            return;
         }
         if (!action.isEmpty()) {
             handleVersionControlBroadcast(action);
         }
+    }
+    else if (type == "applyMoveScribble")
+    {
+        QJsonValue data = json.value(QString("data"));
+        QPointF pos(data["x"].toDouble(), data["y"].toDouble());
+        QColor penColor(data["colorHex"].toString());
+        int penWidth = data["penWidth"].toInt();
+        workspaceArea->onMoveScribble(pos, penColor, penWidth);
+    }
+    else if (type == "applyReleaseScribble")
+    {
+        workspaceArea->onReleaseScribble();
     }
 }
 
@@ -1513,6 +1528,28 @@ void MainWindow::onSendCropWithMagicWand(int x, int y) {
         data["y"] = y;
         json["type"] = "applyCropWithMagicWand";
         json["data"] = data;
+        client->sendJson(json);
+    }
+}
+
+void MainWindow::onSendMoveScribble(double x, double y, QString colorHex, int penWidth) {
+    if (isConnected) {
+        QJsonObject json;
+        QJsonObject data;
+        data["x"] = x;
+        data["y"] = y;
+        data["colorHex"] = colorHex;
+        data["penWidth"] = penWidth;
+        json["type"] = "applyMoveScribble";
+        json["data"] = data;
+        client->sendJson(json);
+    }
+}
+
+void MainWindow::onSendReleaseScribble() {
+    if (isConnected) {
+        QJsonObject json;
+        json["type"] = "applyReleaseScribble";
         client->sendJson(json);
     }
 }
