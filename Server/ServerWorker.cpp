@@ -1,14 +1,16 @@
+/**
+ * @class ServerWorker
+ * @brief about ServerWorker class
+ */
 #include "ServerWorker.h"
 #include <QDataStream>
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonObject>
 
-/*
- *  ServerWorker::ServerWorker(QObject *parent)
- *  @funct:  constructor for the ServerWorker object
- *  @param:  parent: Server
- *  @return: N/A
+/**
+ *  @brief  constructor for the ServerWorker object
+ *  @param  parent Server, also to be passed to serverSocket
  */
 ServerWorker::ServerWorker(QObject *parent):
     QObject(parent),
@@ -19,36 +21,23 @@ ServerWorker::ServerWorker(QObject *parent):
     connect(serverSocket, &QTcpSocket::disconnected, this, &ServerWorker::disconnectFromClient);
 }
 
-/*
- *  ServerWorker::set[...]()
- *  @funct:  setter functions for ServerWorker
+/**
+ *  @brief  setter functions for ServerWorker's Socket Descriptor
  */
 bool ServerWorker::setSocketDescriptor(qintptr socketDescriptor) {
     return serverSocket->setSocketDescriptor(socketDescriptor);
 }
 
-/*
- *  QString ServerWorker::getPlayerName()
- *  @funct:  returns the name of the player/client
- *  @param:  N/A
- *  @return: N/A
- */
-/*
- *  void ServerWorker::disconnectFromClient()
- *  @funct:  signal triggered when disconnected from client
- *  @param:  N/A
- *  @return: N/A
+/**
+ *  @brief  signal triggered when disconnected from client
  */
 void ServerWorker::disconnectFromClient() {
     serverSocket->disconnectFromHost();
     emit disconnectedFromClient();
 }
 
-/*
- *  void ServerWorker::receiveJson()
- *  @funct:  triggerd when recieving a Json object
- *  @param:  N/A
- *  @return: N/A
+/**
+ *  @brief  triggered when recieving a Json object
  */
 void ServerWorker::receiveJson() {
     qDebug("ServerWorker receive Json");
@@ -75,11 +64,9 @@ void ServerWorker::receiveJson() {
     }
 }
 
-/*
- *  void ServerWorker::sendJson(const QJsonObject &json)
- *  @funct:  for sending Json objects
- *  @param:  json: the Json object to be sent
- *  @return: N/A
+/**
+ *  @brief  for sending Json objects
+ *  @param  json the Json object to be sent
  */
 void ServerWorker::sendJson(const QJsonObject &json) {
     QDataStream socketStream(serverSocket);
@@ -88,16 +75,17 @@ void ServerWorker::sendJson(const QJsonObject &json) {
     qDebug() << "on sendJson";
 }
 
+/**
+ *  @brief setter of the playerName (name of the player/client)
+ *  @param playerName name of player/client
+ */
 void ServerWorker::setPlayerName(const QString &playerName) {
     this->playerName = playerName;
 }
 
 
-/*
- *  QString ServerWorker::getPlayerName()
- *  @funct:  returns the name of the player/client
- *  @param:  N/A
- *  @return: N/A
+/**
+ *  @brief  accessor of playerName(returns the name of the player/client)
  */
 QString ServerWorker::getPlayerName() const {
     return playerName;

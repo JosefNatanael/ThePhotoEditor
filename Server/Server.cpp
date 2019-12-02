@@ -1,3 +1,7 @@
+/**
+ * @class Server
+ * @brief about Server class
+ */
 #include "Server.h"
 #include "ServerWorker.h"
 #include <algorithm>
@@ -9,11 +13,10 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
-/*
- *  Server::Server(QObject *parent)
- *  @funct:  constructor for the Server class
- *  @param:  parent: MainWindow
- *  @return: N/A
+/**
+ * @brief  constructor for the Server class
+ * @param  parent: MainWindow, to be passed to QTcpServer
+ * @details checks if starting server is possible
  */
 Server::Server(QObject *parent):
     QTcpServer(parent)
@@ -39,19 +42,24 @@ Server::Server(QObject *parent):
         ip = QHostAddress(QHostAddress::LocalHost).toString();
 }
 
-/*
- *  Server::get[...]
- *  @funct:  getter functions for the Server object
+/**
+ *  @brief  getter functions for the Server's IP Address
  */
 QString Server::getIP() const {return ip;}
+
+/**
+ *  @brief  getter functions for the Server's port
+ */
 quint16 Server::getPort() const {return port;}
+
+/**
+ *  @brief  getter functions for the Server's client(s)
+ */
 QVector<ServerWorker*> Server::getClients() const {return clients;}
 
-/*
- *  void Server::incomingConnection(qintptr socketDesriptor)
- *  @funct:  handler for when there is a new incoming client
- *  @param:  socketDesriptor: the client that is connecting to the server
- *  @return: N/A
+/**
+ *  @brief  handler for when there is a new incoming client
+ *  @param  socketDesriptor the client that is connecting to the server
  */
 void Server::incomingConnection(qintptr socketDesriptor) {
     qDebug("New Player");
@@ -70,11 +78,10 @@ void Server::incomingConnection(qintptr socketDesriptor) {
     emit newPlayerConnected();
 }
 
-/*
- *  void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json)
- *  @funct:  handler for when the server recieves a QJsonObject from a client
- *  @param:  sender: the client who sent the QJsonObject, json: the QJsonObject recieved
- *  @return: N/A
+/**
+ *  @brief  handler for when the server recieves a QJsonObject from a client
+ *  @param  sender the client who sent the QJsonObject
+ *  @param  json the QJsonObject recieved
  */
 void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
     Q_ASSERT(sender);
@@ -130,11 +137,9 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
     emit receiveJson(sender, json);
 }
 
-/*
- *  void Server::userDisconnected(ServerWorker *sender)
- *  @funct:  handler for when a client disconnects
- *  @param:  worker: client that has disconnected
- *  @return: N/A
+/**
+ *  @brief  handler for when a client disconnects
+ *  @param  sender client that has disconnected
  */
 void Server::userDisconnected(ServerWorker *sender) {
     qDebug("user disconnect");
@@ -157,22 +162,20 @@ void Server::userDisconnected(ServerWorker *sender) {
     sender->deleteLater();
 }
 
-/*
- *  void Server::sendJson(ServerWorker *worker, const QJsonObject &json)
- *  @funct:  function for sending a QJsonObject from the server to the client
- *  @param:  worker: client to be sent to, json: QJsonObject to be sent
- *  @return: N/A
+/**
+ *  @brief  function for sending a QJsonObject from the server to the client
+ *  @param  worker client to be sent to
+ *  @param  json QJsonObject to be sent
  */
 void Server::sendJson(ServerWorker *worker, const QJsonObject &json) {
     Q_ASSERT(worker);
     worker->sendJson(json);
 }
 
-/*
- *  void Server::broadcast(const QJsonObject &json, ServerWorker *exclude)
- *  @funct:  function for sending a QJsonObject from the server to all the client
- *  @param:  json: QJsonObject to be sent, exclude: optional argument for a client to be not recieve the broadcast
- *  @return: N/A
+/**
+ *  @brief  function for sending a QJsonObject from the server to all the client
+ *  @param  json: QJsonObject to be sent
+ *  @param  exclude: optional argument for a client to be not recieve the broadcast
  */
 void Server::broadcast(const QJsonObject &json, ServerWorker *exclude) {
     qDebug("Broadcast Message");
@@ -184,11 +187,8 @@ void Server::broadcast(const QJsonObject &json, ServerWorker *exclude) {
     }
 }
 
-/*
- *  void Server::stopServer()
- *  @funct:  function for stopping the server
- *  @param:  N/A
- *  @return: N/A
+/**
+ *  @brief  function for stopping the server
  */
 void Server::stopServer() {
     QJsonObject hostDisconnected;

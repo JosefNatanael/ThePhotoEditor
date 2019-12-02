@@ -1,6 +1,15 @@
+/**
+ * @class ServerRoom
+ * @brief about the ServerRoom class
+ */
+
 #include "ServerRoom.h"
 #include "ui_serverroom.h"
 
+/**
+ * @brief Constructor for ServerRoom::ServerRoom
+ * @param parent Passed to QDialog constructor.
+ */
 ServerRoom::ServerRoom(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ServerRoom)
@@ -13,11 +22,17 @@ ServerRoom::ServerRoom(QWidget *parent) :
     ui->collaboratorsLabel->hide();
 }
 
+/**
+ * @brief Destructor for ServerRoom::~ServerRoom
+ */
 ServerRoom::~ServerRoom()
 {
     delete ui;
 }
 
+/**
+ * @brief set-up for Create Room
+ */
 void ServerRoom::setCreateRoom() {
     ui->addressLine->hide();
     ui->addressLabel->hide();
@@ -27,6 +42,9 @@ void ServerRoom::setCreateRoom() {
     ui->titleLabel->setText("Create Room");
 }
 
+/**
+ * @brief set-up for Join Room
+ */
 void ServerRoom::setJoinRoom() {
     ui->createRoomButtonBox->hide();
     ui->titleLabel->setText("Join Room");
@@ -47,6 +65,11 @@ void ServerRoom::setJoinRoom() {
     ui->collaboratorsLabel->hide();
 }
 
+/**
+ * @brief set-up for Server Room
+ * @param ip IP Address
+ * @param port Port
+ */
 void ServerRoom::setServerRoom(QString ip, quint16 port) {
     ui->nameLine->hide();
     ui->nameLabel->hide();
@@ -68,6 +91,10 @@ void ServerRoom::setServerRoom(QString ip, quint16 port) {
     ui->titleLabel->setText("The Room");
 }
 
+/**
+ * @brief Handling join room
+ * @details emit joinRoom signal with name, address, and port
+ */
 void ServerRoom::on_joinRoomButtonBox_accepted()
 {
     QString name = ui->nameLine->text().simplified();
@@ -76,30 +103,49 @@ void ServerRoom::on_joinRoomButtonBox_accepted()
     emit joinRoom(name, address, port);
 }
 
+/**
+ * @brief Handling create room
+ * @details emit createRoom signal with name
+ */
 void ServerRoom::on_createRoomButtonBox_accepted()
 {
     QString name = ui->nameLine->text().simplified();
     emit createRoom(name);
 }
 
+/**
+ * @brief adds Player
+ */
 void ServerRoom::addPlayer(QString name) {
     ui->playerList->addItem(name);
 }
 
+/**
+ * @brief clear all players from the list
+ */
 void ServerRoom::emptyPlayers() {
     ui->playerList->clear();
 }
 
+/**
+ * @brief close if joinRoomButtonBox is rejected
+ */
 void ServerRoom::on_joinRoomButtonBox_rejected()
 {
     close();
 }
 
+/**
+ * @brief close if createRoomButtonBox is rejected
+ */
 void ServerRoom::on_createRoomButtonBox_rejected()
 {
     close();
 }
 
+/**
+ * @brief If disconnectButton is clicked, emit disconnect signal
+ */
 void ServerRoom::on_disconnectButton_clicked()
 {
     emit disconnect();

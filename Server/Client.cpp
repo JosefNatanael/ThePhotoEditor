@@ -1,4 +1,8 @@
-#include "client.h"
+/**
+ * @class Client
+ * @brief about Client class
+ */
+#include "Server/Client.h"
 #include <QTcpSocket>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -6,11 +10,11 @@
 #include <QNetworkConfiguration>
 #include <QTime>
 
-/*
- *  Client::Client(QObject *parent)
- *  @funct:  constructor for the Client object
- *  @param:  parent: MainWindow
- *  @return: N/A
+/**
+ * @brief constructor for the Client::Client object
+ * @param  parent: MainWindow
+ *
+ * @details initialize connections
  */
 Client::Client(QObject *parent):
     QObject(parent),
@@ -22,11 +26,12 @@ Client::Client(QObject *parent):
     connect(clientSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), this, &Client::onError);
 }
 
-/*
- *  void Client::connectToServer(const QHostAddress &address, quint16 port)
- *  @funct:  connects the client to the server
- *  @param:  address: adderss of the server, port: port of the server
- *  @return: N/A
+/**
+ *  @brief Client::connectToServer(const QHostAddress &address, quint16 port)
+ *  @param address: adderss of the server,
+ *  @param port port of the server
+ *
+ *  @details  connects the client to the server
  */
 void Client::connectToServer(const QHostAddress &address, quint16 port) {
     QTime timer;
@@ -43,22 +48,18 @@ void Client::connectToServer(const QHostAddress &address, quint16 port) {
     }
 }
 
-/*
- *  void Client::disconnectFromHost()
- *  @funct:  disconnect the client from the host
- *  @param:  N/A
- *  @return: N/A
+/**
+ *  @brief Disconnect client from host
+ *  @details  disconnect the client from the host
  */
 void Client::disconnectFromHost() {
     qDebug() << "Client disconnected GG";
     clientSocket->disconnectFromHost();
 }
 
-/*
- *  void Client::sendJson(const QJsonObject &json)
- *  @funct:  sends the Json from the client to the server
- *  @param:  json: QJsonObject to be sent
- *  @return: N/A
+/**
+ *  @brief  sends the Json from the client to the server
+ *  @param  json QJsonObject to be sent
  */
 void Client::sendJson(const QJsonObject &json) {
     QDataStream clientStream(clientSocket);
@@ -66,21 +67,16 @@ void Client::sendJson(const QJsonObject &json) {
     clientStream << QJsonDocument(json).toJson(QJsonDocument::Compact);
 }
 
-/*
- *  void Client::jsonReceived(const QJsonObject &json)
- *  @funct:  slot triggered when Json object has been recieved
+/**
+ *  @brief:  slot triggered when Json object has been recieved
  *  @param:  json: QJsonObject recieved
- *  @return: N/A
  */
 void Client::jsonReceived(const QJsonObject &json) {
     emit receiveJson(json);
 }
 
-/*
- *  void Client::onReadyRead()
- *  @funct:  for receiving the Json object from the server
- *  @param:  N/A
- *  @return: N/A
+/**
+ *  @brief:  for receiving the Json object from the server
  */
 void Client::onReadyRead() {
     qDebug("Client ready read");
@@ -107,6 +103,12 @@ void Client::onReadyRead() {
     }
 }
 
+/**
+ * @brief Connection stopped if error happens
+ * @param error Error happened
+ *
+ * @details emit connectionStopped signal
+ */
 void Client::onError(QAbstractSocket::SocketError error) {
 
     if (!(clientSocket->state() == QTcpSocket::ConnectedState)) {
