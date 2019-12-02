@@ -25,6 +25,7 @@
 #include "Palette/BasicControls.h"
 #include "Palette/Effects.h"
 #include "AboutUs.h"
+#include "Faq.h"
 #include "ServerRoom.h"
 #include "Server/Server.h"
 #include "Server/Client.h"
@@ -55,6 +56,7 @@ private slots:
     void                        on_actionRedo_triggered();
     void                        on_actionRevert_to_Last_Commit_triggered();
     void                        on_actionSave_triggered();
+    void                        on_actionFAQs_triggered();
 
     // Saving, workspace related slots.
     void                        saveAs();
@@ -77,12 +79,6 @@ private slots:
     void                        clientJsonReceived(const QJsonObject&);
     void                        goToServerRoom();
     void                        onConnectionFailed();
-
-    // Version control related slots.
-    void                        on_actionCommit_Changes_triggered();
-    void                        onCommitChanges(QString changes);
-    
-    // Server related slots.
     void                        onSendPathItem(QGraphicsPathItem*);
     void                        onConnectionStopped();
     void                        onDisconnect();
@@ -90,6 +86,10 @@ private slots:
     void                        onSendCrop(int, int, int, int);
     void                        onSendCropWithMagicWand(int, int);
 
+    // Version control related slots.
+    void                        on_actionCommit_Changes_triggered();
+    void                        onCommitChanges(QString changes);
+    
 private:
     // Workspace transformation related member functions. 
     void                        resizeGraphicsViewBoundaries(int newWidth, int newHeight);

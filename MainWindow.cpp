@@ -1526,3 +1526,12 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength, 
 }
 
 
+/**
+ * @brief Shows Faq dialog when slot is triggered.
+ */
+void MainWindow::on_actionFAQs_triggered()
+{
+    Faq faq;
+    faq.setModal(true);
+    faq.exec();
+}
