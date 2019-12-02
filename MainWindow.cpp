@@ -382,7 +382,7 @@ void MainWindow::generateHistoryMenu()
             // 2b. Create an action for each image
             QAction *action = new QAction(i->changes, masterNodeMenu);
             masterNodeMenu->addAction(action);
-            connect(action, &QAction::triggered, this, [=]() { checkoutCommit(masterNodeNumber, sideNodeNumber); });
+            connect(action, &QAction::triggered, this, [=]() { checkoutCommit(masterNodeNumber, sideNodeNumber, true); });
         }
 
         // 3. Add the menu to our menuHistory
@@ -397,7 +397,7 @@ void MainWindow::generateHistoryMenu()
  * @param masterNodeNumber Which branch in the master branch.
  * @param sideNodeNumber Which commit in the branch. 
  */
-void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber)
+void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber, bool fromActionMenu)
 {
     this->masterNodeNumber = masterNodeNumber;
     this->sideNodeNumber = sideNodeNumber;
@@ -413,6 +413,9 @@ void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber)
     {
     }
     rerenderWorkspaceArea(it2->currentImage, it2->currentImage.width(), it2->currentImage.height());
+    if (fromActionMenu) {
+        sendVersion("checkoutCommit", masterNodeNumber, sideNodeNumber);
+    }
 }
 
 /**
@@ -628,6 +631,12 @@ void MainWindow::on_actionSave_triggered()
  */
 void MainWindow::on_actionUndo_triggered()
 {
+    undo();
+    sendVersion("undo");
+}
+
+void MainWindow::undo()
+{
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
     if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1)
     {
@@ -648,6 +657,12 @@ void MainWindow::on_actionUndo_triggered()
  */
 void MainWindow::on_actionRedo_triggered()
 {
+    redo();
+    sendVersion("redo");
+}
+
+void MainWindow::redo()
+{
     // Check if redo is available on current branch
     if (sideNodeNumber > 0)
     {
@@ -663,6 +678,12 @@ void MainWindow::on_actionRedo_triggered()
  * @brief Revert commit to last commit.
  */
 void MainWindow::on_actionRevert_to_Last_Commit_triggered()
+{
+    revertToLastCommit();
+    sendVersion("revertCommit");
+}
+
+void MainWindow::revertToLastCommit()
 {
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
     if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1)
@@ -1046,18 +1067,24 @@ void MainWindow::on_actionCommit_Changes_triggered()
     commitDialog.setModal(true);
     if (commitDialog.exec())
     {
-        // Save the image
-        QImage toMerge = workspaceArea->getImage();
-        // Remove the node
-        imageHistory.masterBranch.erase(imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber));
-        // Set master and side to 0, 0
-        masterNodeNumber = 0;
-        sideNodeNumber = 0;
-        // Commit image with saved image
-        commitChanges(toMerge, "Merged");
-        // Generate history
-        generateHistoryMenu();
+        commitBranch();
+        sendVersion("commitBranch");
     }
+}
+
+void MainWindow::commitBranch()
+{
+    // Save the image
+    QImage toMerge = workspaceArea->getImage();
+    // Remove the node
+    imageHistory.masterBranch.erase(imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber));
+    // Set master and side to 0, 0
+    masterNodeNumber = 0;
+    sideNodeNumber = 0;
+    // Commit image with saved image
+    commitChanges(toMerge, "Merged");
+    // Generate history
+    generateHistoryMenu();
 }
 
 /**
@@ -1299,6 +1326,14 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         int x = data["x"].toInt();
         int y = data["y"].toInt();
         workspaceArea->cropImageWithMagicWand(x, y, true);
+    } else if (type == "versionControl") {
+        QString action = json.value(QString("action")).toString();
+        if (action == "checkoutCommit") {
+            handleVersionControlBroadcast(action, json.value(QString("masterNodeNumber")).toInt(), json.value(QString("sideNodeNumber")).toInt());
+        }
+        if (!action.isEmpty()) {
+            handleVersionControlBroadcast(action);
+        }
     }
 }
 
@@ -1325,7 +1360,7 @@ void MainWindow::sendInitialImage()
             QJsonObject json;
             json["type"] = "initialImage";
             json["data"] = QJsonValue(QLatin1String(buffer.data().toBase64()));
-            server->sendInitialImage(json);
+            client->sendJson(json);
             qDebug() << "image sent";
         }
     }
@@ -1420,6 +1455,30 @@ void MainWindow::sendFilterWithMask(QString filterName, int size, double strengt
     client->sendJson(json);
 }
 
+void MainWindow::sendVersion(QString type) {
+    if (isConnected) {
+        QJsonObject json;
+        json["type"] = "versionControl";
+        if (!type.isEmpty()) {
+            json["action"] = type;
+        }
+        client->sendJson(json);
+    }
+}
+
+void MainWindow::sendVersion(QString type, int masterNodeNumber, int sideNodeNumber) {
+    if (isConnected) {
+        QJsonObject json;
+        json["type"] = "versionControl";
+        if (!type.isEmpty()) {
+            json["action"] = type;
+            json["masterNodeNumber"] = masterNodeNumber;
+            json["sideNodeNumber"] = sideNodeNumber;
+        }
+        client->sendJson(json);
+    }
+}
+
 void MainWindow::onSendResize(int width, int height) {
     if (isConnected) {
         QJsonObject json;
@@ -1504,10 +1563,10 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength) 
     } else if (name == "Counter Clockwise Rotation") {
         CounterClockwiseRotationTransform *ccwRotation = new CounterClockwiseRotationTransform();
         applyFilterTransform(ccwRotation, size, strength, true);
-    } else if (name == "Flip Horizontal Transform") {
+    } else if (name == "Flip Horizontal") {
         FlipHorizontalTransform *flipHorizontal = new FlipHorizontalTransform();
         applyFilterTransform(flipHorizontal, size, strength, true);
-    } else if (name == "Flip Vertical Transform") {
+    } else if (name == "Flip Vertical") {
         FlipVerticalTransform *flipVertical = new FlipVerticalTransform();
         applyFilterTransform(flipVertical, size, strength, true);
     }
@@ -1525,4 +1584,21 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength, 
     }
 }
 
+void MainWindow::handleVersionControlBroadcast(QString action) {
+    if (action == "undo") {
+        undo();
+    } else if (action == "redo") {
+        redo();
+    } else if (action == "revertCommit") {
+        revertToLastCommit();
+    } else if (action == "commitBranch") {
+        commitBranch();
+    }
+}
+
+void MainWindow::handleVersionControlBroadcast(QString action, int masterNodeNumber, int sideNodeNumber) {
+    if (action == "checkoutCommit") {
+        checkoutCommit(masterNodeNumber, sideNodeNumber);
+    }
+}
 

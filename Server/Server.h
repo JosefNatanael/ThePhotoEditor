@@ -17,8 +17,6 @@ public:
     quint16 getPort() const;
     QVector<ServerWorker*> getClients() const;
 
-    void sendInitialImage(const QJsonObject&);
-
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 signals:
@@ -26,7 +24,6 @@ signals:
     void newPlayerConnected();
 public slots:
     void stopServer();
-    void startGameBroadcast();
     void broadcast(const QJsonObject &json, ServerWorker *exclude = nullptr);
 private slots:
     void jsonReceived(ServerWorker *sender, const QJsonObject &json);

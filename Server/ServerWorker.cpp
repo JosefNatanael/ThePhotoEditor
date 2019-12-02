@@ -1,4 +1,4 @@
-#include "serverworker.h"
+#include "ServerWorker.h"
 #include <QDataStream>
 #include <QJsonDocument>
 #include <QJsonParseError>

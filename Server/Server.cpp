@@ -1,5 +1,5 @@
-#include "server.h"
-#include "serverworker.h"
+#include "Server.h"
+#include "ServerWorker.h"
 #include <algorithm>
 
 #include <QNetworkInterface>
@@ -121,37 +121,12 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
         playerNamesMsg["playerNames"] = playerNames;
         broadcast(playerNamesMsg);
 
-        //sendJson(worker, playerNamesMsg);
-//        QJsonObject newPlayerMsg;
-//        newPlayerMsg["type"] = "newPlayer";
-//        newPlayerMsg["playerName"] = playerName;
-//        broadcast(newPlayerMsg);
-    } else if (type == "applyFilter" || type == "applyResize" || type == "applyCrop" || type == "applyCropWithMagicWand") {
+    } else if (type == "applyFilter" || type == "applyFilterWithMask" || type == "applyResize" ||
+               type == "applyCrop" || type == "applyCropWithMagicWand" || type == "initialImage" || type == "versionControl") {
         broadcast(json, sender);
     }
 
     emit receiveJson(sender, json);
-}
-
-/*
- *  void Server::startGameBroadcast()
- *  @funct:  function to tell the clients that the game has been started by the host
- *  @param:  N/A
- *  @return: N/A
- */
-void Server::startGameBroadcast() {
-//    if (clients.size()>2){
-//        QMessageBox::information(nullptr, QString("Too Many Players"), QString("There are too many players."));
-//        return;
-//    }
-//    if (clients.size()==1){
-//        QMessageBox::information(nullptr, QString("Not Enough Players"), QString("You need 2-5 players to play."));
-//        return;
-//    }
-//    qDebug("Server Start Game Broadcast");
-//    QJsonObject startGameMsg;
-//    startGameMsg["type"] = "startGame";
-//    broadcast(startGameMsg);
 }
 
 /*
@@ -169,10 +144,6 @@ void Server::userDisconnected(ServerWorker *sender) {
     clients.removeAll(sender);
     const QString player = sender->getPlayerName();
     if (!player.isEmpty()) {
-//        QJsonObject disconnectedMessage;
-//        disconnectedMessage["type"] = QString("playerDisconnected");
-//        disconnectedMessage["playerName"] = player;
-//        broadcast(disconnectedMessage, nullptr);
 
         QJsonObject playerNamesMsg;
         QJsonArray playerNames;
@@ -227,10 +198,3 @@ void Server::stopServer() {
     close();
 }
 
-void Server::sendInitialImage(const QJsonObject& json) {
-    for (ServerWorker *worker : clients) {
-        Q_ASSERT(worker);
-        qDebug() << "on sendInitialImage";
-        sendJson(worker, json);
-    }
-}

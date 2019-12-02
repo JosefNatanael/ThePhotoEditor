@@ -106,8 +106,12 @@ private:
 
     // Version control related member functions.
     void                        generateHistoryMenu();
-    void                        checkoutCommit(int masterNodeNumber, int sideNodeNumber);
+    void                        checkoutCommit(int masterNodeNumber, int sideNodeNumber, bool fromActionMenu = false);
     void                        commitChanges(QImage changedImage, QString changes);
+    void                        redo();
+    void                        undo();
+    void                        revertToLastCommit();
+    void                        commitBranch();
 
     // Saving related member functions.
     bool                        maybeSave();
@@ -120,8 +124,12 @@ private:
     void                        destroyConnection();
     void                        sendFilter(QString, int, double);
     void                        sendFilterWithMask(QString, int, double, const QImage&);
+    void                        sendVersion(QString);
+    void                        sendVersion(QString, int, int);
     void                        handleFilterBroadcast(QString, int, double);
     void                        handleFilterBroadcast(QString, int, double, const QImage&);
+    void                        handleVersionControlBroadcast(QString);
+    void                        handleVersionControlBroadcast(QString, int, int);
 
 private:
     Ui::MainWindow*             ui;
