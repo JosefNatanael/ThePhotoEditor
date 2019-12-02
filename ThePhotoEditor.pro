@@ -26,6 +26,7 @@ CONFIG += c++14
 
 SOURCES += \
         AboutUs.cpp \
+        Faq.cpp \
         FilterTransform/AbstractImageFilterTransform.cpp \
         FilterTransform/AbstractKernelBasedImageFilterTransform.cpp \
         FilterTransform/AbstractNonKernelBasedImageFilterTransform.cpp \
@@ -69,6 +70,7 @@ SOURCES += \
 
 HEADERS += \
         AboutUs.h \
+        Faq.h \
         FilterTransform/AbstractImageFilterTransform.h \
         FilterTransform/AbstractKernelBasedImageFilterTransform.h \
         FilterTransform/AbstractNonKernelBasedImageFilterTransform.h \
@@ -111,6 +113,7 @@ HEADERS += \
 
 FORMS += \
         AboutUs.ui \
+        Faq.ui \
         MainWindow.ui \
         Palette/BasicControls.ui \
         Palette/Brush.ui \
