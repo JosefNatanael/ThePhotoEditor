@@ -1,15 +1,42 @@
+/**
+ * @class SaturationFilter
+ * @brief Saturation Filter Non-Kernel Implementation.
+ */
 #include "SaturationFilter.h"
 
+/**
+ * @brief Construct a new Saturation Filter:: Saturation Filter object
+ *
+ * @param parent Passed to AbstractNonKernelBasedImageFilterTransform() constructor.
+ */
 SaturationFilter::SaturationFilter(QObject* parent) : AbstractNonKernelBasedImageFilterTransform(parent)
 {
 
 }
 
+/**
+ * @brief Returns the name of the filter.
+ *
+ * @return QString Name of the filter.
+ */
 QString SaturationFilter::getName() const
 {
     return "Saturation Filter";
 }
 
+/**
+ * @brief Gets new image after filter applied.
+ *
+ * @param image Original image to get new filter applied image.
+ * @param strength Strength of Saturation level to be applied
+ *
+ * Get qRgb of each pixel with PixelHelper::getPixel
+ * Convert qRgb into QColor format
+ * Change the Saturation Value for each pixel and set with setHsv
+ * Use the value to set the new image with PixelHelper::setPixel
+ *
+ * @return QImage Filter applied image.
+ */
 QImage SaturationFilter::applyFilter(const QImage &image, double strength) const
 {
     QImage newImage{image};
@@ -32,7 +59,11 @@ QImage SaturationFilter::applyFilter(const QImage &image, double strength) const
     return newImage;
 }
 
-// No change
+/**
+ * @brief This is an overloaded function.
+ *
+ * @return QImage exact copy of image.
+ */
 QImage SaturationFilter::applyFilter(const QImage &image) const
 {
     QImage newImage{image};

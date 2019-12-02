@@ -1,16 +1,37 @@
+/**
+ * @class ExposureFilter
+ * @brief Exposure Filter Non-Kernel Implementation.
+ */
 #include "ExposureFilter.h"
 #include <QtMath>
 
+/**
+ * @brief Construct a new Exposure Filter:: Brightness Filter object
+ *
+ * @param parent Passed to AbstractNonKernelBasedImageFilterTransform() constructor.
+ */
 ExposureFilter::ExposureFilter(QObject* parent) : AbstractNonKernelBasedImageFilterTransform(parent)
 {
 
 }
 
+/**
+ * @brief Returns the name of the filter.
+ *
+ * @return QString Name of the filter.
+ */
 QString ExposureFilter::getName() const
 {
     return "Exposure Filter";
 }
 
+/**
+ * @brief Gets new image after filter applied.
+ *
+ * @param image Original image to get new filter applied image.
+ * @param strength Strength of the exposure to be applied
+ * @return QImage Filter applied image.
+ */
 QImage ExposureFilter::applyFilter(const QImage &image, double strength) const
 {
     QImage newImage{image};
@@ -34,7 +55,11 @@ QImage ExposureFilter::applyFilter(const QImage &image, double strength) const
     return newImage;
 }
 
-// No change
+/**
+ * @brief This is an overloaded function.
+ *
+ * @return QImage exact copy of image.
+ */
 QImage ExposureFilter::applyFilter(const QImage &image) const
 {
     QImage newImage{image};

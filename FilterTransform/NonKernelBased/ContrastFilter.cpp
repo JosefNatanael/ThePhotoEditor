@@ -1,15 +1,37 @@
+/**
+ * @class ContrastFilter
+ * @brief Contrast Filter Non-Kernel Implementation.
+ */
+
 #include "ContrastFilter.h"
 
+/**
+ * @brief Construct a new Contrast Filter:: Contrast Filter object
+ *
+ * @param parent Passed to AbstractKernelBasedImageFilterTransform() constructor.
+ */
 ContrastFilter::ContrastFilter(QObject* parent) : AbstractNonKernelBasedImageFilterTransform(parent)
 {
 
 }
 
+/**
+ * @brief Returns the name of the filter.
+ *
+ * @return QString Name of the filter.
+ */
 QString ContrastFilter::getName() const
 {
     return "Contrast Filter";
 }
 
+/**
+ * @brief Gets new image after filter applied.
+ *
+ * @param image Original image to get new filter applied image.
+ * @param strength Strength of the contrast to be applied
+ * @return QImage Filter applied image.
+ */
 QImage ContrastFilter::applyFilter(const QImage &image, double strength) const
 {
     QImage newImage{image};
@@ -33,7 +55,11 @@ QImage ContrastFilter::applyFilter(const QImage &image, double strength) const
     return newImage;
 }
 
-// No change
+/**
+ * @brief This is an overloaded function.
+ *
+ * @return QImage exact copy of image.
+ */
 QImage ContrastFilter::applyFilter(const QImage &image) const
 {
     QImage newImage{image};
