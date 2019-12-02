@@ -100,7 +100,6 @@ bool MagicWand::colorWithinThreshold(QRgb colorToCheck)
  * Check if (x,y) pixel is within the image and within the color threshold
  * Set pixel to transparent and enqueue QPoint (x,y) into forestFireQueue
  * Recursively check the top, left, right, and down neighbouring pixels in the same way
- * @return void
  */
 void MagicWand::forestFire(QImage &img, int x, int y)
 {

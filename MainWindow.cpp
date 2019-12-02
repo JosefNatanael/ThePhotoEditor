@@ -635,6 +635,11 @@ void MainWindow::on_actionUndo_triggered()
     sendVersion("undo");
 }
 
+/**
+ * @brief Undo implementation
+ *
+ * @details Checks the masterNodeNumber and sideNodeNumber to perform suitable checkoutCommit
+ */
 void MainWindow::undo()
 {
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
@@ -661,6 +666,11 @@ void MainWindow::on_actionRedo_triggered()
     sendVersion("redo");
 }
 
+/**
+ * @brief Redo implementation
+ *
+ * @details Checks the masterNodeNumber and sideNodeNumber to perform suitable checkoutCommit
+ */
 void MainWindow::redo()
 {
     // Check if redo is available on current branch
@@ -683,6 +693,13 @@ void MainWindow::on_actionRevert_to_Last_Commit_triggered()
     sendVersion("revertCommit");
 }
 
+/**
+ * @brief Revert commit to last commit implementation
+ *
+ * @details Checks the masterNodeNumber and sideNodeNumber
+ * and check for imageHistory
+ * whether it is possible to perform suitable checkoutCommit and reverseCommit
+ */
 void MainWindow::revertToLastCommit()
 {
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
@@ -1072,6 +1089,14 @@ void MainWindow::on_actionCommit_Changes_triggered()
     }
 }
 
+/**
+ * @brief Commit branch implementation
+ *
+ * @details Save image in workspaceArea,
+ * Remove node,
+ * Reset masterNodeNumber and sideNodeNumber,
+ * Commit image and generate history
+ */
 void MainWindow::commitBranch()
 {
     // Save the image
@@ -1105,6 +1130,13 @@ void MainWindow::onCommitChanges(QString changes)
     generateHistoryMenu();
 }
 
+/**
+ * @brief Handles creating room (for multiplayer feature)
+ * @param name Name of the user
+ *
+ * @details create new server and connects the user through his/her ip and port
+ * join the new room
+ */
 void MainWindow::onCreateRoom(QString name)
 {
     username = name;
@@ -1123,6 +1155,16 @@ void MainWindow::onCreateRoom(QString name)
     joinRoom();
 }
 
+/**
+ * @brief Handles joining room
+ * @param name Name of the user
+ * @param address IP address of the user
+ * @param port user's port number
+ *
+ * @details Checks if user inputs valid server or uses valid port
+ * If true, then registers the user to the desired room
+ * The user won't be the host of the room
+ */
 void MainWindow::onJoinRoom(QString name, QString address, quint16 port)
 {
     ip = address;
@@ -1150,6 +1192,12 @@ void MainWindow::onJoinRoom(QString name, QString address, quint16 port)
     joinRoom();
 }
 
+/**
+ * @brief Joining room implementation
+ *
+ * @details user becomes client,
+ * Connects client to the server (with the ip and port)
+ */
 void MainWindow::joinRoom()
 {
     client = new Client();
@@ -1163,6 +1211,11 @@ void MainWindow::joinRoom()
     //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
 }
 
+/**
+ * @brief Informs us if connection failed
+ *
+ * @details sets room's modality into false, closes the room
+ */
 void MainWindow::onConnectionFailed()
 {
     QMessageBox::information(this, QString("Connection failed"), QString("Invalid IP address or port."));
@@ -1173,6 +1226,11 @@ void MainWindow::onConnectionFailed()
     }
 }
 
+/**
+ * @brief Go to server room
+ *
+ * @details Set room with ip and port, user is connected
+ */
 void MainWindow::goToServerRoom()
 {
     room->setServerRoom(ip, port);
@@ -1181,6 +1239,12 @@ void MainWindow::goToServerRoom()
     isConnected = true;
 }
 
+/**
+ * @brief Handles create room
+ *
+ * @details Unless the user is connected to any other rooms,
+ * room will be created
+ */
 void MainWindow::on_actionCreate_Room_triggered()
 {
     if (isConnected)
@@ -1196,6 +1260,12 @@ void MainWindow::on_actionCreate_Room_triggered()
     room->exec();
 }
 
+/**
+ * @brief Handles joining room
+ *
+ * @details Unless the user is connected to any other rooms,
+ * the user can join the room
+ */
 void MainWindow::on_actionJoin_Room_triggered()
 {
     if (isConnected)
@@ -1211,6 +1281,12 @@ void MainWindow::on_actionJoin_Room_triggered()
     room->exec();
 }
 
+/**
+ * @brief
+ * @param json QJsonObject
+ *
+ * @details Checks the string-typed value of json and performs desired actions
+ */
 void MainWindow::clientJsonReceived(const QJsonObject &json)
 {
     qDebug() << json;
@@ -1350,6 +1426,12 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
     }
 }
 
+/**
+ * @brief Sending player name
+ *
+ * @details set the user as player with username as the name
+ * send the player name
+ */
 void MainWindow::sendPlayerName()
 {
     QJsonObject playerNameMsg;
@@ -1359,6 +1441,12 @@ void MainWindow::sendPlayerName()
     client->sendJson(playerNameMsg);
 }
 
+/**
+ * @brief Sending initial image
+ *
+ * @details If user is hosting the room and image is present,
+ * send the initial image
+ */
 void MainWindow::sendInitialImage()
 {
     if (isHost)
@@ -1379,6 +1467,12 @@ void MainWindow::sendInitialImage()
     }
 }
 
+/**
+ * @brief Handling viewing room
+ *
+ * @details If user is not connected, message box will pop up (Room unavailable, create or join room first.)
+ * Else, go to server room
+ */
 void MainWindow::on_actionView_Room_triggered()
 {
     if (!isConnected)
@@ -1389,15 +1483,29 @@ void MainWindow::on_actionView_Room_triggered()
     goToServerRoom();
 }
 
+/**
+ * @brief ???
+ */
 void MainWindow::onSendPathItem(QGraphicsPathItem *)
 {
 }
 
+/**
+ * @brief Tells if connection is stopped
+ *
+ * @details message box will pop up
+ */
 void MainWindow::onConnectionStopped()
 {
     QMessageBox::information(this, QString("Connection Stopped"), QString("There was an error in the connection"));
 }
 
+/**
+ * @brief Handling desired disconnecting
+ *
+ * @details message box will pop to ask if the user would like to leave room
+ * If yes, connection destroyed
+ */
 void MainWindow::onDisconnect()
 {
     QMessageBox::StandardButton reply = QMessageBox::question(this, QString("Leave Room"), QString("Are you sure to leave the room?"));
@@ -1407,6 +1515,11 @@ void MainWindow::onDisconnect()
     }
 }
 
+/**
+ * @brief Destroying connection implementation
+ *
+ * @details Closes room after checking for null client or server
+ */
 void MainWindow::destroyConnection()
 {
     isConnected = false;
@@ -1430,6 +1543,14 @@ void MainWindow::destroyConnection()
 //    }
 }
 
+/**
+ * @brief Sending filter implementation
+ * @param filterName name of filter that is used
+ * @param size size of kernel (if kernel is involved)
+ * @param strength strength of filter effect used
+ *
+ * @details Sending information of which filter used to other users
+ */
 void MainWindow::sendFilter(QString filterName, int size, double strength) {
     if (!isConnected || client == nullptr) {
         return;
@@ -1444,6 +1565,16 @@ void MainWindow::sendFilter(QString filterName, int size, double strength) {
     client->sendJson(json);
 }
 
+/**
+ * @brief Sending filter with mask implementation
+ * @param filterName name of filter that is applied
+ * @param size size of kernel (if kernel is involved)
+ * @param strength strength of filter effect applied
+ * @param mask image mask that is used
+ *
+ * @details Sending information of which filter used to other users
+ * The filter here is special because includes image mask
+ */
 void MainWindow::sendFilterWithMask(QString filterName, int size, double strength, const QImage& mask) {
     if (!isConnected || client == nullptr) {
         return;
@@ -1468,6 +1599,12 @@ void MainWindow::sendFilterWithMask(QString filterName, int size, double strengt
     client->sendJson(json);
 }
 
+/**
+ * @brief Sending for version control
+ * @param type type to set json's action
+ *
+ * @details If user is connected and type is valid, set json's action
+ */
 void MainWindow::sendVersion(QString type) {
     if (isConnected) {
         QJsonObject json;
@@ -1479,6 +1616,15 @@ void MainWindow::sendVersion(QString type) {
     }
 }
 
+/**
+ * @brief Sending for version control
+ * @param type type to set json's action
+ * @param masterNodeNumber for branches and nodes
+ * @param sideNodeNumber for branch and nodes
+ *
+ * @details If user is connected and type is valid, set json's action
+ * Also set the masterNodeNumber and sideNodeNumber of json
+ */
 void MainWindow::sendVersion(QString type, int masterNodeNumber, int sideNodeNumber) {
     if (isConnected) {
         QJsonObject json;
@@ -1492,6 +1638,14 @@ void MainWindow::sendVersion(QString type, int masterNodeNumber, int sideNodeNum
     }
 }
 
+/**
+ * @brief Sending for resizing
+ * @param width Width of screen
+ * @param height Height of screen
+ *
+ * @details If user is connected, set the width and height data,
+ * Also applyResize and data of json
+ */
 void MainWindow::onSendResize(int width, int height) {
     if (isConnected) {
         QJsonObject json;
@@ -1504,6 +1658,16 @@ void MainWindow::onSendResize(int width, int height) {
     }
 }
 
+/**
+ * @brief Sending for cropping
+ * @param x Position from top edge of screen
+ * @param y Position from left edge of screen
+ * @param width Width of screen
+ * @param height Height of screen
+ *
+ * @details If user is connected, set the width and height data
+ * Also applyCrop and data of json
+ */
 void MainWindow::onSendCrop(int x, int y, int width, int height) {
     if (isConnected) {
         QJsonObject json;
@@ -1518,6 +1682,14 @@ void MainWindow::onSendCrop(int x, int y, int width, int height) {
     }
 }
 
+/**
+ * @brief Sending for cropping, special for Magic Wand
+ * @param x Position from top edge of screen
+ * @param y Position from left edge of screen
+ *
+ * @details If user is connected, set the x and y data
+ * Also applyCropWithMagicWand and data of json
+ */
 void MainWindow::onSendCropWithMagicWand(int x, int y) {
     if (isConnected) {
         QJsonObject json;
@@ -1530,6 +1702,16 @@ void MainWindow::onSendCropWithMagicWand(int x, int y) {
     }
 }
 
+/**
+ * @brief Sending special during scribble moving
+ * @param x Position from top edge of screen
+ * @param y Position from left edge of screen
+ * @param colorHex color of pen used
+ * @param penWidth width of pen tip used
+ *
+ * @details If user is connected, set the x and y data
+ * Also applyMoveScribble and data of used pen (color and width)
+ */
 void MainWindow::onSendMoveScribble(double x, double y, QString colorHex, int penWidth) {
     if (isConnected) {
         QJsonObject json;
@@ -1544,6 +1726,11 @@ void MainWindow::onSendMoveScribble(double x, double y, QString colorHex, int pe
     }
 }
 
+/**
+ * @brief Sending special during scribble release
+ *
+ * @details If user is connected, set json's type as applyReleaseScribble
+ */
 void MainWindow::onSendReleaseScribble() {
     if (isConnected) {
         QJsonObject json;
@@ -1552,6 +1739,15 @@ void MainWindow::onSendReleaseScribble() {
     }
 }
 
+/**
+ * @brief Handling filter broadcast
+ * @param name name of filter
+ * @param size size of kernel (if kernel is involved)
+ * @param strength strength of filter applied
+ *
+ * @details applyFilterTransform according to the name of filter applied
+ * and according to size and strength
+ */
 void MainWindow::handleFilterBroadcast(QString name, int size, double strength) {
     if (name == "Hue Filter") {
         HueFilter *hueFilter = new HueFilter();
@@ -1607,6 +1803,16 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength) 
     }
 }
 
+/**
+ * @brief Handling filter broadcast which needs mask (Image Scissors and Image Inpainting)
+ * @param name name of filter
+ * @param size size of kernel (if kernel is involved)
+ * @param strength strength of filter applied
+ * @param mask image mask that is used
+ *
+ * @details applyFilterTransform according to the name of filter applied
+ * and according to size and strength, also mask
+ */
 void MainWindow::handleFilterBroadcast(QString name, int size, double strength, const QImage& mask) {
     if (name == "Image Scissors") {
         ImageScissors *imageScissors = new ImageScissors();
@@ -1619,6 +1825,12 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength, 
     }
 }
 
+/**
+ * @brief Handling version control broadcast
+ * @param action name of action implemented
+ *
+ * @details performs action according to action name
+ */
 void MainWindow::handleVersionControlBroadcast(QString action) {
     if (action == "undo") {
         undo();
@@ -1631,6 +1843,14 @@ void MainWindow::handleVersionControlBroadcast(QString action) {
     }
 }
 
+/**
+ * @brief Handling version control broadcast that needs masterNodeNumber and sideNodeNumber
+ * @param action name of action implemented
+ * @param masterNodeNumber for branch and nodes
+ * @param sideNodeNumber for branch and nodes
+ *
+ * @details performs action according to action name and masterNodeNumber & sideNodeNumber
+ */
 void MainWindow::handleVersionControlBroadcast(QString action, int masterNodeNumber, int sideNodeNumber) {
     if (action == "checkoutCommit") {
         checkoutCommit(masterNodeNumber, sideNodeNumber);
