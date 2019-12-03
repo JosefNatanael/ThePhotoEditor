@@ -68,11 +68,6 @@ BasicControls::BasicControls(QWidget *parent, int imageWidth, int imageHeight) :
     logoMagic.load(":/icons/resources/cutout-magic-wand.svg");
     logoMagic = logoMagic.scaled(ui->magicLabel->size(), Qt::KeepAspectRatio);
     ui->magicLabel->setPixmap(logoMagic);
-
-    QPixmap logoLasso;
-    logoLasso.load(":/icons/resources/cutout-lasso.svg");
-    logoLasso = logoLasso.scaled(ui->lassoLabel->size(), Qt::KeepAspectRatio);
-    ui->lassoLabel->setPixmap(logoLasso);
 }
 
 /**
@@ -100,10 +95,6 @@ void BasicControls::on_beginCutoutPushButton_clicked()
     else if (ui->magicCutRadioButton->isChecked())
     {
         emit crossCursorChanged(WorkspaceArea::CursorMode::MAGICWAND, ui->magicSpinBox->value());
-    }
-    else
-    {
-        emit crossCursorChanged(WorkspaceArea::CursorMode::LASSO);
     }
 }
 

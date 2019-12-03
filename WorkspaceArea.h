@@ -31,7 +31,6 @@ public:
         SCRIBBLE,
         RECTANGLECROP,
         MAGICWAND,
-        LASSO
     };
 
 public:

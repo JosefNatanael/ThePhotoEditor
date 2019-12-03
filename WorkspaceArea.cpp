@@ -232,11 +232,11 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void WorkspaceArea::onMoveScribble(QPointF pos, QColor penColor, int penWidth) {
     QPainterPath path;
     if (pathItem == nullptr)
-
     {
         path.moveTo(pos); // move path to event scene position
         pathItem = new QGraphicsPathItem();
         pen.setColor(penColor);
+        pen.setBrush(penColor);
         pen.setWidth(penWidth);
         pathItem->setPen(pen);   // set sticker pen to default pen
         pathItem->setPath(path); // set sticker path to the new path

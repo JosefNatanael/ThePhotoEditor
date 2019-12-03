@@ -900,9 +900,6 @@ void MainWindow::onCrossCursorChanged(WorkspaceArea::CursorMode cursor, int data
         workspaceArea->setCursorMode(WorkspaceArea::CursorMode::MAGICWAND);
         workspaceArea->setMagicWandThreshold(data);
         break;
-    case WorkspaceArea::CursorMode::LASSO:
-        workspaceArea->setCursorMode(WorkspaceArea::CursorMode::LASSO);
-        break;
     case WorkspaceArea::CursorMode::SCRIBBLE:
         graphicsView->setCursor(Qt::ArrowCursor);
         workspaceArea->setCursorMode(WorkspaceArea::CursorMode::SCRIBBLE);
