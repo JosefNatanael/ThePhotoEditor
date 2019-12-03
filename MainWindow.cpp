@@ -403,17 +403,14 @@ void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber, bool f
 {
     this->masterNodeNumber = masterNodeNumber;
     this->sideNodeNumber = sideNodeNumber;
-    // Traverse the imageHistory (Version Control)
+    // Go through the imageHistory (Version Control)
     QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
-    // 1. Traverse nodes in master branch
-    for (int i = 0; i < masterNodeNumber; ++i, ++it)
-    {
-    }
-    // 2. Traverse images in the side branch
+    // 1. Go through nodes in master branch
+    it += masterNodeNumber;
+
+    // 2. Go through images in the side branch
     QLinkedList<VersionControl::SideNode>::iterator it2 = it->sideBranch.begin();
-    for (int j = 0; j < sideNodeNumber; ++j, ++it2)
-    {
-    }
+    it2 += sideNodeNumber;
     rerenderWorkspaceArea(it2->currentImage, it2->currentImage.width(), it2->currentImage.height());
     if (fromActionMenu) {
         sendVersion("checkoutCommit", masterNodeNumber, sideNodeNumber);
@@ -702,18 +699,24 @@ void MainWindow::on_actionRevert_to_Last_Commit_triggered()
  */
 void MainWindow::revertToLastCommit()
 {
+    if (!imageHistory.getBranchLength())
+        return;
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
     if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1)
     {
-        // Node starts at 0, +2 because we want to compare length and if the image is undoable
+        // Node starts at 0, +2 because we want to compare length and if the image is revertible
         if (sideNodeNumber + 2 <= imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength())
+        {
             checkoutCommit(masterNodeNumber, sideNodeNumber + 1);
-        imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->reverseCommit();
+            imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->reverseCommit();
+            --sideNodeNumber;
+        }
     }
     else if (masterNodeNumber + 2 <= imageHistory.getBranchLength())
     {
         checkoutCommit(masterNodeNumber + 1, 0);
         imageHistory.reverseCommit();
+        --masterNodeNumber;
     }
     else
     {
@@ -1151,7 +1154,6 @@ void MainWindow::onCreateRoom(QString name)
     ip = server->getIP();
     port = server->getPort();
     isHost = true;
-    qDebug() << ip << port;
     joinRoom();
 }
 
@@ -1451,7 +1453,6 @@ void MainWindow::sendInitialImage()
 {
     if (isHost)
     {
-        qDebug() << "I am server";
         QImage image = workspaceArea->getImage();
         if (!image.isNull())
         {
@@ -1462,7 +1463,6 @@ void MainWindow::sendInitialImage()
             json["type"] = "initialImage";
             json["data"] = QJsonValue(QLatin1String(buffer.data().toBase64()));
             client->sendJson(json);
-            qDebug() << "image sent";
         }
     }
 }
@@ -1481,13 +1481,6 @@ void MainWindow::on_actionView_Room_triggered()
         return;
     }
     goToServerRoom();
-}
-
-/**
- * @brief ???
- */
-void MainWindow::onSendPathItem(QGraphicsPathItem *)
-{
 }
 
 /**
@@ -1537,10 +1530,6 @@ void MainWindow::destroyConnection()
         server = nullptr;
     }
     room->close();
-//    if (room)
-//    {
-//        delete room;
-//    }
 }
 
 /**
@@ -1551,7 +1540,7 @@ void MainWindow::destroyConnection()
  *
  * @details Sending information of which filter used to other users
  */
-void MainWindow::sendFilter(QString filterName, int size, double strength) {
+void MainWindow::sendFilter(const QString& filterName, int size, double strength) {
     if (!isConnected || client == nullptr) {
         return;
     }
@@ -1575,7 +1564,7 @@ void MainWindow::sendFilter(QString filterName, int size, double strength) {
  * @details Sending information of which filter used to other users
  * The filter here is special because includes image mask
  */
-void MainWindow::sendFilterWithMask(QString filterName, int size, double strength, const QImage& mask) {
+void MainWindow::sendFilterWithMask(const QString& filterName, int size, double strength, const QImage& mask) {
     if (!isConnected || client == nullptr) {
         return;
     }
@@ -1605,7 +1594,7 @@ void MainWindow::sendFilterWithMask(QString filterName, int size, double strengt
  *
  * @details If user is connected and type is valid, set json's action
  */
-void MainWindow::sendVersion(QString type) {
+void MainWindow::sendVersion(const QString& type) {
     if (isConnected) {
         QJsonObject json;
         json["type"] = "versionControl";
@@ -1625,7 +1614,7 @@ void MainWindow::sendVersion(QString type) {
  * @details If user is connected and type is valid, set json's action
  * Also set the masterNodeNumber and sideNodeNumber of json
  */
-void MainWindow::sendVersion(QString type, int masterNodeNumber, int sideNodeNumber) {
+void MainWindow::sendVersion(const QString& type, int masterNodeNumber, int sideNodeNumber) {
     if (isConnected) {
         QJsonObject json;
         json["type"] = "versionControl";
@@ -1748,7 +1737,7 @@ void MainWindow::onSendReleaseScribble() {
  * @details applyFilterTransform according to the name of filter applied
  * and according to size and strength
  */
-void MainWindow::handleFilterBroadcast(QString name, int size, double strength) {
+void MainWindow::handleFilterBroadcast(const QString& name, int size, double strength) {
     if (name == "Hue Filter") {
         HueFilter *hueFilter = new HueFilter();
         applyFilterTransform(hueFilter, size, strength, true);
@@ -1813,13 +1802,13 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength) 
  * @details applyFilterTransform according to the name of filter applied
  * and according to size and strength, also mask
  */
-void MainWindow::handleFilterBroadcast(QString name, int size, double strength, const QImage& mask) {
+void MainWindow::handleFilterBroadcast(const QString& name, int size, double strength, const QImage& mask) {
     if (name == "Image Scissors") {
         ImageScissors *imageScissors = new ImageScissors();
         imageScissors->setMask(mask);
         applyFilterTransform(imageScissors, size, strength, true);
     } else if (name == "Image Inpainting") {
-        ImageInpainting *imageInpainting = new ImageInpainting();
+        ImageInpainting *imageInpainting = new ImageInpainting(5);
         imageInpainting->setMask(mask);
         applyFilterTransform(imageInpainting, size, strength, true);
     }
@@ -1831,7 +1820,7 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength, 
  *
  * @details performs action according to action name
  */
-void MainWindow::handleVersionControlBroadcast(QString action) {
+void MainWindow::handleVersionControlBroadcast(const QString& action) {
     if (action == "undo") {
         undo();
     } else if (action == "redo") {
@@ -1851,7 +1840,7 @@ void MainWindow::handleVersionControlBroadcast(QString action) {
  *
  * @details performs action according to action name and masterNodeNumber & sideNodeNumber
  */
-void MainWindow::handleVersionControlBroadcast(QString action, int masterNodeNumber, int sideNodeNumber) {
+void MainWindow::handleVersionControlBroadcast(const QString& action, int masterNodeNumber, int sideNodeNumber) {
     if (action == "checkoutCommit") {
         checkoutCommit(masterNodeNumber, sideNodeNumber);
     }

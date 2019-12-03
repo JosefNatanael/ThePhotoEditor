@@ -79,7 +79,6 @@ private slots:
     void                        clientJsonReceived(const QJsonObject&);
     void                        goToServerRoom();
     void                        onConnectionFailed();
-    void                        onSendPathItem(QGraphicsPathItem*);
     void                        onConnectionStopped();
     void                        onDisconnect();
     void                        onSendResize(int, int);
@@ -124,14 +123,14 @@ private:
     void                        joinRoom();
     void                        sendInitialImage();  
     void                        destroyConnection();
-    void                        sendFilter(QString, int, double);
-    void                        sendFilterWithMask(QString, int, double, const QImage&);
-    void                        sendVersion(QString);
-    void                        sendVersion(QString, int, int);
-    void                        handleFilterBroadcast(QString, int, double);
-    void                        handleFilterBroadcast(QString, int, double, const QImage&);
-    void                        handleVersionControlBroadcast(QString);
-    void                        handleVersionControlBroadcast(QString, int, int);
+    void                        sendFilter(const QString&, int, double);
+    void                        sendFilterWithMask(const QString&, int, double, const QImage&);
+    void                        sendVersion(const QString&);
+    void                        sendVersion(const QString&, int, int);
+    void                        handleFilterBroadcast(const QString&, int, double);
+    void                        handleFilterBroadcast(const QString&, int, double, const QImage&);
+    void                        handleVersionControlBroadcast(const QString&);
+    void                        handleVersionControlBroadcast(const QString&, int, int);
 
 private:
     Ui::MainWindow*             ui;
@@ -171,12 +170,12 @@ private:
 
     ServerRoom*                 room = nullptr;             //!< ServerRoom instance.
     QString                     username;                   //!< Username name.
-    Server*                     server = nullptr;           //!< TODO COMMENT.
-    Client*                     client = nullptr;           //!< TODO COMMENT.
-    QString                     ip;                         //!< TODO COMMENT.
-    quint16                     port;                       //!< TODO COMMENT.
-    bool                        isHost = false;             //!< TODO COMMENT.
-    bool                        isConnected = false;        //!< TODO COMMENT.
+    Server*                     server = nullptr;           //!< Server instance.
+    Client*                     client = nullptr;           //!< Client instance.
+    QString                     ip;                         //!< Server IP.
+    quint16                     port;                       //!< Server port.
+    bool                        isHost = false;             //!< Current instance is a hos.
+    bool                        isConnected = false;        //!< Connected to server.
     
 
 };

@@ -12,7 +12,6 @@
 #include "FilterTransform/KernelBased/ImageInpainting.h"
 #include "FilterTransform/KernelBased/ImageScissors.h"
 
-#include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 

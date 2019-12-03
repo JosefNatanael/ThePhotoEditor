@@ -21,8 +21,8 @@ public:
     virtual void setMask(const QImage& mask);
 
 private:
-    QImage mask;
-    int size;
+    QImage mask;    //!< Scissor mask.
+    int size;       //!< Kernel size.
 };
 
 #endif // IMAGESCISSORS_H

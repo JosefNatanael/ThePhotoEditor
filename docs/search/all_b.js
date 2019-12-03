@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['magicwand_118',['MagicWand',['../class_magic_wand.html',1,'MagicWand'],['../class_magic_wand.html#ad99725150905e4a751b25d87a260cc47',1,'MagicWand::MagicWand()']]],
+  ['magicwandthreshold_119',['magicWandThreshold',['../class_workspace_area.html#a13da32dd49e0e5cff3d4bdfa0d7a4221',1,'WorkspaceArea']]],
+  ['mainwindow_120',['MainWindow',['../class_main_window.html',1,'MainWindow'],['../class_main_window.html#a996c5a2b6f77944776856f08ec30858d',1,'MainWindow::MainWindow()']]],
+  ['mask_121',['mask',['../class_image_inpainting.html#a71010969b9961d74cf4df9df2cdd3ee3',1,'ImageInpainting::mask()'],['../class_image_scissors.html#ab7ff332a35307c3dc46d46472f601a28',1,'ImageScissors::mask()'],['../class_effects.html#a88d77e238a472ae325c259c8e1b572ab',1,'Effects::mask()']]],
+  ['maskfilename_122',['maskFileName',['../class_effects.html#aa8cc3cc40336d3491763453a06dad9fa',1,'Effects']]],
+  ['masterbranch_123',['masterBranch',['../class_version_control.html#a43778856f8f6263f1b68c6c400163e2d',1,'VersionControl']]],
+  ['masterbranchlength_124',['masterBranchLength',['../class_version_control.html#a2289e8d472370f712cf38068a813a356',1,'VersionControl']]],
+  ['masternode_125',['MasterNode',['../class_version_control_1_1_master_node.html',1,'VersionControl::MasterNode'],['../class_version_control_1_1_master_node.html#a2fc12e321195e0d66d8b43463f236c00',1,'VersionControl::MasterNode::MasterNode(QImage, QString)'],['../class_version_control_1_1_master_node.html#a9ecd469e0dc8d91659cb99b0d3ab091a',1,'VersionControl::MasterNode::MasterNode(SideNode)']]],
+  ['masternodenumber_126',['masterNodeNumber',['../class_main_window.html#aa30975bcbb7de98ff130eb36d51d5bc6',1,'MainWindow']]],
+  ['maxmasterbranchlength_127',['maxMasterBranchLength',['../class_version_control.html#a6b36d8e5919f5c0001dacd4c0d18293d',1,'VersionControl']]],
+  ['maxsidebranchlength_128',['maxSideBranchLength',['../class_version_control.html#acce5f0fb323a6fd5bbffa06c7734220b',1,'VersionControl']]],
+  ['maybesave_129',['maybeSave',['../class_main_window.html#a44eb5d77b382a5acd4b0091f499f4352',1,'MainWindow']]],
+  ['meanblurfilter_130',['MeanBlurFilter',['../class_mean_blur_filter.html',1,'MeanBlurFilter'],['../class_mean_blur_filter.html#a0ec85e701b44dbdd582cff7d8f29a2a9',1,'MeanBlurFilter::MeanBlurFilter()']]],
+  ['modified_131',['modified',['../class_workspace_area.html#ad9024b3baba410252f1fe5105effee51',1,'WorkspaceArea']]],
+  ['mousemoveevent_132',['mouseMoveEvent',['../class_workspace_area.html#a4f8958ad79c568bd61674a9fd89d6715',1,'WorkspaceArea']]],
+  ['mousepressevent_133',['mousePressEvent',['../class_workspace_area.html#ad90b504a4d55909de7e786ff8f561ac3',1,'WorkspaceArea']]],
+  ['mousereleaseevent_134',['mouseReleaseEvent',['../class_workspace_area.html#a242c2a9d199afb6515c4d1b6df1f81c8',1,'WorkspaceArea']]],
+  ['mphistogrambarsblue_135',['mpHistogramBarsBlue',['../class_histogram.html#ab0a48aab4e85cdcbea3dc2183ffdfa62',1,'Histogram']]],
+  ['mphistogrambarsgreen_136',['mpHistogramBarsGreen',['../class_histogram.html#aaa53da4cdd37d0c4cdf548ecb20a8fe6',1,'Histogram']]],
+  ['mphistogrambarsgrey_137',['mpHistogramBarsGrey',['../class_histogram.html#a6a01afc951adc5f879da9f546bc0f04a',1,'Histogram']]],
+  ['mphistogrambarsred_138',['mpHistogramBarsRed',['../class_histogram.html#acd35ba15142b066c696133bf38a296de',1,'Histogram']]],
+  ['mypencolor_139',['myPenColor',['../class_workspace_area.html#a127623efc3b579a0c1ab7f79113788f8',1,'WorkspaceArea']]],
+  ['mypenwidth_140',['myPenWidth',['../class_workspace_area.html#a1a18f07ee974400c6ae931d4a1f9531d',1,'WorkspaceArea']]]
+];

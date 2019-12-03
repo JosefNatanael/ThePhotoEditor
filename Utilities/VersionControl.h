@@ -44,7 +44,7 @@ private:
         void                            commitChanges(QImage, QString);
         void                            reverseCommit();
         const QImage&                   getImageAtIndex(int index);
-        bool                            canReverseCommit() const { return sideBranchLength >= 2; }
+        bool                            canReverseCommit() const { return sideBranchLength > 1; }
     };
 
 public:
@@ -56,13 +56,13 @@ public:
     void                                reverseCommit();
     const QImage&                       getImageAtIndex(int index);
     QLinkedList<MasterNode>::iterator   getMasterNodeIteratorAtIndex(int index);
-    bool                                canReverseCommit() const { return masterBranchLength >= 2; }
+    bool                                canReverseCommit() const { return masterBranchLength > 1; }
 
 private:
-    QLinkedList<MasterNode>             masterBranch;                   // Master branch linked list.
-    int                                 masterBranchLength = 0;         // Length of master branch.
-    static const int                    maxMasterBranchLength = 5;      // Maximum length of master branch.
-    static const int                    maxSideBranchLength = 5;        // Maximum length of a side branch.
+    QLinkedList<MasterNode>             masterBranch;                   //!< Master branch linked list.
+    int                                 masterBranchLength = 0;         //!< Length of master branch.
+    static const int                    maxMasterBranchLength = 5;      //!< Maximum length of master branch.
+    static const int                    maxSideBranchLength = 5;        //!< Maximum length of a side branch.
 
 };
 
