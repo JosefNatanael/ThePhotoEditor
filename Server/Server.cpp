@@ -97,9 +97,7 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
             QJsonObject playerFullMsg;
             playerFullMsg["type"] = "playerFull";
             sendJson(sender, playerFullMsg);
-            fullList.append(sender);
             clients.removeAll(sender);
-            //sender->deleteLater();
             return;
         }
 
@@ -112,9 +110,7 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
                 QJsonObject playerRepeatNameMsg;
                 playerRepeatNameMsg["type"] = "nameRepeat";
                 sendJson(sender, playerRepeatNameMsg);
-                fullList.append(sender);
                 clients.removeAll(sender);
-                //worker->deleteLater();
                 return;
             }
         }
@@ -130,7 +126,7 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
 
     } else if (type == "applyFilter" || type == "applyFilterWithMask" || type == "applyResize" ||
                type == "applyCrop" || type == "applyCropWithMagicWand" || type == "initialImage" ||
-               type == "versionControl" || type == "applyMoveScribble" || type == "applyReleaseScribble") {
+               type == "versionControl" || type == "applyMoveScribble" || type == "applyReleaseScribble" || type == "applyClear") {
         broadcast(json, sender);
     }
 
@@ -143,10 +139,6 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json) {
  */
 void Server::userDisconnected(ServerWorker *sender) {
     qDebug("user disconnect");
-//    if (std::find(clients.begin(), clients.end(), sender) == clients.end()) {
-//        fullList.removeAll(sender);
-//        return;
-//    }
     clients.removeAll(sender);
     const QString player = sender->getPlayerName();
     if (!player.isEmpty()) {

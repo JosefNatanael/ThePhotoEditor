@@ -536,7 +536,10 @@ void MainWindow::on_actionNew_triggered()
         clearImage();
     }
     workspaceArea->setModified(false);
+
+    sendClearScreen();
 }
+
 
 /**
  * @brief Opens a new image.
@@ -1425,6 +1428,10 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
     {
         workspaceArea->onReleaseScribble();
     }
+    else if (type == "applyClear") {
+        clearImage();
+        workspaceArea->setModified(false);
+    }
 }
 
 /**
@@ -1626,6 +1633,14 @@ void MainWindow::sendVersion(const QString& type, int masterNodeNumber, int side
             json["masterNodeNumber"] = masterNodeNumber;
             json["sideNodeNumber"] = sideNodeNumber;
         }
+        client->sendJson(json);
+    }
+}
+
+void MainWindow::sendClearScreen() {
+    if (isConnected) {
+        QJsonObject json;
+        json["type"] = "applyClear";
         client->sendJson(json);
     }
 }

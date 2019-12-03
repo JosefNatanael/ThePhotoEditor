@@ -131,6 +131,7 @@ private:
     void                        handleVersionControlBroadcast(const QString&);
     void                        handleVersionControlBroadcast(const QString&, int, int);
     void                        goToServerRoom(bool onEnter = false);
+    void                        sendClearScreen();
 
 private:
     Ui::MainWindow*             ui;
