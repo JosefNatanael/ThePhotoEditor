@@ -107,9 +107,9 @@ void Effects::on_inpaintingPushButton_clicked()
         QMessageBox::information(this, QString("No Mask"), QString("Please add mask first."));
         return;
     }
-    ImageInpainting* imageInpainting = new ImageInpainting(5);
+    ImageInpainting* imageInpainting = new ImageInpainting(3);
     imageInpainting->mask = mask;
-    emit applyEffectClicked(imageInpainting, 5 , 1);
+    emit applyEffectClicked(imageInpainting, 3, 1);
 }
 
 /**
