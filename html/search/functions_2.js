@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['checkoutcommit_337',['checkoutCommit',['../class_main_window.html#ae9b6952d95f64619cb8dfbdfa421e603',1,'MainWindow']]],
+  ['clearimage_338',['clearImage',['../class_main_window.html#a5984feb339fc07a75fb188918342e33b',1,'MainWindow']]],
+  ['client_339',['Client',['../class_client.html#a5b62b1caeb5c2c35a2ae367851d3ad92',1,'Client']]],
+  ['clientjsonreceived_340',['clientJsonReceived',['../class_main_window.html#adac5fe61dc5d7cda2e9ff0ece2f442d0',1,'MainWindow']]],
+  ['clockwiserotationtransform_341',['ClockwiseRotationTransform',['../class_clockwise_rotation_transform.html#ad02983961897a65f377b84726ec00a2e',1,'ClockwiseRotationTransform']]],
+  ['closeevent_342',['closeEvent',['../class_main_window.html#a05fb9d72c044aa3bb7d187b994704e2f',1,'MainWindow']]],
+  ['colorcontrols_343',['ColorControls',['../class_color_controls.html#a714b1b458988ed8afa0f2cf51867b2b4',1,'ColorControls']]],
+  ['colorwithinthreshold_344',['colorWithinThreshold',['../class_magic_wand.html#a072bf8a37dc1e25fd75426affc9192f0',1,'MagicWand']]],
+  ['commitbranch_345',['commitBranch',['../class_main_window.html#aaad2b6d2e4da0093e66eecc036cf1387',1,'MainWindow']]],
+  ['commitchanges_346',['commitChanges',['../class_main_window.html#af385c22dd194639ca1253f5a2e826de6',1,'MainWindow::commitChanges()'],['../class_version_control_1_1_master_node.html#a9cbbf0582a289695df2c30c5c7739ddf',1,'VersionControl::MasterNode::commitChanges()'],['../class_version_control.html#a4163181b3c92dfbf490846c755319f68',1,'VersionControl::commitChanges()'],['../class_workspace_area.html#a96cbe6d2666cf7a2aaa646002f7a60ce',1,'WorkspaceArea::commitChanges()']]],
+  ['commitdialog_347',['CommitDialog',['../class_commit_dialog.html#ad4fe449fb89e5a0c3a0e8ba183487200',1,'CommitDialog']]],
+  ['commitimage_348',['commitImage',['../class_workspace_area.html#ad8fc0670dfc110dd2a1517ee1372c2a6',1,'WorkspaceArea']]],
+  ['commitimageandset_349',['commitImageAndSet',['../class_workspace_area.html#a3b2fa93ec26dad8a9d1ef356d3b47205',1,'WorkspaceArea']]],
+  ['commitimageforpreview_350',['commitImageForPreview',['../class_workspace_area.html#a249a5798cf545aae3a69bb939d18f2bf',1,'WorkspaceArea']]],
+  ['connecttoserver_351',['connectToServer',['../class_client.html#ac2396013d01ea4e1bf3dfb520941b93e',1,'Client']]],
+  ['contrastfilter_352',['ContrastFilter',['../class_contrast_filter.html#a732454a0e845fdc2ee934ec85cf9f10f',1,'ContrastFilter']]],
+  ['convolution_353',['convolution',['../class_abstract_kernel_based_image_filter_transform.html#a8677dd96fb34666df771e3051767567a',1,'AbstractKernelBasedImageFilterTransform::convolution()'],['../class_image_inpainting.html#ae5430ce569d53049c977c5b7f1cbe074',1,'ImageInpainting::convolution()'],['../class_image_scissors.html#a877ac7027753fd3933df78b36be2ef50',1,'ImageScissors::convolution()']]],
+  ['counterclockwiserotationtransform_354',['CounterClockwiseRotationTransform',['../class_counter_clockwise_rotation_transform.html#aa5ddd33ebdddd54d54a143ebe9d8fd97',1,'CounterClockwiseRotationTransform']]],
+  ['createactions_355',['createActions',['../class_main_window.html#a62cd8712fb41a754298f6f60eead2cb0',1,'MainWindow']]],
+  ['createmenus_356',['createMenus',['../class_main_window.html#aa4907b0251d305659e403c62921ef331',1,'MainWindow']]],
+  ['crop_357',['crop',['../class_magic_wand.html#a0fedcab808d2ed5ea65706d63b89579d',1,'MagicWand']]],
+  ['customaddchild_358',['customAddChild',['../class_main_window.html#a1b90b333d11754aef02c13919642e67c',1,'MainWindow']]]
+];

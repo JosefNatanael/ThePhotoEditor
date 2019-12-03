@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['gaussianblurfilter_70',['GaussianBlurFilter',['../class_gaussian_blur_filter.html',1,'GaussianBlurFilter'],['../class_gaussian_blur_filter.html#ab7bbb82df5b71590623b24b43b3786ad',1,'GaussianBlurFilter::GaussianBlurFilter()']]],
+  ['generatehistorymenu_71',['generateHistoryMenu',['../class_main_window.html#a54b18293c23f468e73175ab9bb368452',1,'MainWindow']]],
+  ['getclients_72',['getClients',['../class_server.html#ab23c3d59aa7e8cfcaf28447dc58bde30',1,'Server']]],
+  ['getentry_73',['getEntry',['../class_abstract_kernel_based_image_filter_transform.html#a1d66b5831c1baf3bc82fb417bcfe0af3',1,'AbstractKernelBasedImageFilterTransform']]],
+  ['getimage_74',['getImage',['../class_workspace_area.html#aab6ceb2cab4da418a47c017cf620fffc',1,'WorkspaceArea']]],
+  ['getimageatindex_75',['getImageAtIndex',['../class_version_control_1_1_master_node.html#a785428d781fa27fc15cc7beff7918fc1',1,'VersionControl::MasterNode::getImageAtIndex()'],['../class_version_control.html#a8f59808805925424c4a5c94b330171f5',1,'VersionControl::getImageAtIndex()']]],
+  ['getimageheight_76',['getImageHeight',['../class_workspace_area.html#a87faad69c6f17cad248fbdea434ff6cd',1,'WorkspaceArea']]],
+  ['getimageloaded_77',['getImageLoaded',['../class_workspace_area.html#a0c6e9dc5978345a4c7521ea82b4f2f01',1,'WorkspaceArea']]],
+  ['getimagewidth_78',['getImageWidth',['../class_workspace_area.html#a2ea810dc68fbbeac8a778653319daf5e',1,'WorkspaceArea']]],
+  ['getip_79',['getIP',['../class_server.html#a27a184ab7862f1fe76e7d8fddec71730',1,'Server']]],
+  ['getmasternodeiteratoratindex_80',['getMasterNodeIteratorAtIndex',['../class_version_control.html#a57f9f82ab1a038d81915cf88d174f6c2',1,'VersionControl']]],
+  ['getname_81',['getName',['../class_edge_detection_filter.html#a45b83dadce5820d7992d69c5f3376b21',1,'EdgeDetectionFilter::getName()'],['../class_emboss_filter.html#abb3e2057923f2c93bc679987d1063264',1,'EmbossFilter::getName()'],['../class_gaussian_blur_filter.html#a36fe8881c22446a8cd0db20c4651c97d',1,'GaussianBlurFilter::getName()'],['../class_brightness_filter.html#ac4988ea6e0c500e6f35a9fa39994b127',1,'BrightnessFilter::getName()'],['../class_clockwise_rotation_transform.html#a78476a6638ed51900834d704bdbc0928',1,'ClockwiseRotationTransform::getName()'],['../class_contrast_filter.html#ad84281d9b868d1e23b2c88fa5349efd6',1,'ContrastFilter::getName()'],['../class_counter_clockwise_rotation_transform.html#a0186ee44c340c17781a9250eec8c444f',1,'CounterClockwiseRotationTransform::getName()'],['../class_exposure_filter.html#a0066bad48e8e992e0ce98cdac3cf1061',1,'ExposureFilter::getName()'],['../class_flip_horizontal_transform.html#a5be52f91fc921b49816697d4cf4a5a06',1,'FlipHorizontalTransform::getName()'],['../class_flip_vertical_transform.html#a523faae65a63d5963f5d6006be4bb7b1',1,'FlipVerticalTransform::getName()'],['../class_grayscale_filter.html#ae735587ba029d75665cea061119cca9e',1,'GrayscaleFilter::getName()'],['../class_hue_filter.html#ac6f18c5041387834078579f4a7359232',1,'HueFilter::getName()'],['../class_invert_filter.html#a8f012543dca56fe048c6d79b5b0363da',1,'InvertFilter::getName()'],['../class_magic_wand.html#aedf71478698512a2d9ecc74098882ded',1,'MagicWand::getName()'],['../class_saturation_filter.html#a56f4235042ac7257412f9a6b4a6f966a',1,'SaturationFilter::getName()'],['../class_temperature_filter.html#a5c9c8ce4ce72425a8b40071ecbfb2165',1,'TemperatureFilter::getName()'],['../class_tint_filter.html#af2c42bc6b768b35bcad210d3a974d02c',1,'TintFilter::getName()']]],
+  ['getplayername_82',['getPlayerName',['../class_server_worker.html#acc41d21c9554d216d6489a3d1ae3c7ad',1,'ServerWorker']]],
+  ['getport_83',['getPort',['../class_server.html#a4bfb54bdd3bb92fea9b1f8ff88c52076',1,'Server']]],
+  ['getx_84',['getX',['../class_magic_wand_1_1_point.html#a34f2d6763a124cac8a44b78e2012d75d',1,'MagicWand::Point']]],
+  ['gety_85',['getY',['../class_magic_wand_1_1_point.html#a120ad744609a4404cb83eaa12a2b14fe',1,'MagicWand::Point']]],
+  ['gotoserverroom_86',['goToServerRoom',['../class_main_window.html#ac147ee33778fdf0c1214f3fa23d14f54',1,'MainWindow']]],
+  ['graphicsview_87',['graphicsView',['../class_main_window.html#a2ae234c8fc9c4a897231f2ead4ad6d29',1,'MainWindow']]],
+  ['grayscalefilter_88',['GrayscaleFilter',['../class_grayscale_filter.html',1,'GrayscaleFilter'],['../class_grayscale_filter.html#a6aab15034a53373ccf8a09ed30225208',1,'GrayscaleFilter::GrayscaleFilter()']]]
+];
