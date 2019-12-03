@@ -21,8 +21,8 @@ public:
     virtual void setMask(const QImage& mask);
 
 private:
-    QImage mask;
-    int size;
+    QImage mask;    //!< Inpainting mask.
+    int size;       //!< Kernel size.
 };
 
 #endif // IMAGEINPAINTING_H

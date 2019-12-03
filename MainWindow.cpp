@@ -1151,7 +1151,6 @@ void MainWindow::onCreateRoom(QString name)
     ip = server->getIP();
     port = server->getPort();
     isHost = true;
-    qDebug() << ip << port;
     joinRoom();
 }
 
@@ -1451,7 +1450,6 @@ void MainWindow::sendInitialImage()
 {
     if (isHost)
     {
-        qDebug() << "I am server";
         QImage image = workspaceArea->getImage();
         if (!image.isNull())
         {
@@ -1462,7 +1460,6 @@ void MainWindow::sendInitialImage()
             json["type"] = "initialImage";
             json["data"] = QJsonValue(QLatin1String(buffer.data().toBase64()));
             client->sendJson(json);
-            qDebug() << "image sent";
         }
     }
 }
@@ -1481,13 +1478,6 @@ void MainWindow::on_actionView_Room_triggered()
         return;
     }
     goToServerRoom();
-}
-
-/**
- * @brief ???
- */
-void MainWindow::onSendPathItem(QGraphicsPathItem *)
-{
 }
 
 /**
@@ -1537,10 +1527,6 @@ void MainWindow::destroyConnection()
         server = nullptr;
     }
     room->close();
-//    if (room)
-//    {
-//        delete room;
-//    }
 }
 
 /**
@@ -1551,7 +1537,7 @@ void MainWindow::destroyConnection()
  *
  * @details Sending information of which filter used to other users
  */
-void MainWindow::sendFilter(QString filterName, int size, double strength) {
+void MainWindow::sendFilter(const QString& filterName, int size, double strength) {
     if (!isConnected || client == nullptr) {
         return;
     }
@@ -1575,7 +1561,7 @@ void MainWindow::sendFilter(QString filterName, int size, double strength) {
  * @details Sending information of which filter used to other users
  * The filter here is special because includes image mask
  */
-void MainWindow::sendFilterWithMask(QString filterName, int size, double strength, const QImage& mask) {
+void MainWindow::sendFilterWithMask(const QString& filterName, int size, double strength, const QImage& mask) {
     if (!isConnected || client == nullptr) {
         return;
     }
@@ -1605,7 +1591,7 @@ void MainWindow::sendFilterWithMask(QString filterName, int size, double strengt
  *
  * @details If user is connected and type is valid, set json's action
  */
-void MainWindow::sendVersion(QString type) {
+void MainWindow::sendVersion(const QString& type) {
     if (isConnected) {
         QJsonObject json;
         json["type"] = "versionControl";
@@ -1625,7 +1611,7 @@ void MainWindow::sendVersion(QString type) {
  * @details If user is connected and type is valid, set json's action
  * Also set the masterNodeNumber and sideNodeNumber of json
  */
-void MainWindow::sendVersion(QString type, int masterNodeNumber, int sideNodeNumber) {
+void MainWindow::sendVersion(const QString& type, int masterNodeNumber, int sideNodeNumber) {
     if (isConnected) {
         QJsonObject json;
         json["type"] = "versionControl";
@@ -1748,7 +1734,7 @@ void MainWindow::onSendReleaseScribble() {
  * @details applyFilterTransform according to the name of filter applied
  * and according to size and strength
  */
-void MainWindow::handleFilterBroadcast(QString name, int size, double strength) {
+void MainWindow::handleFilterBroadcast(const QString& name, int size, double strength) {
     if (name == "Hue Filter") {
         HueFilter *hueFilter = new HueFilter();
         applyFilterTransform(hueFilter, size, strength, true);
@@ -1813,7 +1799,7 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength) 
  * @details applyFilterTransform according to the name of filter applied
  * and according to size and strength, also mask
  */
-void MainWindow::handleFilterBroadcast(QString name, int size, double strength, const QImage& mask) {
+void MainWindow::handleFilterBroadcast(const QString& name, int size, double strength, const QImage& mask) {
     if (name == "Image Scissors") {
         ImageScissors *imageScissors = new ImageScissors();
         imageScissors->setMask(mask);
@@ -1831,7 +1817,7 @@ void MainWindow::handleFilterBroadcast(QString name, int size, double strength, 
  *
  * @details performs action according to action name
  */
-void MainWindow::handleVersionControlBroadcast(QString action) {
+void MainWindow::handleVersionControlBroadcast(const QString& action) {
     if (action == "undo") {
         undo();
     } else if (action == "redo") {
@@ -1851,7 +1837,7 @@ void MainWindow::handleVersionControlBroadcast(QString action) {
  *
  * @details performs action according to action name and masterNodeNumber & sideNodeNumber
  */
-void MainWindow::handleVersionControlBroadcast(QString action, int masterNodeNumber, int sideNodeNumber) {
+void MainWindow::handleVersionControlBroadcast(const QString& action, int masterNodeNumber, int sideNodeNumber) {
     if (action == "checkoutCommit") {
         checkoutCommit(masterNodeNumber, sideNodeNumber);
     }

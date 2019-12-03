@@ -6,7 +6,6 @@
 #include "BasicControls.h"
 #include "ui_BasicControls.h"
 #include <QPixmap>
-#include <QDebug>
 
 #include "../FilterTransform/NonKernelBased/CounterClockwiseRotationTransform.h"
 #include "../FilterTransform/NonKernelBased/ClockwiseRotationTransform.h"
