@@ -85,10 +85,7 @@ void VersionControl::MasterNode::reverseCommit()
  */
 const QImage& VersionControl::MasterNode::getImageAtIndex(int index)
 {
-    QLinkedList<SideNode>::iterator it = sideBranch.begin();
-    for (int i = 0; i < index - 1; ++i) {
-        ++it;
-    }
+    QLinkedList<SideNode>::iterator it = sideBranch.begin() + index;
     return it->currentImage;
 }
 
@@ -142,9 +139,6 @@ const QImage& VersionControl::getImageAtIndex(int index)
  */
 QLinkedList<VersionControl::MasterNode>::iterator VersionControl::getMasterNodeIteratorAtIndex(int index)
 {
-    QLinkedList<MasterNode>::iterator it = masterBranch.begin();
-    for (int i = 0; i < index; ++i) {
-        ++it;
-    }
+    QLinkedList<MasterNode>::iterator it = masterBranch.begin() + index;
     return it;
 }

@@ -403,17 +403,14 @@ void MainWindow::checkoutCommit(int masterNodeNumber, int sideNodeNumber, bool f
 {
     this->masterNodeNumber = masterNodeNumber;
     this->sideNodeNumber = sideNodeNumber;
-    // Traverse the imageHistory (Version Control)
+    // Go through the imageHistory (Version Control)
     QLinkedList<VersionControl::MasterNode>::iterator it = imageHistory.masterBranch.begin();
-    // 1. Traverse nodes in master branch
-    for (int i = 0; i < masterNodeNumber; ++i, ++it)
-    {
-    }
-    // 2. Traverse images in the side branch
+    // 1. Go through nodes in master branch
+    it += masterNodeNumber;
+
+    // 2. Go through images in the side branch
     QLinkedList<VersionControl::SideNode>::iterator it2 = it->sideBranch.begin();
-    for (int j = 0; j < sideNodeNumber; ++j, ++it2)
-    {
-    }
+    it2 += sideNodeNumber;
     rerenderWorkspaceArea(it2->currentImage, it2->currentImage.width(), it2->currentImage.height());
     if (fromActionMenu) {
         sendVersion("checkoutCommit", masterNodeNumber, sideNodeNumber);
@@ -702,18 +699,24 @@ void MainWindow::on_actionRevert_to_Last_Commit_triggered()
  */
 void MainWindow::revertToLastCommit()
 {
+    if (!imageHistory.getBranchLength())
+        return;
     // sideNodeNumber > 0 means we are in a sideBranch, sideBranchLength > 1 means we are also in a sideBranch
     if (sideNodeNumber > 0 || imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength() > 1)
     {
-        // Node starts at 0, +2 because we want to compare length and if the image is undoable
+        // Node starts at 0, +2 because we want to compare length and if the image is revertible
         if (sideNodeNumber + 2 <= imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->getBranchLength())
+        {
             checkoutCommit(masterNodeNumber, sideNodeNumber + 1);
-        imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->reverseCommit();
+            imageHistory.getMasterNodeIteratorAtIndex(masterNodeNumber)->reverseCommit();
+            --sideNodeNumber;
+        }
     }
     else if (masterNodeNumber + 2 <= imageHistory.getBranchLength())
     {
         checkoutCommit(masterNodeNumber + 1, 0);
         imageHistory.reverseCommit();
+        --masterNodeNumber;
     }
     else
     {
@@ -1805,7 +1808,7 @@ void MainWindow::handleFilterBroadcast(const QString& name, int size, double str
         imageScissors->setMask(mask);
         applyFilterTransform(imageScissors, size, strength, true);
     } else if (name == "Image Inpainting") {
-        ImageInpainting *imageInpainting = new ImageInpainting();
+        ImageInpainting *imageInpainting = new ImageInpainting(5);
         imageInpainting->setMask(mask);
         applyFilterTransform(imageInpainting, size, strength, true);
     }
