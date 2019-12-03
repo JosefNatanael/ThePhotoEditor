@@ -1201,13 +1201,12 @@ void MainWindow::joinRoom()
 {
     client = new Client();
     connect(client, &Client::connectionFailedBad, this, &MainWindow::onConnectionFailed);
-    connect(client, &Client::connected, this, &MainWindow::goToServerRoom);
+    connect(client, &Client::connected, [=]() {goToServerRoom(true);});
     connect(client, &Client::receiveJson, this, &MainWindow::clientJsonReceived);
     connect(client, &Client::connected, this, &MainWindow::sendPlayerName);
     connect(client, &Client::connectionStopped, this, &MainWindow::onConnectionStopped);
+    connect(client, &Client::disconnected, [=]() {destroyConnection();});
     client->connectToServer(QHostAddress(ip), port);
-    //connect(client, &Client::connected, this, &MainWindow::sendInitialImage);
-    //connect(client, &Client::disconnected, this, &MainWindow::forceLeaveRoom);
 }
 
 /**
@@ -1230,12 +1229,15 @@ void MainWindow::onConnectionFailed()
  *
  * @details Set room with ip and port, user is connected
  */
-void MainWindow::goToServerRoom()
+void MainWindow::goToServerRoom(bool onEnter)
 {
     room->setServerRoom(ip, port);
     room->setModal(true);
-    room->exec();
-    isConnected = true;
+    if (!onEnter) {
+        room->exec();
+    } else {
+        isConnected = true;
+    }
 }
 
 /**
@@ -1373,7 +1375,7 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
         QString name = data["name"].toString();
         int size = data["size"].toInt();
         double strength = data["strength"].toDouble();
-        QByteArray ba = QByteArray::fromBase64(json.value(QString("data")).toString().toLatin1());
+        QByteArray ba = QByteArray::fromBase64(data["mask"].toString().toLatin1());
         QImage mask = QImage::fromData(ba, "PNG");
         if (!mask.isNull() && !name.isEmpty()) {
             handleFilterBroadcast(name, size, strength, mask);
@@ -1501,6 +1503,15 @@ void MainWindow::onDisconnect()
     QMessageBox::StandardButton reply = QMessageBox::question(this, QString("Leave Room"), QString("Are you sure to leave the room?"));
     if (reply == QMessageBox::Yes)
     {
+        if (isHost) {
+            if (server != nullptr)
+            {
+                server->stopServer();
+                server->deleteLater();
+                server = nullptr;
+                return;
+            }
+        }
         destroyConnection();
     }
 }
@@ -1512,6 +1523,7 @@ void MainWindow::onDisconnect()
  */
 void MainWindow::destroyConnection()
 {
+    isHost = false;
     isConnected = false;
     if (client != nullptr)
     {
@@ -1519,15 +1531,9 @@ void MainWindow::destroyConnection()
         client->deleteLater();
         client = nullptr;
     }
-    if (server != nullptr)
-
-    {
-        server->stopServer();
-        server->deleteLater();
-        server = nullptr;
-    }
     room->close();
 }
+
 
 /**
  * @brief Sending filter implementation
@@ -1805,7 +1811,7 @@ void MainWindow::handleFilterBroadcast(const QString& name, int size, double str
         imageScissors->setMask(mask);
         applyFilterTransform(imageScissors, size, strength, true);
     } else if (name == "Image Inpainting") {
-        ImageInpainting *imageInpainting = new ImageInpainting(5);
+        ImageInpainting *imageInpainting = new ImageInpainting(size);
         imageInpainting->setMask(mask);
         applyFilterTransform(imageInpainting, size, strength, true);
     }

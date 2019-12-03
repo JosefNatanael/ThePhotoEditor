@@ -191,9 +191,6 @@ void Server::broadcast(const QJsonObject &json, ServerWorker *exclude) {
  *  @brief  function for stopping the server
  */
 void Server::stopServer() {
-    QJsonObject hostDisconnected;
-    hostDisconnected["type"] = "hostDisconnected";
-    broadcast(hostDisconnected);
     for (ServerWorker *worker : clients)
         worker->disconnectFromClient();
     close();

@@ -77,7 +77,6 @@ private slots:
     void                        onJoinRoom(QString, QString, quint16);
     void                        sendPlayerName();
     void                        clientJsonReceived(const QJsonObject&);
-    void                        goToServerRoom();
     void                        onConnectionFailed();
     void                        onConnectionStopped();
     void                        onDisconnect();
@@ -131,6 +130,7 @@ private:
     void                        handleFilterBroadcast(const QString&, int, double, const QImage&);
     void                        handleVersionControlBroadcast(const QString&);
     void                        handleVersionControlBroadcast(const QString&, int, int);
+    void                        goToServerRoom(bool onEnter = false);
 
 private:
     Ui::MainWindow*             ui;
