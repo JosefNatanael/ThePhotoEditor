@@ -1463,6 +1463,7 @@ void MainWindow::sendInitialImage()
     if (isHost)
     {
         workspaceArea->commitImageAndSet();
+        rerenderWorkspaceArea(workspaceArea->getImage(), workspaceArea->getImageWidth(), workspaceArea->getImageHeight());
         QImage image = workspaceArea->getImage();
         if (!image.isNull())
         {
@@ -1642,6 +1643,9 @@ void MainWindow::sendVersion(const QString& type, int masterNodeNumber, int side
     }
 }
 
+/**
+ * @brief Notifies clients to clear image.
+ */
 void MainWindow::sendClearScreen() {
     if (isConnected) {
         QJsonObject json;

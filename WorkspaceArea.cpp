@@ -124,7 +124,17 @@ QImage WorkspaceArea::commitImage()
 		QPainter painter(&commitImage);
 		render(&painter);
 		return commitImage;
-	}
+    }
+}
+
+/**
+ * @brief Sets the workspaceImage to a committed version of it.
+ */
+void WorkspaceArea::commitImageAndSet()
+{
+    image = commitImage();
+    imageWidth = image.width();
+    imageHeight = image.height();
 }
 
 /**

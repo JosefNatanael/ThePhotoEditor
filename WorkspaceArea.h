@@ -52,7 +52,7 @@ public:
     void                        setCursorMode(CursorMode cursorMode) { this->cursorMode = cursorMode; }             //!< Sets cursor mode of workspace area.
     void                        setMagicWandThreshold(int threshold) { this->magicWandThreshold = threshold; }      //!< Sets magic wand threshold.
     QImage                      commitImage();
-    void                        commitImageAndSet() { image = commitImage(); }                  //!< Sets the workspaceImage to a committed version of it.
+    void                        commitImageAndSet();
     QImage                      commitImageForPreview();
     void                        cropImage(int, int, int, int, bool = false);
     void                        cropImageWithMagicWand(int, int, bool = false);

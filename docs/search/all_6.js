@@ -17,7 +17,7 @@ var searchData=
   ['getport_84',['getPort',['../class_server.html#a4bfb54bdd3bb92fea9b1f8ff88c52076',1,'Server']]],
   ['getx_85',['getX',['../class_magic_wand_1_1_point.html#a34f2d6763a124cac8a44b78e2012d75d',1,'MagicWand::Point']]],
   ['gety_86',['getY',['../class_magic_wand_1_1_point.html#a120ad744609a4404cb83eaa12a2b14fe',1,'MagicWand::Point']]],
-  ['gotoserverroom_87',['goToServerRoom',['../class_main_window.html#ac147ee33778fdf0c1214f3fa23d14f54',1,'MainWindow']]],
+  ['gotoserverroom_87',['goToServerRoom',['../class_main_window.html#aa10c67cbaa5151cd7ab8453622676003',1,'MainWindow']]],
   ['graphicsview_88',['graphicsView',['../class_main_window.html#a2ae234c8fc9c4a897231f2ead4ad6d29',1,'MainWindow']]],
   ['grayscalefilter_89',['GrayscaleFilter',['../class_grayscale_filter.html',1,'GrayscaleFilter'],['../class_grayscale_filter.html#a6aab15034a53373ccf8a09ed30225208',1,'GrayscaleFilter::GrayscaleFilter()']]]
 ];
