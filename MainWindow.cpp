@@ -352,7 +352,7 @@ void MainWindow::createActions()
     // Create clear screen action and tie to MainWindow::clearImage()
     clearScreenAct = new QAction(tr("&Clear Screen"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
-    connect(clearScreenAct, SIGNAL(triggered()), this, SLOT(clearImage()));
+    connect(clearScreenAct, SIGNAL(triggered()), this, SLOT(on_actionNew_triggered()));
 }
 
 /**
@@ -1202,6 +1202,9 @@ void MainWindow::onJoinRoom(QString name, QString address, quint16 port)
  */
 void MainWindow::joinRoom()
 {
+    if (!isHost) {
+        clearImage();
+    }
     client = new Client();
     connect(client, &Client::connectionFailedBad, this, &MainWindow::onConnectionFailed);
     connect(client, &Client::connected, [=]() {goToServerRoom(true);});
@@ -1220,11 +1223,11 @@ void MainWindow::joinRoom()
 void MainWindow::onConnectionFailed()
 {
     QMessageBox::information(this, QString("Connection failed"), QString("Invalid IP address or port."));
-    if (room)
-    {
-        room->setModal(false);
-        room->close();
-    }
+//    if (room)
+//    {
+//        room->setModal(false);
+//        room->close();
+//    }
 }
 
 /**
@@ -1459,6 +1462,7 @@ void MainWindow::sendInitialImage()
 {
     if (isHost)
     {
+        workspaceArea->commitImageAndSet();
         QImage image = workspaceArea->getImage();
         if (!image.isNull())
         {
@@ -1539,6 +1543,7 @@ void MainWindow::destroyConnection()
         client = nullptr;
     }
     room->close();
+    delete room;
 }
 
 
