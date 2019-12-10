@@ -172,7 +172,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:ac73339296c0fe4cb798224c9a2437952"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles joining room.  <a href="class_main_window.html#ac73339296c0fe4cb798224c9a2437952">More...</a><br /></td></tr>
 <tr class="separator:ac73339296c0fe4cb798224c9a2437952"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af33761bb11ab5bc82a74975fe73dc0b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#af33761bb11ab5bc82a74975fe73dc0b5">on_actionView_Room_triggered</a> ()</td></tr>
-<tr class="memdesc:af33761bb11ab5bc82a74975fe73dc0b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handling viewing room.  <a href="class_main_window.html#af33761bb11ab5bc82a74975fe73dc0b5">More...</a><br /></td></tr>
+<tr class="memdesc:af33761bb11ab5bc82a74975fe73dc0b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles view room action.  <a href="class_main_window.html#af33761bb11ab5bc82a74975fe73dc0b5">More...</a><br /></td></tr>
 <tr class="separator:af33761bb11ab5bc82a74975fe73dc0b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36c59cace88bc2ed23b15362e647cc97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a36c59cace88bc2ed23b15362e647cc97">onCreateRoom</a> (QString)</td></tr>
 <tr class="memdesc:a36c59cace88bc2ed23b15362e647cc97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles creating room (for multiplayer feature)  <a href="class_main_window.html#a36c59cace88bc2ed23b15362e647cc97">More...</a><br /></td></tr>
@@ -181,33 +181,35 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a32b970ce3281f133563122ad334edcc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles joining room.  <a href="class_main_window.html#a32b970ce3281f133563122ad334edcc2">More...</a><br /></td></tr>
 <tr class="separator:a32b970ce3281f133563122ad334edcc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02088148c77ba7ba79383027eea2a737"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a02088148c77ba7ba79383027eea2a737">sendPlayerName</a> ()</td></tr>
-<tr class="memdesc:a02088148c77ba7ba79383027eea2a737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending player name.  <a href="class_main_window.html#a02088148c77ba7ba79383027eea2a737">More...</a><br /></td></tr>
+<tr class="memdesc:a02088148c77ba7ba79383027eea2a737"><td class="mdescLeft">&#160;</td><td class="mdescRight">sends player name (via json)  <a href="class_main_window.html#a02088148c77ba7ba79383027eea2a737">More...</a><br /></td></tr>
 <tr class="separator:a02088148c77ba7ba79383027eea2a737"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adac5fe61dc5d7cda2e9ff0ece2f442d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#adac5fe61dc5d7cda2e9ff0ece2f442d0">clientJsonReceived</a> (const QJsonObject &amp;)</td></tr>
+<tr class="memdesc:adac5fe61dc5d7cda2e9ff0ece2f442d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles all incoming json.  <a href="class_main_window.html#adac5fe61dc5d7cda2e9ff0ece2f442d0">More...</a><br /></td></tr>
 <tr class="separator:adac5fe61dc5d7cda2e9ff0ece2f442d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abebab5217ecee5cb768e35a253173c9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#abebab5217ecee5cb768e35a253173c9f">onConnectionFailed</a> ()</td></tr>
-<tr class="memdesc:abebab5217ecee5cb768e35a253173c9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs us if connection failed.  <a href="class_main_window.html#abebab5217ecee5cb768e35a253173c9f">More...</a><br /></td></tr>
+<tr class="memitem:abebab5217ecee5cb768e35a253173c9f"><td class="memItemLeft" align="right" valign="top"><a id="abebab5217ecee5cb768e35a253173c9f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#abebab5217ecee5cb768e35a253173c9f">onConnectionFailed</a> ()</td></tr>
+<tr class="memdesc:abebab5217ecee5cb768e35a253173c9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs us if connection failed. <br /></td></tr>
 <tr class="separator:abebab5217ecee5cb768e35a253173c9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70ce8425448cce5e6131e742c20382e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a70ce8425448cce5e6131e742c20382e2">onConnectionStopped</a> ()</td></tr>
-<tr class="memdesc:a70ce8425448cce5e6131e742c20382e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells if connection is stopped.  <a href="class_main_window.html#a70ce8425448cce5e6131e742c20382e2">More...</a><br /></td></tr>
+<tr class="memdesc:a70ce8425448cce5e6131e742c20382e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notifies user if connection is cut.  <a href="class_main_window.html#a70ce8425448cce5e6131e742c20382e2">More...</a><br /></td></tr>
 <tr class="separator:a70ce8425448cce5e6131e742c20382e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91740aa5c9d1bfc86b178eb8c6a4ddcd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a91740aa5c9d1bfc86b178eb8c6a4ddcd">onDisconnect</a> ()</td></tr>
-<tr class="memdesc:a91740aa5c9d1bfc86b178eb8c6a4ddcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handling desired disconnecting.  <a href="class_main_window.html#a91740aa5c9d1bfc86b178eb8c6a4ddcd">More...</a><br /></td></tr>
+<tr class="memdesc:a91740aa5c9d1bfc86b178eb8c6a4ddcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles disconnect action.  <a href="class_main_window.html#a91740aa5c9d1bfc86b178eb8c6a4ddcd">More...</a><br /></td></tr>
 <tr class="separator:a91740aa5c9d1bfc86b178eb8c6a4ddcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3dc914b1e782e7dd3b1301a915502438"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a3dc914b1e782e7dd3b1301a915502438">onSendResize</a> (int, int)</td></tr>
-<tr class="memdesc:a3dc914b1e782e7dd3b1301a915502438"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending for resizing.  <a href="class_main_window.html#a3dc914b1e782e7dd3b1301a915502438">More...</a><br /></td></tr>
+<tr class="memdesc:a3dc914b1e782e7dd3b1301a915502438"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends json to server for resizing.  <a href="class_main_window.html#a3dc914b1e782e7dd3b1301a915502438">More...</a><br /></td></tr>
 <tr class="separator:a3dc914b1e782e7dd3b1301a915502438"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7daa3be81072b2e88458d69ed88584f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#ab7daa3be81072b2e88458d69ed88584f">onSendCrop</a> (int, int, int, int)</td></tr>
-<tr class="memdesc:ab7daa3be81072b2e88458d69ed88584f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending for cropping.  <a href="class_main_window.html#ab7daa3be81072b2e88458d69ed88584f">More...</a><br /></td></tr>
+<tr class="memdesc:ab7daa3be81072b2e88458d69ed88584f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends json to server for cropping.  <a href="class_main_window.html#ab7daa3be81072b2e88458d69ed88584f">More...</a><br /></td></tr>
 <tr class="separator:ab7daa3be81072b2e88458d69ed88584f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab55c75ed2e5877ef7231291374380790"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#ab55c75ed2e5877ef7231291374380790">onSendCropWithMagicWand</a> (int, int)</td></tr>
-<tr class="memdesc:ab55c75ed2e5877ef7231291374380790"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending for cropping, special for Magic Wand.  <a href="class_main_window.html#ab55c75ed2e5877ef7231291374380790">More...</a><br /></td></tr>
+<tr class="memdesc:ab55c75ed2e5877ef7231291374380790"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends json to server for cropping with Magic Wand.  <a href="class_main_window.html#ab55c75ed2e5877ef7231291374380790">More...</a><br /></td></tr>
 <tr class="separator:ab55c75ed2e5877ef7231291374380790"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b487b68d0fc8edb92422f7233bf33ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a4b487b68d0fc8edb92422f7233bf33ee">onSendMoveScribble</a> (double, double, QString, int)</td></tr>
-<tr class="memdesc:a4b487b68d0fc8edb92422f7233bf33ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending special during scribble moving.  <a href="class_main_window.html#a4b487b68d0fc8edb92422f7233bf33ee">More...</a><br /></td></tr>
+<tr class="memdesc:a4b487b68d0fc8edb92422f7233bf33ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends json to server during scribble moving.  <a href="class_main_window.html#a4b487b68d0fc8edb92422f7233bf33ee">More...</a><br /></td></tr>
 <tr class="separator:a4b487b68d0fc8edb92422f7233bf33ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad487eb5022e9bfca82f5fab500410e52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#ad487eb5022e9bfca82f5fab500410e52">onSendReleaseScribble</a> ()</td></tr>
-<tr class="memdesc:ad487eb5022e9bfca82f5fab500410e52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending special during scribble release.  <a href="class_main_window.html#ad487eb5022e9bfca82f5fab500410e52">More...</a><br /></td></tr>
+<tr class="memdesc:ad487eb5022e9bfca82f5fab500410e52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends json to server during scribble release.  <a href="class_main_window.html#ad487eb5022e9bfca82f5fab500410e52">More...</a><br /></td></tr>
 <tr class="separator:ad487eb5022e9bfca82f5fab500410e52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab58a765c99981afb380ab4b825fb39c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#ab58a765c99981afb380ab4b825fb39c8">on_actionCommit_Changes_triggered</a> ()</td></tr>
 <tr class="memdesc:ab58a765c99981afb380ab4b825fb39c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles commit changes action/merging to master branch.  <a href="class_main_window.html#ab58a765c99981afb380ab4b825fb39c8">More...</a><br /></td></tr>
@@ -282,22 +284,22 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a014ccfbf1abf23292518b762640974f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joining room implementation.  <a href="class_main_window.html#a014ccfbf1abf23292518b762640974f5">More...</a><br /></td></tr>
 <tr class="separator:a014ccfbf1abf23292518b762640974f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a159c1d13152b07838f46c973320c60c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a159c1d13152b07838f46c973320c60c2">sendInitialImage</a> ()</td></tr>
-<tr class="memdesc:a159c1d13152b07838f46c973320c60c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending initial image.  <a href="class_main_window.html#a159c1d13152b07838f46c973320c60c2">More...</a><br /></td></tr>
+<tr class="memdesc:a159c1d13152b07838f46c973320c60c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">sends initial image (via json)  <a href="class_main_window.html#a159c1d13152b07838f46c973320c60c2">More...</a><br /></td></tr>
 <tr class="separator:a159c1d13152b07838f46c973320c60c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf84660401736e62e99b528d0e45f220"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#aaf84660401736e62e99b528d0e45f220">destroyConnection</a> ()</td></tr>
-<tr class="memdesc:aaf84660401736e62e99b528d0e45f220"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroying connection implementation.  <a href="class_main_window.html#aaf84660401736e62e99b528d0e45f220">More...</a><br /></td></tr>
+<tr class="memdesc:aaf84660401736e62e99b528d0e45f220"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys connection to server.  <a href="class_main_window.html#aaf84660401736e62e99b528d0e45f220">More...</a><br /></td></tr>
 <tr class="separator:aaf84660401736e62e99b528d0e45f220"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b23c854e52de11702c04c2358a4790f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a8b23c854e52de11702c04c2358a4790f">sendFilter</a> (const QString &amp;, int, double)</td></tr>
 <tr class="memdesc:a8b23c854e52de11702c04c2358a4790f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending filter implementation.  <a href="class_main_window.html#a8b23c854e52de11702c04c2358a4790f">More...</a><br /></td></tr>
 <tr class="separator:a8b23c854e52de11702c04c2358a4790f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45339851c7ca460e07678ad658ec27cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a45339851c7ca460e07678ad658ec27cb">sendFilterWithMask</a> (const QString &amp;, int, double, const QImage &amp;)</td></tr>
-<tr class="memdesc:a45339851c7ca460e07678ad658ec27cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending filter with mask implementation.  <a href="class_main_window.html#a45339851c7ca460e07678ad658ec27cb">More...</a><br /></td></tr>
+<tr class="memdesc:a45339851c7ca460e07678ad658ec27cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends json to server for filter with mask implementation.  <a href="class_main_window.html#a45339851c7ca460e07678ad658ec27cb">More...</a><br /></td></tr>
 <tr class="separator:a45339851c7ca460e07678ad658ec27cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e6d3a46341c5e73ae1352b0333af9a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a9e6d3a46341c5e73ae1352b0333af9a6">sendVersion</a> (const QString &amp;)</td></tr>
-<tr class="memdesc:a9e6d3a46341c5e73ae1352b0333af9a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending for version control.  <a href="class_main_window.html#a9e6d3a46341c5e73ae1352b0333af9a6">More...</a><br /></td></tr>
+<tr class="memdesc:a9e6d3a46341c5e73ae1352b0333af9a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends json to server for version control.  <a href="class_main_window.html#a9e6d3a46341c5e73ae1352b0333af9a6">More...</a><br /></td></tr>
 <tr class="separator:a9e6d3a46341c5e73ae1352b0333af9a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdddf66acd8a0ce56c02471316c4c0d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#acdddf66acd8a0ce56c02471316c4c0d4">sendVersion</a> (const QString &amp;, int, int)</td></tr>
-<tr class="memdesc:acdddf66acd8a0ce56c02471316c4c0d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sending for version control.  <a href="class_main_window.html#acdddf66acd8a0ce56c02471316c4c0d4">More...</a><br /></td></tr>
+<tr class="memdesc:acdddf66acd8a0ce56c02471316c4c0d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded function.  <a href="class_main_window.html#acdddf66acd8a0ce56c02471316c4c0d4">More...</a><br /></td></tr>
 <tr class="separator:acdddf66acd8a0ce56c02471316c4c0d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bc7f683f5dec5a359a6e3fce756a7f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a6bc7f683f5dec5a359a6e3fce756a7f7">handleFilterBroadcast</a> (const QString &amp;, int, double)</td></tr>
 <tr class="memdesc:a6bc7f683f5dec5a359a6e3fce756a7f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handling filter broadcast.  <a href="class_main_window.html#a6bc7f683f5dec5a359a6e3fce756a7f7">More...</a><br /></td></tr>
@@ -306,10 +308,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a36e562ec6073c85251c5b4f6ae19ba5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handling filter broadcast which needs mask (Image Scissors and Image Inpainting)  <a href="class_main_window.html#a36e562ec6073c85251c5b4f6ae19ba5b">More...</a><br /></td></tr>
 <tr class="separator:a36e562ec6073c85251c5b4f6ae19ba5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a191ca5ee9a61d404ef9ded7a64076523"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a191ca5ee9a61d404ef9ded7a64076523">handleVersionControlBroadcast</a> (const QString &amp;)</td></tr>
-<tr class="memdesc:a191ca5ee9a61d404ef9ded7a64076523"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handling version control broadcast.  <a href="class_main_window.html#a191ca5ee9a61d404ef9ded7a64076523">More...</a><br /></td></tr>
+<tr class="memdesc:a191ca5ee9a61d404ef9ded7a64076523"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles version control broadcast. Calls function according to action name.  <a href="class_main_window.html#a191ca5ee9a61d404ef9ded7a64076523">More...</a><br /></td></tr>
 <tr class="separator:a191ca5ee9a61d404ef9ded7a64076523"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59b6fe79e152257e95d2ab1f062481a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a59b6fe79e152257e95d2ab1f062481a3">handleVersionControlBroadcast</a> (const QString &amp;, int, int)</td></tr>
-<tr class="memdesc:a59b6fe79e152257e95d2ab1f062481a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handling version control broadcast that needs masterNodeNumber and sideNodeNumber.  <a href="class_main_window.html#a59b6fe79e152257e95d2ab1f062481a3">More...</a><br /></td></tr>
+<tr class="memdesc:a59b6fe79e152257e95d2ab1f062481a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles version control broadcast that needs masterNodeNumber and sideNodeNumber.  <a href="class_main_window.html#a59b6fe79e152257e95d2ab1f062481a3">More...</a><br /></td></tr>
 <tr class="separator:a59b6fe79e152257e95d2ab1f062481a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa10c67cbaa5151cd7ab8453622676003"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#aa10c67cbaa5151cd7ab8453622676003">goToServerRoom</a> (bool onEnter=false)</td></tr>
 <tr class="memdesc:aa10c67cbaa5151cd7ab8453622676003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Go to server room.  <a href="class_main_window.html#aa10c67cbaa5151cd7ab8453622676003">More...</a><br /></td></tr>
@@ -786,13 +788,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Handles all incoming json. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">json</td><td>QJsonObject</td></tr>
   </table>
   </dd>
 </dl>
-<p>Checks the string-typed value of json and performs desired actions </p>
+<p>Checks the value of json and performs desired actions. </p>
 
 </div>
 </div>
@@ -972,8 +976,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </table>
 </div><div class="memdoc">
 
-<p>Destroying connection implementation. </p>
-<p>Closes room after checking for null client or server </p>
+<p>Destroys connection to server. </p>
+<p>Closes the room </p>
 
 </div>
 </div>
@@ -1141,15 +1145,14 @@ false event is not a GraphicsSceneWheel. </dd></dl>
 </div><div class="memdoc">
 
 <p>Handling filter broadcast. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>applyFilterTransform according to the name of filter applied and according to size and strength </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>name of filter </td></tr>
     <tr><td class="paramname">size</td><td>size of kernel (if kernel is involved) </td></tr>
-    <tr><td class="paramname">strength</td><td>strength of filter applied</td></tr>
+    <tr><td class="paramname">strength</td><td>strength of filter applied </td></tr>
   </table>
   </dd>
 </dl>
-<p>applyFilterTransform according to the name of filter applied and according to size and strength </p>
 
 </div>
 </div>
@@ -1200,16 +1203,15 @@ false event is not a GraphicsSceneWheel. </dd></dl>
 </div><div class="memdoc">
 
 <p>Handling filter broadcast which needs mask (Image Scissors and Image Inpainting) </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>applyFilterTransform according to the name of filter applied and according to size and strength, also mask </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>name of filter </td></tr>
     <tr><td class="paramname">size</td><td>size of kernel (if kernel is involved) </td></tr>
     <tr><td class="paramname">strength</td><td>strength of filter applied </td></tr>
-    <tr><td class="paramname">mask</td><td>image mask that is used</td></tr>
+    <tr><td class="paramname">mask</td><td>image mask that is used </td></tr>
   </table>
   </dd>
 </dl>
-<p>applyFilterTransform according to the name of filter applied and according to size and strength, also mask </p>
 
 </div>
 </div>
@@ -1237,14 +1239,13 @@ false event is not a GraphicsSceneWheel. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Handling version control broadcast. </p>
+<p>Handles version control broadcast. Calls function according to action name. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">action</td><td>name of action implemented</td></tr>
+    <tr><td class="paramname">action</td><td>name of action implemented </td></tr>
   </table>
   </dd>
 </dl>
-<p>performs action according to action name </p>
 
 </div>
 </div>
@@ -1288,7 +1289,7 @@ false event is not a GraphicsSceneWheel. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Handling version control broadcast that needs masterNodeNumber and sideNodeNumber. </p>
+<p>Handles version control broadcast that needs masterNodeNumber and sideNodeNumber. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">action</td><td>name of action implemented </td></tr>
@@ -1417,7 +1418,7 @@ false There was no changes/modifications made. </dd></dl>
 </div><div class="memdoc">
 
 <p>Handles commit changes action/merging to master branch. </p>
-<p>This action is triggered manually by the user. This means user will try to commit changes/merge to master branch. </p>
+<p>This action is triggered manually by the user. Calling this function means user tries to commit changes/merge to master branch. </p>
 
 </div>
 </div>
@@ -1696,7 +1697,7 @@ false There was no changes/modifications made. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Handling viewing room. </p>
+<p>Handles view room action. </p>
 <p>If user is not connected, message box will pop up (Room unavailable, create or join room first.) Else, go to server room </p>
 
 </div>
@@ -1735,34 +1736,6 @@ false There was no changes/modifications made. </dd></dl>
 
 </div>
 </div>
-<a id="abebab5217ecee5cb768e35a253173c9f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abebab5217ecee5cb768e35a253173c9f">&#9670;&nbsp;</a></span>onConnectionFailed</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void MainWindow::onConnectionFailed </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">slot</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Informs us if connection failed. </p>
-<p>sets room's modality into false, closes the room </p>
-
-</div>
-</div>
 <a id="a70ce8425448cce5e6131e742c20382e2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a70ce8425448cce5e6131e742c20382e2">&#9670;&nbsp;</a></span>onConnectionStopped</h2>
 
@@ -1786,7 +1759,7 @@ false There was no changes/modifications made. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Tells if connection is stopped. </p>
+<p>Notifies user if connection is cut. </p>
 <p>message box will pop up </p>
 
 </div>
@@ -1822,7 +1795,7 @@ false There was no changes/modifications made. </dd></dl>
   </table>
   </dd>
 </dl>
-<p>create new server and connects the user through his/her ip and port join the new room </p>
+<p>create new server and connects the user through his/her ip and port, join the new room </p>
 
 </div>
 </div>
@@ -1895,8 +1868,8 @@ false There was no changes/modifications made. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Handling desired disconnecting. </p>
-<p>message box will pop to ask if the user would like to leave room If yes, connection destroyed </p>
+<p>Handles disconnect action. </p>
+<p>message box will pop to ask if the user would like to leave room If yes, connection severed. </p>
 
 </div>
 </div>
@@ -2027,17 +2000,17 @@ false There was no changes/modifications made. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending for cropping. </p>
+<p>Sends json to server for cropping. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>Position from top edge of screen </td></tr>
     <tr><td class="paramname">y</td><td>Position from left edge of screen </td></tr>
-    <tr><td class="paramname">width</td><td>Width of screen </td></tr>
-    <tr><td class="paramname">height</td><td>Height of screen</td></tr>
+    <tr><td class="paramname">width</td><td></td></tr>
+    <tr><td class="paramname">height</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<p>If user is connected, set the width and height data Also applyCrop and data of json </p>
+<p>If user is connected, send the width and height, applyCrop json </p>
 
 </div>
 </div>
@@ -2075,7 +2048,7 @@ false There was no changes/modifications made. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending for cropping, special for Magic Wand. </p>
+<p>Sends json to server for cropping with Magic Wand. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>Position from top edge of screen </td></tr>
@@ -2083,7 +2056,7 @@ false There was no changes/modifications made. </dd></dl>
   </table>
   </dd>
 </dl>
-<p>If user is connected, set the x and y data Also applyCropWithMagicWand and data of json </p>
+<p>If user is connected, send the x and y, applyCropWithMagicWand data. </p>
 
 </div>
 </div>
@@ -2133,7 +2106,7 @@ false There was no changes/modifications made. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending special during scribble moving. </p>
+<p>Sends json to server during scribble moving. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>Position from top edge of screen </td></tr>
@@ -2143,7 +2116,7 @@ false There was no changes/modifications made. </dd></dl>
   </table>
   </dd>
 </dl>
-<p>If user is connected, set the x and y data Also applyMoveScribble and data of used pen (color and width) </p>
+<p>If user is connected, sends the x and y data, applyMoveScribble and data of used pen (color and width) </p>
 
 </div>
 </div>
@@ -2170,8 +2143,8 @@ false There was no changes/modifications made. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending special during scribble release. </p>
-<p>If user is connected, set json's type as applyReleaseScribble </p>
+<p>Sends json to server during scribble release. </p>
+<p>If user is connected, sends json with type as applyReleaseScribble </p>
 
 </div>
 </div>
@@ -2209,15 +2182,15 @@ false There was no changes/modifications made. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending for resizing. </p>
+<p>Sends json to server for resizing. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">width</td><td>Width of screen </td></tr>
-    <tr><td class="paramname">height</td><td>Height of screen</td></tr>
+    <tr><td class="paramname">width</td><td></td></tr>
+    <tr><td class="paramname">height</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<p>If user is connected, set the width and height data, Also applyResize and data of json </p>
+<p>If user is connected, sends the width and height data, applyResize json </p>
 
 </div>
 </div>
@@ -2680,7 +2653,7 @@ false Image not saved. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending filter with mask implementation. </p>
+<p>Sends json to server for filter with mask implementation. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filterName</td><td>name of filter that is applied </td></tr>
@@ -2690,7 +2663,7 @@ false Image not saved. </dd></dl>
   </table>
   </dd>
 </dl>
-<p>Sending information of which filter used to other users The filter here is special because includes image mask </p>
+<p>Sending information of which filter to use to server The filter here is special because it includes image mask </p>
 
 </div>
 </div>
@@ -2717,7 +2690,7 @@ false Image not saved. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending initial image. </p>
+<p>sends initial image (via json) </p>
 <p>If user is hosting the room and image is present, send the initial image </p>
 
 </div>
@@ -2745,8 +2718,8 @@ false Image not saved. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending player name. </p>
-<p>set the user as player with username as the name send the player name </p>
+<p>sends player name (via json) </p>
+<p>senda username/player name </p>
 
 </div>
 </div>
@@ -2774,14 +2747,14 @@ false Image not saved. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending for version control. </p>
+<p>Sends json to server for version control. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">type</td><td>type to set json's action</td></tr>
   </table>
   </dd>
 </dl>
-<p>If user is connected and type is valid, set json's action </p>
+<p>If user is connected and type is valid, set json's action, send the json. </p>
 
 </div>
 </div>
@@ -2825,16 +2798,16 @@ false Image not saved. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Sending for version control. </p>
+<p>This is an overloaded function. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">type</td><td>type to set json's action </td></tr>
-    <tr><td class="paramname">masterNodeNumber</td><td>for branches and nodes </td></tr>
-    <tr><td class="paramname">sideNodeNumber</td><td>for branch and nodes</td></tr>
+    <tr><td class="paramname">masterNodeNumber</td><td></td></tr>
+    <tr><td class="paramname">sideNodeNumber</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<p>If user is connected and type is valid, set json's action Also set the masterNodeNumber and sideNodeNumber of json </p>
+<p>If user is connected and type is valid, sends json with parameters as json values. </p>
 
 </div>
 </div>

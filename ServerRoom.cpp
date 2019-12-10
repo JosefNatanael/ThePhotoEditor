@@ -105,7 +105,7 @@ void ServerRoom::on_joinRoomButtonBox_accepted()
 
 /**
  * @brief Handling create room
- * @details emit createRoom signal with name
+ * @details emit createRoom signal with name (slot at MainWindow)
  */
 void ServerRoom::on_createRoomButtonBox_accepted()
 {
@@ -114,14 +114,14 @@ void ServerRoom::on_createRoomButtonBox_accepted()
 }
 
 /**
- * @brief adds Player
+ * @brief adds Player to player list.
  */
 void ServerRoom::addPlayer(QString name) {
     ui->playerList->addItem(name);
 }
 
 /**
- * @brief clear all players from the list
+ * @brief clears all players from the player list.
  */
 void ServerRoom::emptyPlayers() {
     ui->playerList->clear();
@@ -144,7 +144,7 @@ void ServerRoom::on_createRoomButtonBox_rejected()
 }
 
 /**
- * @brief If disconnectButton is clicked, emit disconnect signal
+ * @brief If disconnectButton is clicked, emit disconnect signal (slot at MainWindow)
  */
 void ServerRoom::on_disconnectButton_clicked()
 {

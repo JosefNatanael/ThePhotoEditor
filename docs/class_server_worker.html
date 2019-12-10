@@ -88,7 +88,7 @@ Inheritance diagram for ServerWorker:</div>
 Public Slots</h2></td></tr>
 <tr class="memitem:a63fcb2e44f78b5dea4f676255459d66c"><td class="memItemLeft" align="right" valign="top"><a id="a63fcb2e44f78b5dea4f676255459d66c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_server_worker.html#a63fcb2e44f78b5dea4f676255459d66c">disconnectFromClient</a> ()</td></tr>
-<tr class="memdesc:a63fcb2e44f78b5dea4f676255459d66c"><td class="mdescLeft">&#160;</td><td class="mdescRight">signal triggered when disconnected from client <br /></td></tr>
+<tr class="memdesc:a63fcb2e44f78b5dea4f676255459d66c"><td class="mdescLeft">&#160;</td><td class="mdescRight">signal triggered when disconnected from client. Emits disconnectedFromClient signal, received in <a class="el" href="class_server.html" title="about Server class">Server</a> class <br /></td></tr>
 <tr class="separator:a63fcb2e44f78b5dea4f676255459d66c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
@@ -107,7 +107,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a877c40ee4c9824f8c95cdca7ca9435e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7fabee95d40a9d14d31c0373d69eaeb"><td class="memItemLeft" align="right" valign="top"><a id="af7fabee95d40a9d14d31c0373d69eaeb"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_server_worker.html#af7fabee95d40a9d14d31c0373d69eaeb">setSocketDescriptor</a> (qintptr socketDescriptor)</td></tr>
-<tr class="memdesc:af7fabee95d40a9d14d31c0373d69eaeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">setter functions for <a class="el" href="class_server_worker.html" title="about ServerWorker class">ServerWorker</a>'s Socket Descriptor <br /></td></tr>
+<tr class="memdesc:af7fabee95d40a9d14d31c0373d69eaeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets socket descriptor of server socket. <br /></td></tr>
 <tr class="separator:af7fabee95d40a9d14d31c0373d69eaeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc41d21c9554d216d6489a3d1ae3c7ad"><td class="memItemLeft" align="right" valign="top"><a id="acc41d21c9554d216d6489a3d1ae3c7ad"></a>
 QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_server_worker.html#acc41d21c9554d216d6489a3d1ae3c7ad">getPlayerName</a> () const</td></tr>
@@ -124,7 +124,7 @@ QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 Private Slots</h2></td></tr>
 <tr class="memitem:a77e374fa7cf877cc2d18c82a9e05b8e2"><td class="memItemLeft" align="right" valign="top"><a id="a77e374fa7cf877cc2d18c82a9e05b8e2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_server_worker.html#a77e374fa7cf877cc2d18c82a9e05b8e2">receiveJson</a> ()</td></tr>
-<tr class="memdesc:a77e374fa7cf877cc2d18c82a9e05b8e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">triggered when recieving a Json object <br /></td></tr>
+<tr class="memdesc:a77e374fa7cf877cc2d18c82a9e05b8e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives json and emits jsonReceived signal with parameter the json received. <br /></td></tr>
 <tr class="separator:a77e374fa7cf877cc2d18c82a9e05b8e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -166,7 +166,7 @@ QString&#160;</td><td class="memItemRight" valign="bottom"><b>playerName</b></td
 <p>constructor for the <a class="el" href="class_server_worker.html" title="about ServerWorker class">ServerWorker</a> object </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">parent</td><td><a class="el" href="class_server.html" title="about Server class">Server</a>, also to be passed to serverSocket </td></tr>
+    <tr><td class="paramname">parent</td><td>Passed to QObject() constructor, instantiate serversocket with "this" QTcpSocket </td></tr>
   </table>
   </dd>
 </dl>

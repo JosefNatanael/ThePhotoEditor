@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['cursormode_622',['CursorMode',['../class_workspace_area.html#a3fd40d18af57770a866937c668ea0f72',1,'WorkspaceArea']]]
+  ['cursormode_630',['CursorMode',['../class_workspace_area.html#a3fd40d18af57770a866937c668ea0f72',1,'WorkspaceArea']]]
 ];

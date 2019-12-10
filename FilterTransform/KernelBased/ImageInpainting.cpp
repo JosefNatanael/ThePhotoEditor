@@ -3,7 +3,6 @@
  * @brief Image Inpainting Filter kernel implementation.
  */
 #include "ImageInpainting.h"
-#include <QDebug>
 
 /**
  * @brief Construct a new Image Inpainting:: Image Inpainting object
@@ -67,7 +66,6 @@ void ImageInpainting::setKernel(int size, double)
     for (int dx = -size + 1; dx < size; ++dx)
         for (int dy = -size + 1; dy < size; ++dy)
         {
-//            setEntry(dx, dy, (2 * size - 1) * (2 * size - 1) - 1);
             if((dx+dy)%2 == 0){setEntry(dx, dy, 0.073235*MULTIPLIER);}
             else {setEntry(dx, dy, 0.176765*MULTIPLIER);}
         }              // if size is 2, the kernel would be 3x3, from 2*size -1
@@ -108,9 +106,6 @@ QImage ImageInpainting::convolution(const QImage &img) const
     avgRed /= widthThreshold * heightThreshold;
     avgGreen /= widthThreshold * heightThreshold;
     avgBlue /= widthThreshold * heightThreshold;
-
-    qDebug()<<avgRed<<" "<<avgGreen<<" "<<avgBlue;
-    qDebug()<<img.width()<<" "<<img.height();
 
     //actual formula: (1 - mask/255) * image + (mask/255) * average
     for(int i = 0; i<widthThreshold; ++i){

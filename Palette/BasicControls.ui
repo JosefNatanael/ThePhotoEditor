@@ -122,14 +122,14 @@
     </widget>
    </item>
    <item row="6" column="0">
-    <widget class="QLabel" name="cutoutFlipLabel">
+    <widget class="QLabel" name="cutoutLabel">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Image Scissors</string>
+      <string>Cutout Tool</string>
      </property>
     </widget>
    </item>

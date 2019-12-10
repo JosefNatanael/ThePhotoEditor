@@ -1078,8 +1078,8 @@ void MainWindow::onUpdateImagePreview()
 
 /**
  * @brief Handles commit changes action/merging to master branch.
- * 
- * @details This action is triggered manually by the user. This means user will try to commit changes/merge to master branch.
+ * @details This action is triggered manually by the user. 
+ * Calling this function means user tries to commit changes/merge to master branch.
  */
 void MainWindow::on_actionCommit_Changes_triggered()
 {
@@ -1137,7 +1137,7 @@ void MainWindow::onCommitChanges(QString changes)
  * @brief Handles creating room (for multiplayer feature)
  * @param name Name of the user
  *
- * @details create new server and connects the user through his/her ip and port
+ * @details create new server and connects the user through his/her ip and port,
  * join the new room
  */
 void MainWindow::onCreateRoom(QString name)
@@ -1217,22 +1217,14 @@ void MainWindow::joinRoom()
 
 /**
  * @brief Informs us if connection failed
- *
- * @details sets room's modality into false, closes the room
  */
 void MainWindow::onConnectionFailed()
 {
     QMessageBox::information(this, QString("Connection failed"), QString("Invalid IP address or port."));
-//    if (room)
-//    {
-//        room->setModal(false);
-//        room->close();
-//    }
 }
 
 /**
  * @brief Go to server room
- *
  * @details Set room with ip and port, user is connected
  */
 void MainWindow::goToServerRoom(bool onEnter)
@@ -1289,10 +1281,10 @@ void MainWindow::on_actionJoin_Room_triggered()
 }
 
 /**
- * @brief
+ * @brief Handles all incoming json.
  * @param json QJsonObject
  *
- * @details Checks the string-typed value of json and performs desired actions
+ * @details Checks the value of json and performs desired actions.
  */
 void MainWindow::clientJsonReceived(const QJsonObject &json)
 {
@@ -1310,7 +1302,6 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
     }
     else if (type == "playerFull")
     {
-        qDebug() << "CANNOT ENTER BRO";
         QMessageBox::information(this, QString("Room Full"), QString("Room is full. Please try again or find a different room."));
         isConnected = false;
         client->disconnectFromHost();
@@ -1438,10 +1429,8 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
 }
 
 /**
- * @brief Sending player name
- *
- * @details set the user as player with username as the name
- * send the player name
+ * @brief sends player name (via json)
+ * @details senda username/player name
  */
 void MainWindow::sendPlayerName()
 {
@@ -1453,8 +1442,7 @@ void MainWindow::sendPlayerName()
 }
 
 /**
- * @brief Sending initial image
- *
+ * @brief sends initial image (via json)
  * @details If user is hosting the room and image is present,
  * send the initial image
  */
@@ -1479,8 +1467,7 @@ void MainWindow::sendInitialImage()
 }
 
 /**
- * @brief Handling viewing room
- *
+ * @brief Handles view room action.
  * @details If user is not connected, message box will pop up (Room unavailable, create or join room first.)
  * Else, go to server room
  */
@@ -1495,8 +1482,7 @@ void MainWindow::on_actionView_Room_triggered()
 }
 
 /**
- * @brief Tells if connection is stopped
- *
+ * @brief Notifies user if connection is cut
  * @details message box will pop up
  */
 void MainWindow::onConnectionStopped()
@@ -1505,10 +1491,9 @@ void MainWindow::onConnectionStopped()
 }
 
 /**
- * @brief Handling desired disconnecting
- *
+ * @brief Handles disconnect action.
  * @details message box will pop to ask if the user would like to leave room
- * If yes, connection destroyed
+ * If yes, connection severed.
  */
 void MainWindow::onDisconnect()
 {
@@ -1529,9 +1514,8 @@ void MainWindow::onDisconnect()
 }
 
 /**
- * @brief Destroying connection implementation
- *
- * @details Closes room after checking for null client or server
+ * @brief Destroys connection to server
+ * @details Closes the room
  */
 void MainWindow::destroyConnection()
 {
@@ -1571,14 +1555,14 @@ void MainWindow::sendFilter(const QString& filterName, int size, double strength
 }
 
 /**
- * @brief Sending filter with mask implementation
+ * @brief Sends json to server for filter with mask implementation
  * @param filterName name of filter that is applied
  * @param size size of kernel (if kernel is involved)
  * @param strength strength of filter effect applied
  * @param mask image mask that is used
  *
- * @details Sending information of which filter used to other users
- * The filter here is special because includes image mask
+ * @details Sending information of which filter to use to server
+ * The filter here is special because it includes image mask
  */
 void MainWindow::sendFilterWithMask(const QString& filterName, int size, double strength, const QImage& mask) {
     if (!isConnected || client == nullptr) {
@@ -1605,10 +1589,10 @@ void MainWindow::sendFilterWithMask(const QString& filterName, int size, double 
 }
 
 /**
- * @brief Sending for version control
+ * @brief Sends json to server for version control
  * @param type type to set json's action
  *
- * @details If user is connected and type is valid, set json's action
+ * @details If user is connected and type is valid, set json's action, send the json.
  */
 void MainWindow::sendVersion(const QString& type) {
     if (isConnected) {
@@ -1622,13 +1606,12 @@ void MainWindow::sendVersion(const QString& type) {
 }
 
 /**
- * @brief Sending for version control
+ * @brief This is an overloaded function.
  * @param type type to set json's action
- * @param masterNodeNumber for branches and nodes
- * @param sideNodeNumber for branch and nodes
+ * @param masterNodeNumber 
+ * @param sideNodeNumber 
  *
- * @details If user is connected and type is valid, set json's action
- * Also set the masterNodeNumber and sideNodeNumber of json
+ * @details If user is connected and type is valid, sends json with parameters as json values.
  */
 void MainWindow::sendVersion(const QString& type, int masterNodeNumber, int sideNodeNumber) {
     if (isConnected) {
@@ -1655,12 +1638,11 @@ void MainWindow::sendClearScreen() {
 }
 
 /**
- * @brief Sending for resizing
- * @param width Width of screen
- * @param height Height of screen
+ * @brief Sends json to server for resizing
+ * @param width 
+ * @param height 
  *
- * @details If user is connected, set the width and height data,
- * Also applyResize and data of json
+ * @details If user is connected, sends the width and height data, applyResize json
  */
 void MainWindow::onSendResize(int width, int height) {
     if (isConnected) {
@@ -1675,14 +1657,13 @@ void MainWindow::onSendResize(int width, int height) {
 }
 
 /**
- * @brief Sending for cropping
+ * @brief Sends json to server for cropping
  * @param x Position from top edge of screen
  * @param y Position from left edge of screen
- * @param width Width of screen
- * @param height Height of screen
+ * @param width 
+ * @param height 
  *
- * @details If user is connected, set the width and height data
- * Also applyCrop and data of json
+ * @details If user is connected, send the width and height, applyCrop json
  */
 void MainWindow::onSendCrop(int x, int y, int width, int height) {
     if (isConnected) {
@@ -1699,12 +1680,11 @@ void MainWindow::onSendCrop(int x, int y, int width, int height) {
 }
 
 /**
- * @brief Sending for cropping, special for Magic Wand
+ * @brief Sends json to server for cropping with Magic Wand
  * @param x Position from top edge of screen
  * @param y Position from left edge of screen
  *
- * @details If user is connected, set the x and y data
- * Also applyCropWithMagicWand and data of json
+ * @details If user is connected, send the x and y, applyCropWithMagicWand data.
  */
 void MainWindow::onSendCropWithMagicWand(int x, int y) {
     if (isConnected) {
@@ -1719,14 +1699,13 @@ void MainWindow::onSendCropWithMagicWand(int x, int y) {
 }
 
 /**
- * @brief Sending special during scribble moving
+ * @brief Sends json to server during scribble moving
  * @param x Position from top edge of screen
  * @param y Position from left edge of screen
  * @param colorHex color of pen used
  * @param penWidth width of pen tip used
  *
- * @details If user is connected, set the x and y data
- * Also applyMoveScribble and data of used pen (color and width)
+ * @details If user is connected, sends the x and y data, applyMoveScribble and data of used pen (color and width)
  */
 void MainWindow::onSendMoveScribble(double x, double y, QString colorHex, int penWidth) {
     if (isConnected) {
@@ -1743,9 +1722,8 @@ void MainWindow::onSendMoveScribble(double x, double y, QString colorHex, int pe
 }
 
 /**
- * @brief Sending special during scribble release
- *
- * @details If user is connected, set json's type as applyReleaseScribble
+ * @brief Sends json to server during scribble release
+ * @details If user is connected, sends json with type as applyReleaseScribble
  */
 void MainWindow::onSendReleaseScribble() {
     if (isConnected) {
@@ -1757,12 +1735,11 @@ void MainWindow::onSendReleaseScribble() {
 
 /**
  * @brief Handling filter broadcast
+ * @details applyFilterTransform according to the name of filter applied
+ * and according to size and strength
  * @param name name of filter
  * @param size size of kernel (if kernel is involved)
  * @param strength strength of filter applied
- *
- * @details applyFilterTransform according to the name of filter applied
- * and according to size and strength
  */
 void MainWindow::handleFilterBroadcast(const QString& name, int size, double strength) {
     if (name == "Hue Filter") {
@@ -1821,13 +1798,12 @@ void MainWindow::handleFilterBroadcast(const QString& name, int size, double str
 
 /**
  * @brief Handling filter broadcast which needs mask (Image Scissors and Image Inpainting)
+ * @details applyFilterTransform according to the name of filter applied
+ * and according to size and strength, also mask
  * @param name name of filter
  * @param size size of kernel (if kernel is involved)
  * @param strength strength of filter applied
  * @param mask image mask that is used
- *
- * @details applyFilterTransform according to the name of filter applied
- * and according to size and strength, also mask
  */
 void MainWindow::handleFilterBroadcast(const QString& name, int size, double strength, const QImage& mask) {
     if (name == "Image Scissors") {
@@ -1842,10 +1818,8 @@ void MainWindow::handleFilterBroadcast(const QString& name, int size, double str
 }
 
 /**
- * @brief Handling version control broadcast
+ * @brief Handles version control broadcast. Calls function according to action name
  * @param action name of action implemented
- *
- * @details performs action according to action name
  */
 void MainWindow::handleVersionControlBroadcast(const QString& action) {
     if (action == "undo") {
@@ -1860,7 +1834,7 @@ void MainWindow::handleVersionControlBroadcast(const QString& action) {
 }
 
 /**
- * @brief Handling version control broadcast that needs masterNodeNumber and sideNodeNumber
+ * @brief Handles version control broadcast that needs masterNodeNumber and sideNodeNumber
  * @param action name of action implemented
  * @param masterNodeNumber for branch and nodes
  * @param sideNodeNumber for branch and nodes

@@ -24,5 +24,7 @@
         <file>resources/noimageavail.png</file>
         <file>resources/commit.svg</file>
         <file>resources/merge.svg</file>
+        <file>resources/redo-solid.svg</file>
+        <file>resources/undo-solid.svg</file>
     </qresource>
 </RCC>

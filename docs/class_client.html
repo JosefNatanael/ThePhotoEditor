@@ -88,7 +88,7 @@ Inheritance diagram for Client:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
 <tr class="memitem:ac2396013d01ea4e1bf3dfb520941b93e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_client.html#ac2396013d01ea4e1bf3dfb520941b93e">connectToServer</a> (const QHostAddress &amp;address, quint16 port)</td></tr>
-<tr class="memdesc:ac2396013d01ea4e1bf3dfb520941b93e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_client.html#ac2396013d01ea4e1bf3dfb520941b93e" title="Client::connectToServer(const QHostAddress &amp;address, quint16 port)">Client::connectToServer(const QHostAddress &amp;address, quint16 port)</a>  <a href="class_client.html#ac2396013d01ea4e1bf3dfb520941b93e">More...</a><br /></td></tr>
+<tr class="memdesc:ac2396013d01ea4e1bf3dfb520941b93e"><td class="mdescLeft">&#160;</td><td class="mdescRight">connects the client to the server  <a href="class_client.html#ac2396013d01ea4e1bf3dfb520941b93e">More...</a><br /></td></tr>
 <tr class="separator:ac2396013d01ea4e1bf3dfb520941b93e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acefa70c7d756d8b0dd0d7be3d02a981d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_client.html#acefa70c7d756d8b0dd0d7be3d02a981d">disconnectFromHost</a> ()</td></tr>
 <tr class="memdesc:acefa70c7d756d8b0dd0d7be3d02a981d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disconnect client from host.  <a href="class_client.html#acefa70c7d756d8b0dd0d7be3d02a981d">More...</a><br /></td></tr>
@@ -128,13 +128,13 @@ Public Member Functions</h2></td></tr>
 Private Slots</h2></td></tr>
 <tr class="memitem:a1e1df136ba1989a25261aed93a46c6a1"><td class="memItemLeft" align="right" valign="top"><a id="a1e1df136ba1989a25261aed93a46c6a1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_client.html#a1e1df136ba1989a25261aed93a46c6a1">onReadyRead</a> ()</td></tr>
-<tr class="memdesc:a1e1df136ba1989a25261aed93a46c6a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">: for receiving the Json object from the server <br /></td></tr>
+<tr class="memdesc:a1e1df136ba1989a25261aed93a46c6a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">receives Json from the server, client is ready to read <br /></td></tr>
 <tr class="separator:a1e1df136ba1989a25261aed93a46c6a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:ab50e58fe1fe24b3732a90d6fee6e3e00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_client.html#ab50e58fe1fe24b3732a90d6fee6e3e00">jsonReceived</a> (const QJsonObject &amp;doc)</td></tr>
-<tr class="memdesc:ab50e58fe1fe24b3732a90d6fee6e3e00"><td class="mdescLeft">&#160;</td><td class="mdescRight">: slot triggered when Json object has been recieved  <a href="class_client.html#ab50e58fe1fe24b3732a90d6fee6e3e00">More...</a><br /></td></tr>
+<tr class="memdesc:ab50e58fe1fe24b3732a90d6fee6e3e00"><td class="mdescLeft">&#160;</td><td class="mdescRight">slot triggered when Json object has been recieved, emits signal, received in <a class="el" href="class_main_window.html" title="Central hub for all functions and classes in this application.">MainWindow</a>  <a href="class_client.html#ab50e58fe1fe24b3732a90d6fee6e3e00">More...</a><br /></td></tr>
 <tr class="separator:ab50e58fe1fe24b3732a90d6fee6e3e00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -216,15 +216,14 @@ QTcpSocket *&#160;</td><td class="memItemRight" valign="bottom"><b>clientSocket<
 </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="class_client.html#ac2396013d01ea4e1bf3dfb520941b93e" title="Client::connectToServer(const QHostAddress &amp;address, quint16 port)">Client::connectToServer(const QHostAddress &amp;address, quint16 port)</a> </p>
+<p>connects the client to the server </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">address</td><td>adderss of the server, </td></tr>
-    <tr><td class="paramname">port</td><td>port of the server</td></tr>
+    <tr><td class="paramname">address</td><td>address of the server, </td></tr>
+    <tr><td class="paramname">port</td><td>port of the server </td></tr>
   </table>
   </dd>
 </dl>
-<p>connects the client to the server </p>
 
 </div>
 </div>
@@ -280,10 +279,10 @@ QTcpSocket *&#160;</td><td class="memItemRight" valign="bottom"><b>clientSocket<
 </table>
 </div><div class="memdoc">
 
-<p>: slot triggered when Json object has been recieved </p>
+<p>slot triggered when Json object has been recieved, emits signal, received in <a class="el" href="class_main_window.html" title="Central hub for all functions and classes in this application.">MainWindow</a> </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"></td><td>json: QJsonObject recieved </td></tr>
+    <tr><td class="paramname">json</td><td>QJsonObject received </td></tr>
   </table>
   </dd>
 </dl>

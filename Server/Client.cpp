@@ -16,9 +16,8 @@
  *
  * @details initialize connections
  */
-Client::Client(QObject *parent):
-    QObject(parent),
-    clientSocket(new QTcpSocket(this))
+Client::Client(QObject *parent) : QObject(parent),
+                                  clientSocket(new QTcpSocket(this))
 {
     connect(clientSocket, &QTcpSocket::connected, this, &Client::connected);
     connect(clientSocket, &QTcpSocket::disconnected, this, &Client::disconnected);
@@ -27,22 +26,22 @@ Client::Client(QObject *parent):
 }
 
 /**
- *  @brief Client::connectToServer(const QHostAddress &address, quint16 port)
- *  @param address: adderss of the server,
+ *  @brief connects the client to the server
+ *  @param address: address of the server,
  *  @param port port of the server
- *
- *  @details  connects the client to the server
  */
-void Client::connectToServer(const QHostAddress &address, quint16 port) {
+void Client::connectToServer(const QHostAddress &address, quint16 port)
+{
     QTime timer;
     timer.start();
     clientSocket->connectToHost(address, port);
 
-    if (clientSocket->waitForConnected(5000)) {
+    if (clientSocket->waitForConnected(5000))
+    {
         qDebug() << "connected in" << timer.elapsed();
-        //emit connected();
-    } else {
-
+    }
+    else
+    {
         qDebug() << "not connected in" << timer.elapsed();
         emit connectionFailedBad();
     }
@@ -52,52 +51,56 @@ void Client::connectToServer(const QHostAddress &address, quint16 port) {
  *  @brief Disconnect client from host
  *  @details  disconnect the client from the host
  */
-void Client::disconnectFromHost() {
-    qDebug() << "Client disconnected GG";
+void Client::disconnectFromHost()
+{
+    qDebug() << "Client disconnected";
     clientSocket->disconnectFromHost();
 }
 
 /**
- *  @brief  sends the Json from the client to the server
- *  @param  json QJsonObject to be sent
+ *  @brief sends the Json from the client to the server
+ *  @param json QJsonObject to be sent
  */
-void Client::sendJson(const QJsonObject &json) {
+void Client::sendJson(const QJsonObject &json)
+{
     QDataStream clientStream(clientSocket);
     clientStream.setVersion(QDataStream::Qt_5_11);
     clientStream << QJsonDocument(json).toJson(QJsonDocument::Compact);
 }
 
 /**
- *  @brief:  slot triggered when Json object has been recieved
- *  @param:  json: QJsonObject recieved
+ *  @brief slot triggered when Json object has been recieved, emits signal, received in MainWindow
+ *  @param json QJsonObject received
  */
-void Client::jsonReceived(const QJsonObject &json) {
+void Client::jsonReceived(const QJsonObject &json)
+{
     emit receiveJson(json);
 }
 
 /**
- *  @brief:  for receiving the Json object from the server
+ *  @brief receives Json from the server, client is ready to read
  */
-void Client::onReadyRead() {
-    qDebug("Client ready read");
+void Client::onReadyRead()
+{
     QByteArray jsonData;
     QDataStream socketStream(clientSocket);
     socketStream.setVersion(QDataStream::Qt_5_11);
-    while(true) {
+    while (true)
+    {
         socketStream.startTransaction();
         socketStream >> jsonData;
-        if (socketStream.commitTransaction()) {
+        if (socketStream.commitTransaction())
+        {
             QJsonParseError parseError;
             const QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData, &parseError);
-            if (parseError.error == QJsonParseError::NoError) {
+            if (parseError.error == QJsonParseError::NoError)
+            {
                 if (jsonDoc.isObject())
                     emit jsonReceived(jsonDoc.object());
-                else
-                    qDebug("Invalid message");
-            } else {
-                qDebug("Invalid message");
             }
-        } else {
+        }
+        else
+        {
             break;
         }
     }
@@ -109,10 +112,11 @@ void Client::onReadyRead() {
  *
  * @details emit connectionStopped signal
  */
-void Client::onError(QAbstractSocket::SocketError error) {
+void Client::onError(QAbstractSocket::SocketError error)
+{
 
-    if (!(clientSocket->state() == QTcpSocket::ConnectedState)) {
+    if (!(clientSocket->state() == QTcpSocket::ConnectedState))
+    {
         emit connectionStopped();
-        qDebug() << "NOT CONNECTED";
     }
 }

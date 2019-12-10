@@ -9,8 +9,8 @@
 #include <QJsonObject>
 
 /**
- *  @brief  constructor for the ServerWorker object
- *  @param  parent Server, also to be passed to serverSocket
+ *  @brief constructor for the ServerWorker object
+ *  @param parent Passed to QObject() constructor, instantiate serversocket with "this" QTcpSocket
  */
 ServerWorker::ServerWorker(QObject *parent):
     QObject(parent),
@@ -22,14 +22,14 @@ ServerWorker::ServerWorker(QObject *parent):
 }
 
 /**
- *  @brief  setter functions for ServerWorker's Socket Descriptor
+ *  @brief Sets socket descriptor of server socket.
  */
 bool ServerWorker::setSocketDescriptor(qintptr socketDescriptor) {
     return serverSocket->setSocketDescriptor(socketDescriptor);
 }
 
 /**
- *  @brief  signal triggered when disconnected from client
+ *  @brief signal triggered when disconnected from client. Emits disconnectedFromClient signal, received in Server class
  */
 void ServerWorker::disconnectFromClient() {
     serverSocket->disconnectFromHost();
@@ -37,7 +37,7 @@ void ServerWorker::disconnectFromClient() {
 }
 
 /**
- *  @brief  triggered when recieving a Json object
+ *  @brief Receives json and emits jsonReceived signal with parameter the json received.
  */
 void ServerWorker::receiveJson() {
     qDebug("ServerWorker receive Json");

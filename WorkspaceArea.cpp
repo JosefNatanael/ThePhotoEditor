@@ -20,7 +20,6 @@
 
 /**
  * @brief Construct a new Workspace Area:: Workspace Area object.
- * 
  * @param parent To be passed to QGraphicScene constructor.
  */
 WorkspaceArea::WorkspaceArea(QObject *parent)
@@ -39,7 +38,6 @@ WorkspaceArea::WorkspaceArea(QObject *parent)
 
 /**
  * @brief Construct a new Workspace Area:: Workspace Area object.
- * 
  * @details Workspace area will have dimensions width and height.
  * 
  * @param width Workspace area width.
@@ -95,7 +93,6 @@ void WorkspaceArea::openImage(const QImage &loadedImage, int imageWidth, int ima
 
 /**
  * @brief Makes the brush strokes/drawing permanent, i.e. fused into the image.
- * 
  * @return QImage Fused image (fused with brush strokes).
  */
 QImage WorkspaceArea::commitImage()
@@ -166,9 +163,7 @@ bool WorkspaceArea::saveImage(const QString &fileName, const char *fileFormat)
 
 /**
  * @brief Mouse press event override.
- * 
  * @details Press event will be based on which cursor is selected.
- * 
  * @param event Mouse event.
  */
 void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -194,9 +189,7 @@ void WorkspaceArea::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 /**
  * @brief Mouse move event override.
- * 
  * @details Move event will be based on which cursor is selected.
- * 
  * @param event Mouse event.
  */
 void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -239,6 +232,13 @@ void WorkspaceArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	modified = true;
 }
 
+/**
+ * @brief Scribble action, draws painter path to path item.
+ * 
+ * @param pos Position to move
+ * @param penColor 
+ * @param penWidth 
+ */
 void WorkspaceArea::onMoveScribble(QPointF pos, QColor penColor, int penWidth) {
     QPainterPath path;
     if (pathItem == nullptr)
@@ -261,9 +261,7 @@ void WorkspaceArea::onMoveScribble(QPointF pos, QColor penColor, int penWidth) {
 
 /**
  * @brief Mouse release event override.
- * 
  * @details Release event will be based on which cursor is selected.
- * 
  * @param event Mouse event.
  */
 void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -297,13 +295,24 @@ void WorkspaceArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 	}
 	QGraphicsScene::mouseReleaseEvent(event);
 }
-
+/**
+ * @brief When user release mouse press (cursor == SCRIBBLE), emits signal to update image preview and image drawn.
+ */
 void WorkspaceArea::onReleaseScribble() {
     emit updateImagePreview();
     emit imageDrawn();
     pathItem = nullptr;
 }
 
+/**
+ * @brief Crops image on position x, y, for size width, height.
+ * 
+ * @param x 
+ * @param y 
+ * @param width 
+ * @param height 
+ * @param fromServer Command from the server.
+ */
 void WorkspaceArea::cropImage(int x, int y, int width, int height, bool fromServer) {
     QRect cropRect = QRect(x, y, width, height);
 
@@ -345,6 +354,13 @@ void WorkspaceArea::resizeImage(int width, int height, bool fromServer)
     emit imageResized(resizedImage, width, height);
 }
 
+/**
+ * @brief Magic Wand cropping uses a filter from class MagicWand, with specified threshold (from data member)
+ * 
+ * @param x x starting position.
+ * @param y y starting position.
+ * @param fromServer 
+ */
 void WorkspaceArea::cropImageWithMagicWand(int x, int y, bool fromServer) {
     thisColor = PixelHelper::getPixel(image, x, y);
     MagicWand m;
@@ -418,5 +434,5 @@ void WorkspaceArea::print()
 		painter.setWindow(image.rect());
 		painter.drawImage(0, 0, image);
 	}
-#endif // QT_CONFIG(printdialog)
+#endif
 }

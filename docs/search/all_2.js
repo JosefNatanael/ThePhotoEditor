@@ -25,12 +25,14 @@ var searchData=
   ['createactions_38',['createActions',['../class_main_window.html#a62cd8712fb41a754298f6f60eead2cb0',1,'MainWindow']]],
   ['createmenus_39',['createMenus',['../class_main_window.html#aa4907b0251d305659e403c62921ef331',1,'MainWindow']]],
   ['crop_40',['crop',['../class_magic_wand.html#a0fedcab808d2ed5ea65706d63b89579d',1,'MagicWand']]],
-  ['croporigin_41',['cropOrigin',['../class_workspace_area.html#acd7bbae9baf433b7a41f36237bf7d173',1,'WorkspaceArea']]],
-  ['croporiginscreen_42',['cropOriginScreen',['../class_workspace_area.html#af12c3ae64ef507979c2060727224c9cf',1,'WorkspaceArea']]],
-  ['cropx_43',['cropX',['../class_workspace_area.html#aa41474bd27ceaddde001a8bb58d8013d',1,'WorkspaceArea']]],
-  ['cropy_44',['cropY',['../class_workspace_area.html#a8ce94a20e62ef8bd21ad8a4a8c1cce20',1,'WorkspaceArea']]],
-  ['currentimage_45',['currentImage',['../struct_version_control_1_1_side_node.html#af51e14195d10cfb5cc87a87280e39b37',1,'VersionControl::SideNode']]],
-  ['currentzoom_46',['currentZoom',['../class_main_window.html#a2ca4eb6dc403eb24991624aacb68e340',1,'MainWindow']]],
-  ['cursormode_47',['CursorMode',['../class_workspace_area.html#a3fd40d18af57770a866937c668ea0f72',1,'WorkspaceArea::CursorMode()'],['../class_workspace_area.html#ad301235aa6be0e0fdf5922a99740265d',1,'WorkspaceArea::cursorMode()']]],
-  ['customaddchild_48',['customAddChild',['../class_main_window.html#a1b90b333d11754aef02c13919642e67c',1,'MainWindow']]]
+  ['cropimage_41',['cropImage',['../class_workspace_area.html#a50ad80114d492f39a4c9f409ab38a9b3',1,'WorkspaceArea']]],
+  ['cropimagewithmagicwand_42',['cropImageWithMagicWand',['../class_workspace_area.html#ae6273fc27ca43f55982b249363a0f5a2',1,'WorkspaceArea']]],
+  ['croporigin_43',['cropOrigin',['../class_workspace_area.html#acd7bbae9baf433b7a41f36237bf7d173',1,'WorkspaceArea']]],
+  ['croporiginscreen_44',['cropOriginScreen',['../class_workspace_area.html#af12c3ae64ef507979c2060727224c9cf',1,'WorkspaceArea']]],
+  ['cropx_45',['cropX',['../class_workspace_area.html#aa41474bd27ceaddde001a8bb58d8013d',1,'WorkspaceArea']]],
+  ['cropy_46',['cropY',['../class_workspace_area.html#a8ce94a20e62ef8bd21ad8a4a8c1cce20',1,'WorkspaceArea']]],
+  ['currentimage_47',['currentImage',['../struct_version_control_1_1_side_node.html#af51e14195d10cfb5cc87a87280e39b37',1,'VersionControl::SideNode']]],
+  ['currentzoom_48',['currentZoom',['../class_main_window.html#a2ca4eb6dc403eb24991624aacb68e340',1,'MainWindow']]],
+  ['cursormode_49',['CursorMode',['../class_workspace_area.html#a3fd40d18af57770a866937c668ea0f72',1,'WorkspaceArea::CursorMode()'],['../class_workspace_area.html#ad301235aa6be0e0fdf5922a99740265d',1,'WorkspaceArea::cursorMode()']]],
+  ['customaddchild_50',['customAddChild',['../class_main_window.html#a1b90b333d11754aef02c13919642e67c',1,'MainWindow']]]
 ];

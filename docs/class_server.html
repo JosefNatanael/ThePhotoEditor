@@ -126,16 +126,16 @@ QVector&lt; <a class="el" href="class_server_worker.html">ServerWorker</a> * &gt
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:aa229a1587514197693274aa0d589344b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_server.html#aa229a1587514197693274aa0d589344b">incomingConnection</a> (qintptr socketDescriptor) override</td></tr>
-<tr class="memdesc:aa229a1587514197693274aa0d589344b"><td class="mdescLeft">&#160;</td><td class="mdescRight">handler for when there is a new incoming client  <a href="class_server.html#aa229a1587514197693274aa0d589344b">More...</a><br /></td></tr>
+<tr class="memdesc:aa229a1587514197693274aa0d589344b"><td class="mdescLeft">&#160;</td><td class="mdescRight">handler when there is a new incoming client, creates a <a class="el" href="class_server_worker.html" title="about ServerWorker class">ServerWorker</a> instance, sets up connections from <a class="el" href="class_server_worker.html" title="about ServerWorker class">ServerWorker</a>.  <a href="class_server.html#aa229a1587514197693274aa0d589344b">More...</a><br /></td></tr>
 <tr class="separator:aa229a1587514197693274aa0d589344b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-slots"></a>
 Private Slots</h2></td></tr>
 <tr class="memitem:ace70d933a8942daf7d4865e2699093b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_server.html#ace70d933a8942daf7d4865e2699093b1">jsonReceived</a> (<a class="el" href="class_server_worker.html">ServerWorker</a> *sender, const QJsonObject &amp;json)</td></tr>
-<tr class="memdesc:ace70d933a8942daf7d4865e2699093b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">handler for when the server recieves a QJsonObject from a client  <a href="class_server.html#ace70d933a8942daf7d4865e2699093b1">More...</a><br /></td></tr>
+<tr class="memdesc:ace70d933a8942daf7d4865e2699093b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">handler when the server recieves a QJsonObject from a client  <a href="class_server.html#ace70d933a8942daf7d4865e2699093b1">More...</a><br /></td></tr>
 <tr class="separator:ace70d933a8942daf7d4865e2699093b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2462e971241b924c2eba8b160f942ee8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_server.html#a2462e971241b924c2eba8b160f942ee8">userDisconnected</a> (<a class="el" href="class_server_worker.html">ServerWorker</a> *sender)</td></tr>
-<tr class="memdesc:a2462e971241b924c2eba8b160f942ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">handler for when a client disconnects  <a href="class_server.html#a2462e971241b924c2eba8b160f942ee8">More...</a><br /></td></tr>
+<tr class="memdesc:a2462e971241b924c2eba8b160f942ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">handler for when a client disconnects, updates and broadcast playernames.  <a href="class_server.html#a2462e971241b924c2eba8b160f942ee8">More...</a><br /></td></tr>
 <tr class="separator:a2462e971241b924c2eba8b160f942ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
@@ -186,7 +186,7 @@ QVector&lt; <a class="el" href="class_server_worker.html">ServerWorker</a> * &gt
 <p>constructor for the <a class="el" href="class_server.html" title="about Server class">Server</a> class </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">parent</td><td><a class="el" href="class_main_window.html" title="Central hub for all functions and classes in this application.">MainWindow</a>, to be passed to QTcpServer</td></tr>
+    <tr><td class="paramname">parent</td><td><a class="el" href="class_main_window.html" title="Central hub for all functions and classes in this application.">MainWindow</a>, to be passed to QTcpServer() constructor</td></tr>
   </table>
   </dd>
 </dl>
@@ -264,7 +264,7 @@ QVector&lt; <a class="el" href="class_server_worker.html">ServerWorker</a> * &gt
 </table>
 </div><div class="memdoc">
 
-<p>handler for when there is a new incoming client </p>
+<p>handler when there is a new incoming client, creates a <a class="el" href="class_server_worker.html" title="about ServerWorker class">ServerWorker</a> instance, sets up connections from <a class="el" href="class_server_worker.html" title="about ServerWorker class">ServerWorker</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">socketDesriptor</td><td>the client that is connecting to the server </td></tr>
@@ -308,7 +308,7 @@ QVector&lt; <a class="el" href="class_server_worker.html">ServerWorker</a> * &gt
 </table>
 </div><div class="memdoc">
 
-<p>handler for when the server recieves a QJsonObject from a client </p>
+<p>handler when the server recieves a QJsonObject from a client </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sender</td><td>the client who sent the QJsonObject </td></tr>
@@ -388,7 +388,7 @@ QVector&lt; <a class="el" href="class_server_worker.html">ServerWorker</a> * &gt
 </table>
 </div><div class="memdoc">
 
-<p>handler for when a client disconnects </p>
+<p>handler for when a client disconnects, updates and broadcast playernames. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sender</td><td>client that has disconnected </td></tr>

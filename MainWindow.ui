@@ -187,7 +187,7 @@
   <action name="actionUndo">
    <property name="icon">
     <iconset resource="Resources.qrc">
-     <normaloff>:/icons/resources/history-solid.svg</normaloff>:/icons/resources/history-solid.svg</iconset>
+     <normaloff>:/icons/resources/undo-solid.svg</normaloff>:/icons/resources/undo-solid.svg</iconset>
    </property>
    <property name="text">
     <string>Undo</string>
@@ -253,6 +253,10 @@
    </property>
   </action>
   <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/resources/redo-solid.svg</normaloff>:/icons/resources/redo-solid.svg</iconset>
+   </property>
    <property name="text">
     <string>Redo</string>
    </property>
@@ -263,6 +267,10 @@
    </property>
   </action>
   <action name="actionRevert_to_Last_Commit">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/resources/history-solid.svg</normaloff>:/icons/resources/history-solid.svg</iconset>
+   </property>
    <property name="text">
     <string>Revert to Last Commit</string>
    </property>
