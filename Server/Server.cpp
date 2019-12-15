@@ -98,7 +98,7 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json)
 
         qDebug() << clients.size();
 
-        if (clients.size() > 2)
+        if (clients.size() > 3)
         {
             QJsonObject userFullMsg;
             userFullMsg["type"] = "userFull";
