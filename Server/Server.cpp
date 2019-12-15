@@ -65,7 +65,7 @@ QVector<ServerWorker *> Server::getClients() const { return clients; }
  */
 void Server::incomingConnection(qintptr socketDesriptor)
 {
-    qDebug("New Player");
+    qDebug("New User");
     ServerWorker *worker = new ServerWorker(this);
     if (!worker->setSocketDescriptor(socketDesriptor))
     {
@@ -73,13 +73,12 @@ void Server::incomingConnection(qintptr socketDesriptor)
         return;
     }
 
-    qDebug("Send player list");
+    qDebug("Send user list");
     clients.append(worker);
     connect(worker, &ServerWorker::disconnectedFromClient, this, std::bind(&Server::userDisconnected, this, worker));
     connect(worker, &ServerWorker::jsonReceived, this, std::bind(&Server::jsonReceived, this, worker, std::placeholders::_1));
 
-    qDebug() << "new player connected";
-    emit newPlayerConnected();
+    emit newUserConnected();
 }
 
 /**
@@ -93,44 +92,44 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json)
 
     qDebug("Server Receive a Client Json");
     const QString type = json.value(QString("type")).toString();
-    if (type == "playerName")
+    if (type == "username")
     {
-        const QString playerName = json.value("playerName").toString();
+        const QString username = json.value("username").toString();
 
         qDebug() << clients.size();
 
         if (clients.size() > 2)
         {
-            QJsonObject playerFullMsg;
-            playerFullMsg["type"] = "playerFull";
-            sendJson(sender, playerFullMsg);
+            QJsonObject userFullMsg;
+            userFullMsg["type"] = "userFull";
+            sendJson(sender, userFullMsg);
             clients.removeAll(sender);
             return;
         }
 
-        // If the player has the same name with existing player, server won't allow the player to enter the room
+        // If the user has the same name with existing user, server won't allow the user to enter the room
         for (ServerWorker *worker : clients)
         {
             if (worker == sender)
                 continue;
-            if (worker->getPlayerName() == playerName)
+            if (worker->getUsername() == username)
             {
-                QJsonObject playerRepeatNameMsg;
-                playerRepeatNameMsg["type"] = "nameRepeat";
-                sendJson(sender, playerRepeatNameMsg);
+                QJsonObject userRepeatNameMsg;
+                userRepeatNameMsg["type"] = "nameRepeat";
+                sendJson(sender, userRepeatNameMsg);
                 clients.removeAll(sender);
                 return;
             }
         }
 
-        sender->setPlayerName(playerName);
-        QJsonObject playerNamesMsg;
-        QJsonArray playerNames;
+        sender->setUsername(username);
+        QJsonObject usernamesMsg;
+        QJsonArray usernames;
         for (ServerWorker *worker : clients)
-            playerNames.append(worker->getPlayerName());
-        playerNamesMsg["type"] = "playerList";
-        playerNamesMsg["playerNames"] = playerNames;
-        broadcast(playerNamesMsg);
+            usernames.append(worker->getUsername());
+        usernamesMsg["type"] = "userList";
+        usernamesMsg["usernames"] = usernames;
+        broadcast(usernamesMsg);
     }
     else if (type == "applyFilter" || type == "applyFilterWithMask" || type == "applyResize" ||
              type == "applyCrop" || type == "applyCropWithMagicWand" || type == "initialImage" ||
@@ -143,24 +142,24 @@ void Server::jsonReceived(ServerWorker *sender, const QJsonObject &json)
 }
 
 /**
- *  @brief handler for when a client disconnects, updates and broadcast playernames.
+ *  @brief handler for when a client disconnects, updates and broadcast usernames.
  *  @param sender client that has disconnected
  */
 void Server::userDisconnected(ServerWorker *sender)
 {
     qDebug("user disconnect");
     clients.removeAll(sender);
-    const QString player = sender->getPlayerName();
-    if (!player.isEmpty())
+    const QString user = sender->getUsername();
+    if (!user.isEmpty())
     {
 
-        QJsonObject playerNamesMsg;
-        QJsonArray playerNames;
+        QJsonObject usernamesMsg;
+        QJsonArray usernames;
         for (ServerWorker *worker : clients)
-            playerNames.append(worker->getPlayerName());
-        playerNamesMsg["type"] = "playerList";
-        playerNamesMsg["playerNames"] = playerNames;
-        broadcast(playerNamesMsg);
+            usernames.append(worker->getUsername());
+        usernamesMsg["type"] = "userList";
+        usernamesMsg["usernames"] = usernames;
+        broadcast(usernamesMsg);
     }
     sender->deleteLater();
 }

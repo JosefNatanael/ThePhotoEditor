@@ -20,8 +20,8 @@ public:
     void setCreateRoom();
     void setJoinRoom();
     void setServerRoom(QString, quint16);
-    void addPlayer(QString);
-    void emptyPlayers();
+    void addUser(QString);
+    void emptyUsers();
 
 signals:
     void createRoom(QString);

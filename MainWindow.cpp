@@ -7,7 +7,7 @@
  *  @copyright      GNU Public License.
  *  @mainpage       The Photo Editor
  *  @section        intro_sec Introduction
- *  This code is developed to implement version control and multiplayer support to a standard photo editing software.
+ *  This code is developed to implement version control and multi-user support to a standard photo editing software.
  *  @section        compile_sec Compilation
  *  Here I will describe how to compile this code with Qt
  *  1. Load .pro project file to QtCreator
@@ -1134,7 +1134,7 @@ void MainWindow::onCommitChanges(QString changes)
 }
 
 /**
- * @brief Handles creating room (for multiplayer feature)
+ * @brief Handles creating room (for multi-user feature)
  * @param name Name of the user
  *
  * @details create new server and connects the user through his/her ip and port,
@@ -1150,7 +1150,7 @@ void MainWindow::onCreateRoom(QString name)
     }
 
     server = new Server(this);
-    connect(server, &Server::newPlayerConnected, this, &MainWindow::sendInitialImage);
+    connect(server, &Server::newUserConnected, this, &MainWindow::sendInitialImage);
     ip = server->getIP();
     port = server->getPort();
     isHost = true;
@@ -1209,7 +1209,7 @@ void MainWindow::joinRoom()
     connect(client, &Client::connectionFailedBad, this, &MainWindow::onConnectionFailed);
     connect(client, &Client::connected, [=]() {goToServerRoom(true);});
     connect(client, &Client::receiveJson, this, &MainWindow::clientJsonReceived);
-    connect(client, &Client::connected, this, &MainWindow::sendPlayerName);
+    connect(client, &Client::connected, this, &MainWindow::sendUsername);
     connect(client, &Client::connectionStopped, this, &MainWindow::onConnectionStopped);
     connect(client, &Client::disconnected, [=]() {destroyConnection();});
     client->connectToServer(QHostAddress(ip), port);
@@ -1290,17 +1290,17 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
 {
     qDebug() << json;
     const QString type = json.value(QString("type")).toString();
-    if (type == "newPlayer")
+    if (type == "newUser")
     {
-        qDebug() << "New Player has entered";
+        qDebug() << "New User has entered";
     }
-    else if (type == "playerList")
+    else if (type == "userList")
     {
-        room->emptyPlayers();
-        for (QJsonValue playerName : json.value(QString("playerNames")).toArray())
-            room->addPlayer(playerName.toString());
+        room->emptyUsers();
+        for (QJsonValue username : json.value(QString("usernames")).toArray())
+            room->addUser(username.toString());
     }
-    else if (type == "playerFull")
+    else if (type == "userFull")
     {
         QMessageBox::information(this, QString("Room Full"), QString("Room is full. Please try again or find a different room."));
         isConnected = false;
@@ -1429,16 +1429,16 @@ void MainWindow::clientJsonReceived(const QJsonObject &json)
 }
 
 /**
- * @brief sends player name (via json)
- * @details senda username/player name
+ * @brief sends user name (via json)
+ * @details senda username/user name
  */
-void MainWindow::sendPlayerName()
+void MainWindow::sendUsername()
 {
-    QJsonObject playerNameMsg;
-    playerNameMsg["type"] = "playerName";
-    playerNameMsg["playerName"] = username;
+    QJsonObject usernameMsg;
+    usernameMsg["type"] = "username";
+    usernameMsg["username"] = username;
 
-    client->sendJson(playerNameMsg);
+    client->sendJson(usernameMsg);
 }
 
 /**
@@ -1528,7 +1528,7 @@ void MainWindow::destroyConnection()
         client = nullptr;
     }
     room->close();
-    delete room;
+    room->deleteLater();
 }
 
 

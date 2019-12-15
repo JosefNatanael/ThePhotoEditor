@@ -21,7 +21,7 @@ protected:
     void incomingConnection(qintptr socketDescriptor) override;
 signals:
     void receiveJson(ServerWorker *sender, const QJsonObject &json);
-    void newPlayerConnected();
+    void newUserConnected();
 public slots:
     void stopServer();
     void broadcast(const QJsonObject &json, ServerWorker *exclude = nullptr);

@@ -72,21 +72,20 @@ void ServerWorker::sendJson(const QJsonObject &json) {
     QDataStream socketStream(serverSocket);
     socketStream.setVersion(QDataStream::Qt_5_11);
     socketStream << QJsonDocument(json).toJson(QJsonDocument::Compact);
-    qDebug() << "on sendJson";
 }
 
 /**
- *  @brief setter of the playerName (name of the player/client)
- *  @param playerName name of player/client
+ *  @brief setter of the username (name of the user/client)
+ *  @param username name of user/client
  */
-void ServerWorker::setPlayerName(const QString &playerName) {
-    this->playerName = playerName;
+void ServerWorker::setUsername(const QString &username) {
+    this->username = username;
 }
 
 
 /**
- *  @brief  accessor of playerName(returns the name of the player/client)
+ *  @brief  accessor of username(returns the name of the user/client)
  */
-QString ServerWorker::getPlayerName() const {
-    return playerName;
+QString ServerWorker::getUsername() const {
+    return username;
 }

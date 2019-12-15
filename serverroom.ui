@@ -98,7 +98,7 @@
     <string>Port</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="playerList">
+  <widget class="QListWidget" name="userList">
    <property name="geometry">
     <rect>
      <x>30</x>

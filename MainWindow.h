@@ -75,7 +75,7 @@ private slots:
     void                        on_actionView_Room_triggered();
     void                        onCreateRoom(QString);
     void                        onJoinRoom(QString, QString, quint16);
-    void                        sendPlayerName();
+    void                        sendUsername();
     void                        clientJsonReceived(const QJsonObject&);
     void                        onConnectionFailed();
     void                        onConnectionStopped();

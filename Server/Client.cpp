@@ -114,7 +114,6 @@ void Client::onReadyRead()
  */
 void Client::onError(QAbstractSocket::SocketError error)
 {
-
     if (!(clientSocket->state() == QTcpSocket::ConnectedState))
     {
         emit connectionStopped();

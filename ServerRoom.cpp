@@ -15,7 +15,7 @@ ServerRoom::ServerRoom(QWidget *parent) :
     ui(new Ui::ServerRoom)
 {
     ui->setupUi(this);
-    ui->playerList->hide();
+    ui->userList->hide();
     ui->roomIpLabel->hide();
     ui->roomPortLabel->hide();
     ui->disconnectButton->hide();
@@ -56,7 +56,7 @@ void ServerRoom::setJoinRoom() {
     ui->portLabel->show();
     ui->joinRoomButtonBox->show();
 
-    ui->playerList->hide();
+    ui->userList->hide();
     ui->roomIpLabel->hide();
     ui->ipContent->hide();
     ui->roomPortLabel->hide();
@@ -79,7 +79,7 @@ void ServerRoom::setServerRoom(QString ip, quint16 port) {
     ui->portLabel->hide();
     ui->joinRoomButtonBox->hide();
     ui->createRoomButtonBox->hide();
-    ui->playerList->show();
+    ui->userList->show();
     ui->roomIpLabel->show();
     ui->roomPortLabel->show();
     ui->ipContent->show();
@@ -114,17 +114,17 @@ void ServerRoom::on_createRoomButtonBox_accepted()
 }
 
 /**
- * @brief adds Player to player list.
+ * @brief adds User to user list.
  */
-void ServerRoom::addPlayer(QString name) {
-    ui->playerList->addItem(name);
+void ServerRoom::addUser(QString name) {
+    ui->userList->addItem(name);
 }
 
 /**
- * @brief clears all players from the player list.
+ * @brief clears all users from the user list.
  */
-void ServerRoom::emptyPlayers() {
-    ui->playerList->clear();
+void ServerRoom::emptyUsers() {
+    ui->userList->clear();
 }
 
 /**

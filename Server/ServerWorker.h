@@ -11,8 +11,8 @@ class ServerWorker : public QObject
 public:
     explicit ServerWorker(QObject *parent = nullptr);
     virtual bool setSocketDescriptor(qintptr socketDescriptor);
-    QString getPlayerName() const;
-    void setPlayerName(const QString &userName);
+    QString getUsername() const;
+    void setUsername(const QString &userName);
     void sendJson(const QJsonObject &json);
 signals:
     void jsonReceived(const QJsonObject &jsonDoc);
@@ -23,7 +23,7 @@ private slots:
     void receiveJson();
 private:
     QTcpSocket *serverSocket;
-    QString playerName;
+    QString username;
 };
 
 #endif // SERVERWORKER_H
